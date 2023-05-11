@@ -1,0 +1,62 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        {{.pageTitle}}
+        <small>Gerenciar recursos, como menu e os botões, que precisam ser adicionados ao controle</small>
+    </h1>
+    <ol class="breadcrumb">
+            <li>
+                <a href="{{urlfor "HomeController.Index"}}">
+                    <i class="fa fa-dashboard"></i> Home</a>
+            </li>
+            <li class="active">{{.pageTitle}}</li>
+        </ol>
+</section>
+
+<!-- Content Header (Page header) -->
+<section class="content container-fluid">
+    <!-- início do conteúdo da página -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="btn-group">
+                                {{ if .canEdit}}
+                                <button class="btn btn-info" href="javascript:;" onclick="EditFun()">
+                                    <i class="fa fa-plus"></i> Novo</button> 
+                                {{end}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 align-right">
+                            <div class="btn-group">
+                                <button class="btn btn-warning treegridexpend" data-target="#treeGrid" >
+                                    <i class="fa fa-expand"></i> Expandir todos</button>
+                                <button class="btn btn-primary treegridcollapse" data-target="#treeGrid" >
+                                    <i class="fa fa-compress"></i> Encolher todos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table id="treeGrid" class="table  table-bordered table-hover margin-top-10">
+                        <thead>                          
+                            <th>Nome</th>
+                            <th class="align-center">Ícone</th>
+                            <th class="align-center">Endereço</th>
+                            <th>Endereço</th>
+                            <th class="align-center">Ordem</th>
+                            <th style="width:150px;">Ação</th>
+                        </thead>
+                        <tbody>                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Fim do conteúdo da página -->
+</section>
+<!-- /.content -->

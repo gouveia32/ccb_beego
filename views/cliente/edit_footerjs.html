@@ -1,0 +1,52 @@
+<!-- Verifique o plugin -->
+<script src="/static/plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="/static/plugins/jquery-validation/localization/messages_pt_BR.js"></script>
+<!-- Encapsulamento simples para o tópico atual, código condensado -->
+<script src="/static/sdtheme/scripts/sdvalidate.js"></script>
+
+<script>
+	var index = parent.layer.getFrameIndex(window.name); //Primeiro, obtenha o índice da camada iframe atual
+   $(function () {
+       pageInit();
+   });
+
+    function pageInit(){
+        $("#Id").attr("readonly", true);
+        $("#Estado").selectpicker('val', '{{.m.Estado}}');
+
+        //verificar
+        validateInfo();
+    }
+
+    //Validação de formulário e envio AJAX
+    function validateInfo() {
+        var $thisForm = $('#thisForm');
+        $thisForm.sdvalidate({
+            rules: {
+                VendorDesc:{
+                    required: true
+                }
+            },
+            messages: {},
+            submitHandler: function (form) {
+				var url ='{{ urlfor "ClienteController.Edit"}}';
+				var params = $thisForm.serialize();
+				$.sdpost(url, params, function(re){
+					if(re.code === 0){
+						parent.layer.msg(re.msg);
+						parent.refresh(re.obj);
+						parent.layer.close(index)
+					}else{
+						parent.layer.alert(re.msg,{icon:2,title:'Falha'})
+					}
+				});
+               return false;
+            }
+        });
+    }
+
+    function FormSubmit() {
+        $("#thisForm").submit();		
+    }
+
+</script>

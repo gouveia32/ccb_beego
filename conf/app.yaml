@@ -1,0 +1,46 @@
+sys:
+  EnableAdmin: true
+  EnableHTTP: true
+  EnableHTTPS: false
+  EnableHttpTLS: true
+  HTTPPort: 8023
+  HTTPSCertFile: conf/server.crt
+  HTTPSKeyFile: conf/server.key
+  HTTPSPort: 10443
+  copyrequestbody: true
+  enablexsrf: false
+  sessionname: rmsbackusersessionid
+  xsrfexpire: 3600
+  xsrfkey: asdfioerjlasdfmFADFOEJF2323SDFF
+app:
+  appname: gardens
+  runmode: dev
+site:
+  app: SG
+  name: Sist. de Ger.
+  version: 1.0.15
+cache:
+  cache_expire: 10
+  db_dt_prefix: rms_
+  db_type: mysql
+  redis_host: 127.0.0.1:6379
+  redis_password: ''
+lang:
+  names: Português
+  types: pt-BR
+logs:
+  level: 7
+mysql:
+  db_alias: ccb_beego
+  db_charset: utf8
+  db_host: 127.0.0.1
+  db_name: ccb_beego
+  db_port: 3306
+  db_pwd: root
+  db_user: ebtaju
+
+simcard:
+  api: http://127.0.0.1:8089/api/Service/QueryCardPackage
+  key: '1231232131232123213'
+  username: '123213213213'
+

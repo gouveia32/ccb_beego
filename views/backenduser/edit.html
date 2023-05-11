@@ -1,0 +1,66 @@
+<form id="thisForm">
+    <input type="hidden" name="Id" id="Id" value="{{.m.Id}}">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="UserName" class="form-control" placeholder="username" value="{{.m.UserName}}">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Nome</label>
+                <input type="text" name="RealName" class="form-control" placeholder="nome" value="{{.m.RealName}}">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Celular</label>
+                <input type="text" name="Mobile" class="form-control" placeholder="" value="{{.m.Mobile}}">
+            </div>
+        </div> 
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" name="Email" class="form-control" placeholder="" value="{{.m.Email}}">
+            </div>
+        </div>       
+    </div>      
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>É Super Usuário?</label>
+                <select name="IsSuper" id="IsSuper" class="form-control bs-select">
+                    <option value="false">Não</option>
+                    <option value="true">Sim</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Estado</label>
+                <select name="Status" id="Status" class="form-control bs-select">
+                    <option value="0">Inativo</option>
+                    <option value="1">Ativo</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="text" name="UserPwd" class="form-control" placeholder="senha">
+            </div>
+        </div> 
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Regras</label>
+                <select name="RoleIds" id="Roles" class="form-control" multiple></select>
+            </div>
+        </div>
+    </div>
+</form>
+</div>

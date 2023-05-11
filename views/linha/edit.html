@@ -1,0 +1,87 @@
+<form id="thisForm">
+    <input type="hidden" name="Id" id="Id" value="{{.m.Id}}">
+
+    <div align="right">
+        <div style="max-width: 80px;">
+            <label for="Estado">ESTADO</label>
+            <select name="Estado" id="Estado" class="form-control bs-select">
+                <option value="1">Inativo</option>
+                <option value="0">Ativo</option>
+            </select>
+        </div>
+    </div>
+
+    <br>
+    <table>
+        <tr>
+            <td style="width: 12%">
+                <label class="label-micro">CÓDIGO</label>
+                <input type="text" name="Codigo" id="codigo"  autocomplete="off" placeholder="" class="layui-input form-control field-text" value="{{.m.Codigo}}">
+            </td>
+            <td style="width: 1%"></td>
+            <td style="width: 60%">
+                <label class="label-micro">NOME</label>
+                <input type="text" name="Nome" id="nome"  autocomplete="off" placeholder="nome" class="layui-input form-control field-text" value="{{.m.Nome}}">
+            </td>
+            <td style="width: 3%"> </td>
+            <td style="width: 7%">
+                <label class="label-micro">COR</label>
+                <input type="color" id="cor_hex" name="CorHex" class="layui-input form-control field-text" value="#{{.m.CorHex}}">
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table>
+        <tr>
+            <td style="width: 40%">
+                <label class="label-micro">MATERIAL</label>
+                <input type="text" name="MaterialNome" id="material_nome"  autocomplete="on" placeholder="material" class="layui-input form-control field-text" value="{{.m.MaterialNome}}">
+            </td>
+            <td style="width: 1%"></td>
+            <td style="width: 30%">
+                <label class="label-micro">FABRICANTE</label>
+                <input type="text" name="MaterialFabricante" id="aaterial_fabricante"  autocomplete="on" placeholder="fabricante" class="layui-input form-control field-text" value="{{.m.MaterialFabricante}}">
+            </td>
+            <td style="width: 1%"> </td>
+            <td style="width: 20%">
+                <label class="label-micro">TIPO</label>
+                <input type="text" name="MaterialTipo" id="material_tipo"  autocomplete="on" placeholder="tipo de material" class="layui-input form-control field-text" value="{{.m.MaterialTipo}}">
+            </td>
+        </tr>
+    </table>
+    <br>
+
+    <table>
+        <tr>
+            <td style="width: 100px">
+                <label class="label-micro">Estoque 1</label>
+                <input type="number" name="Estoque1" id="Estoque1" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.Estoque1}}">
+            </td>
+            <td style="width: 5%"></td>
+            <td style="width: 100px">
+                <label class="label-micro">Estoque 2</label>
+                <input type="number" name="Estoque2" id="Estoque2" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.Estoque2}}">
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 100px">
+                <label class="label-micro">Mínimo</label>
+                <input type="number" name="Minimo" id="minmo" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.Minimo}}">
+            </td>
+            <td style="width: 5%"></td>
+            <td style="width: 100px">
+                <label class="label-micro">Pedido</label>
+                <input type="number" name="Pedido" id="pedido" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.Pedido}}">
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+
+    </table>
+
+
+
+</form>
+</div>

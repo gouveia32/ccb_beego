@@ -1,0 +1,73 @@
+<form id="thisForm">
+    <input type="hidden" name="Id" id="Id" value="{{.m.Id}}">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Nome</label>
+                <input type="text" name="Name" class="form-control" placeholder="O comprimento não excede 32" value="{{.m.Name}}">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Nó pai</label>
+                <select name="Parent" id="Parent" class="form-control">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Tipo</label>
+                <select name="Rtype" id="Rtype" class="form-control bs-select">
+                    <option value="0">região</option>
+                    <option value="1">menu</option>
+                    <option value="2">botão</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Ícone</label>
+                <div class="input-group">
+                    <input type="text" name="Icon" id="Icon" class="form-control" placeholder="O comprimento não excede 32" value="{{.m.Icon}}">
+                    <span class="input-group-btn">
+                       <button class="btn btn-info btn-flat" type="button" onclick="searchIcon()">Ícone de pesquisa</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>UrlFor(Veja Beego
+                    <a href="https://beego.me/docs/mvc/controller/urlbuilding.md" target="_blank">url</a>Aspas duplas não são necessárias)</label>
+                <input type="text" id="UrlFor" name="UrlFor" class="form-control" placeholder="如：BackendUserController.Edit,:id,1" 
+                value="{{.m.UrlFor}}" onchange="urlForChange(this)">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>ordem</label>
+                <input type="text" name="Seq" class="form-control" placeholder="Inteiros não negativos" value="{{.m.Seq}}">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>O endereço cujo valor é representado por UrlFor depois de ter sido processado por uma regra de roteamento</label>
+                <div class="input-group">
+                    <input type="text" id="LinkUrl" name="LinkUrl" class="form-control" placeholder="Clique em Verificar para exibi-lo aqui" value="{{.m.LinkUrl}}"
+                        readonly>
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-flat" type="button" onclick="chkUrlFor()">verificar</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+</div>

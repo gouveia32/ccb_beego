@@ -1,0 +1,285 @@
+{{template "shared/bootstraptablejs.html"}}
+
+<script>
+    var $dataGrid = $('#dataGrid');
+    var $searchForm = $("#searchForm");
+
+    //Realce o ID
+    var highlightPk = null;
+
+    //Inicia a carga da pag
+    $(function () {
+        pageInit();
+    });
+
+    //Inicializar a página
+    function pageInit() {
+        //Carregue a condição de consulta do cookie e passe a ID do formulário de parâmetro
+        sdtheme.loadSearchText('searchForm');
+
+        //Inicializar o formulário
+        dataGridInit();
+
+        //Procurar
+        $("#btnSearch").on("click", function (e) {
+            refreshToFirstPage();
+        });
+
+        //Limpar a pesquisa
+        $("#btnClearSearch").on("click", function (e) {
+            $('select', $searchForm).selectpicker('val', '');
+            $('Estado', $searchForm).selectpicker('val', '');
+            $('input', $searchForm).val('');
+            refreshToFirstPage();
+        });
+
+        //A associação é carregada com êxito e realça o item atual após o êxito
+        $dataGrid.on('load-success.bs.table', function () {
+            if (highlightPk !== null && typeof highlightPk !== 'undefined') {
+                sdtheme.highlight($dataGrid.find('tbody tr[data-pk="' + highlightPk + '"]'));
+            }
+            //Realçar uma vez e, em seguida, falhar
+            highlightPk = null;
+        });
+
+        //Sair do estado do painel de critérios de pesquisa
+        sdtheme.searchPanelStatusInit('searchpanelbtn');
+    }
+
+    //Atualiza a página atual
+    function refresh(pk) {
+        $dataGrid.bootstrapTable('refresh');
+        highlightPk = pk;
+    }
+
+    //Atualizar e saltar para a home
+    function refreshToFirstPage() {
+        //Quando a tabela for atualizada, salve os critérios de consulta no cookie
+        sdtheme.saveSearchText('searchForm');
+        //Atualizar e saltar para a página 1
+        $dataGrid.bootstrapTable('refresh', {pageNumber: 1});
+        //Ao mesmo tempo, o número da página atual é salvo no cookie de atualização
+        $.cookie('dataGrid.bs.table.pageNumber', 1, {expires: 1});
+    }
+
+    //bootstrap table data init
+    function dataGridInit() {
+        $dataGrid.bootstrapTable({
+            url: '{{ urlfor "ClienteController.DataGrid"}}',
+            method: 'post',
+            sidePagination: 'server', //Lado do servidor
+            idField: 'Id',
+            queryParamsType: 'limit',
+            queryParams: function (params) {
+                //O tipo de parâmetros próprios dos parâmetros é determinado por queryParamsType
+                params.Id = $('.searchForm input[name="Id"]').val();
+                params.Nome = $('.searchForm input[name="Nome"]').val();
+                params.Contato = $('.searchForm input[name="Contato"]').val();
+                params.Estado = $('.searchForm select[name="Estado"]').selectpicker('val');
+                return params;
+            },
+            pagination: true,
+            showRefresh: true,
+            showColumns: true,
+            toolbar: '#toolbar',
+            pageSize: 10,
+            pageList: [5, 10, 20, 100, 200],
+            paginationShowPageGo: true,    //20170812 lht Estender a seleção para saltar
+            paginationUseBSSelect: true,   //20170812 lht Ative o BoostrapSelect (as páginas devem fazer referência a botstrap-select.min.js)
+            cookie: true,
+            classes: 'table table-bordered table-hover',
+            undefinedText: '',
+            sortName: 'Id',
+            sortOrder: 'asc',
+            stickyHeader: true,
+            resizable: true,
+
+            rowAttributes: function (row, index) {
+                return {'data-pk': row.Id}
+            },
+
+            columns: [
+                {
+                    field: 'state',
+                    checkbox: true,
+                    radio: false
+                }, {
+                    field: 'Id',
+                    title: 'Id',
+                    width: '80px',
+                    align: 'center',
+                    visible: false,
+                    sortable: true
+                }, {
+                    field: 'Nome',
+                    title: 'Nome',
+                    formatter: nomeFormatter,
+                    sortable: true
+                }, {
+                    field: 'ContatoNome',
+                    title: 'Contato',
+                    sortable: true
+                }, {
+                    field: 'Email',
+                    title: 'Email',
+                    width: '150px',
+                    sortable: false
+                }, {                                        
+                    field: 'CriadoEm',
+                    title: 'Criado em',
+                    width: '150px',
+                    align: 'center',
+                    sortable: false,
+                    visible: false,
+                    formatter: sdtheme.formatterDateTimeBySpan
+                }, {
+                    field: 'AlteradoEm',
+                    title: 'Alterado em',
+                    width: '150px',
+                    align: 'center',
+                    sortable: false,
+                    visible: false,
+                    formatter: sdtheme.formatterDateTimeBySpan
+                }, {
+                    field: 'Estado',
+                    title: 'Estado',
+                    width: '100px',
+                    align: 'center',
+                    sortable: false,
+                    formatter: sdtheme.showTwoState
+                }, {
+                    field: 'operate',
+                    title: 'Ação',
+                    width: '100px',
+                    align: 'center',
+                    visible: isVisible(),
+                    formatter: formatterOperate
+                }],
+            onLoadSuccess: function (data) {
+                layer.closeAll('carregando...');
+                //CheboxUniform()
+            },
+            onSort: function (name, order) {
+                //alert('name:' + name + " order:" + order);
+            },
+            onPageChange: function () {
+                //layer.load();
+            },
+            onCheckAll: function (rows) {
+                //Desativar o botão Excluir que precisa ser verificado
+                $(".table-btn-check-enable").removeAttr('disabled');
+            },
+            onCheck: function (rows) {
+                //Desativar o botão Excluir que precisa ser verificado
+                $(".table-btn-check-enable").removeAttr('disabled');
+            },
+            onUncheck: function (rows) {
+                //Desativar o botão Excluir que precisa ser verificado
+                if ($("#dataGrid").bootstrapTable("getSelections").length === 0) {
+                    $(".table-btn-check-enable").attr('disabled', 'disabled');
+                }
+            },
+            onUncheckAll: function () {
+                //Desativar o botão Excluir que precisa ser verificado
+                if ($("#dataGrid").bootstrapTable("getSelections").length === 0) {
+                    $(".table-btn-check-enable").attr('disabled', 'disabled');
+                }
+            },
+
+            onLoadError: function (status) {
+                layer.alert('Falha ao obter dados, código de erro:' + status);
+            }
+        });
+    }
+
+
+    function nomeFormatter(value, row) {
+        return '<span style="white-space: nowrap;">' + value + '</span>'
+        
+    }
+
+
+    ///Encapsular o valor com uma extensão com o valor do título
+    function formatterWapBySpan(value, row, index) {
+        if (value !== null) {
+            return '<span title="' + value + '">' + value + '</span>';
+        }
+        return "";
+    }
+
+    //Editar no campo Formatar Ação
+    function formatterOperate(value, row, index) {
+
+        var html = [];
+        html.push('<div class="btn-group">');
+        if ('{{.canEdit}}' === 'true') {
+            html.push('<button title="Alterar Cliente" class="btn btn-primary btn-xs" onclick="EditFun(' + row.Id + ')">' +
+                    '<i class="fa fa-pencil"></i></button>');
+        }
+        html.push('</div>');
+        return html.join('');
+    }
+
+    function isVisible() {
+        if ('{{.canEdit}}' === 'true') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function EditFun(Id) {
+        var title = 'Novo ';
+        if (Id > 0) {
+            title = "Alterar "
+        }
+        title += "Cliente";
+
+        //console.log('row.Id:',Id);
+
+        var url = '{{ urlfor "ClienteController.Edit"}}' + '/' + Id;
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: false,
+            shade: 0.2,
+            maxmin: true,
+            shift: 1,
+            area: ['800px', '520px'],
+            content: url,
+            btn: ['Salvar', 'Fechar'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                //console.log("iFrame:", iframeWin);
+                iframeWin.FormSubmit();
+            }
+        });
+    }
+
+    function DeleteFun() {
+        var url = '{{ urlfor "ClienteController.Delete"}}';
+        var rows = $dataGrid.bootstrapTable("getSelections");
+        if (rows.length === 0) {
+            layer.alert('Selecione o item que você deseja excluir', {icon: 0, title: 'Rápido'});
+            return;
+        }
+        var ids = [];
+        $(rows).each(function (i, e) {
+            ids.push(e.Id);
+        });
+
+        layer.confirm('Deseja excluir o item selecionado? ', {
+            btn: ['Sim', 'Não'], icon: 3, title: 'Favor confirmar'
+        }, function () {
+            var params = {ids: ids.join(',')};
+            $.sdpost(url, params, function (re) {
+                if (re.code === 0) {
+                    layer.msg(re.msg, {icon: 1, title: 'Sucesso'});
+                    refresh();
+                } else {
+                    layer.alert(re.msg, {icon: 2, title: "Falha"});
+                }
+            });
+        });
+    }
+</script>
