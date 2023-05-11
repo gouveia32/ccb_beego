@@ -1,4 +1,4 @@
-// Copyright 2018 gardens Author. All Rights Reserved.
+// Copyright 2018 ccb_beego Author. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"gardens/enums"
-	"gardens/models"
+	"ccb_beego/enums"
+	"ccb_beego/models"
 	"strconv"
 	"strings"
 

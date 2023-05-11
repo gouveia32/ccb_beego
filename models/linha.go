@@ -1,4 +1,4 @@
-// Copyright 2018 gardens Author. All Rights Reserved.
+// Copyright 2018 ccb_beego Author. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ type LinhaQueryParam struct {
 	Nome   string
 	Codigo string
 	Estado string
+	Alerta string
 }
 
 func init() {
@@ -73,6 +74,10 @@ func LinhaPageList(params *LinhaQueryParam) ([]*Linha, int64) {
 	query = query.Filter("Nome__icontains", params.Nome)
 	query = query.Filter("Codigo__icontains", params.Codigo)
 	query = query.Filter("estado__istartswith", params.Estado)
+	if (params.Alerta > "0") {
+		query = query.Filter("estoque_1__lt","Minimo")
+	}
+	
 
 	total, _ := query.Count()
 	query.OrderBy(sortorder).Limit(params.Limit, params.Offset).All(&data)

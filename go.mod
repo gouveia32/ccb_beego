@@ -1,4 +1,4 @@
-module gardens
+module ccb_beego
 
 go 1.17
 

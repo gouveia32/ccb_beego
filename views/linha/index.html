@@ -29,21 +29,30 @@
                         </div>
 
 						{{if .showMoreQuery }}
-                        <div class="box-tools pull-right">
-                            <button id="searchpanelbtn" type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
-                        </div>
+                            <div class="box-tools pull-right">
+                                <button id="searchpanelbtn" type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                            </div>
+
 						{{end}}
                         <!-- /.box-tools -->
                     </div>
 
                     <!-- /.box-header -->
                     <div class="box-body" style="display: none;">
+                        <label>Estado:</label>
                         <select name="Estado" class="form-control bs-select" data-width="100px">
                             <option value="">- Todos -</option>
                             <option value="0">Ativo</option>
                             <option value="1">Inativo</option>
                         </select>
+                        <label>Estoque:</label>
+                        <select name="Alerta" class="form-control bs-select" data-width="100px">
+                            <option value="0">Todos</option>
+                            <option value="1">Alerta</option>
+                        </select>
+
                     </div>
+                    
                     <!-- /.box-body -->
                 </div>
             </form>

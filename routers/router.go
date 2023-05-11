@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"gardens/controllers"
+	"ccb_beego/controllers"
 
 	beego "github.com/beego/beego/v2/server/web"
 )

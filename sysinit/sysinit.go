@@ -1,4 +1,4 @@
-// Copyright 2018 gardens Author. All Rights Reserved.
+// Copyright 2018 ccb_beego Author. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 package sysinit
 
 import (
-	"gardens/utils"
+	"ccb_beego/utils"
 
 	beego "github.com/beego/beego/v2/server/web"
 )
