@@ -27,6 +27,7 @@
 
         //Limpar a pesquisa
         $("#btnClearSearch").on("click", function (e) {
+            $('Alerta', $searchForm).selectpicker('val', '' );
             $('select', $searchForm).selectpicker('val', '');
             $('Estado', $searchForm).selectpicker('val', '');
             $('input', $searchForm).val('');

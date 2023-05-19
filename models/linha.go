@@ -15,6 +15,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/beego/beego/v2/client/orm"
 )
 
@@ -74,10 +76,11 @@ func LinhaPageList(params *LinhaQueryParam) ([]*Linha, int64) {
 	query = query.Filter("Nome__icontains", params.Nome)
 	query = query.Filter("Codigo__icontains", params.Codigo)
 	query = query.Filter("estado__istartswith", params.Estado)
-	if (params.Alerta > "0") {
-		query = query.Filter("estoque_1__lt","Minimo")
+	fmt.Println("Alerta", params.Alerta)
+	if params.Alerta == "1" {
+		fmt.Println("Alerta: Aqui", params.Alerta)
+		query = query.FilterRaw("estoque_1", "<= minimo")
 	}
-	
 
 	total, _ := query.Count()
 	query.OrderBy(sortorder).Limit(params.Limit, params.Offset).All(&data)
