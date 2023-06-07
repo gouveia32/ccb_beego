@@ -28,3 +28,9 @@ type BaseQueryParam struct {
 	Offset int64  `json:"offset"`
 	Limit  int    `json:"limit"`
 }
+
+
+// GetUFs
+func GetUFs() []string {
+	return []string{"--", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PR", "PB", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SE", "SP", "PA", "TO"}
+}

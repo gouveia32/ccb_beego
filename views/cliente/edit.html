@@ -3,7 +3,7 @@
     <table>
         <tr>
             <td style="width: 60%">
-                <label class="label-micro">NOME</label>
+                <label class="col-sm-8 control-label">NOME</label>
                 <input type="text" name="Nome" id="nome"  autocomplete="off" placeholder="nome" class="layui-input form-control field-text" value="{{.m.Nome}}">
             </td>
             <td style="width: 3%"> </td>
@@ -21,12 +21,12 @@
     <table width="95%">
         <tr>
             <td style="width: 10%">
-                <label class="label-micro">CONTATO</label>
+                <label class="col-sm-8 control-label">CONTATO</label>
                 <input type="text" name="ContatoFuncao" id="contato_funcao" placeholder="função" class="layui-input form-control field-text" value="{{.m.ContatoFuncao}}" /> 
             </td>
             <td style="width: 1%"></td>
             <td style="width: 60%">
-                <label class="label-micro">CONTATO</label>
+                <label class="col-sm-8 control-label">NOME</label>
                 <input type="text" name="ContatoNome" id="contato_nome" placeholder="nome" class="layui-input form-control field-text" value="{{.m.ContatoNome}}" />
             </td>
         </tr>
@@ -34,17 +34,17 @@
     <table width="95%">
         <tr>
             <td style="width: 20%">
-                <label class="label-micro">CNPJ/CPF</label>
+                <label class="col-sm-8 control-label">CGC/CPF</label>
                 <input type="text" name="CgcCpf" id="cgc_cpf"  autocomplete="off" class="layui-input form-control field-text" value="{{.m.CgcCpf}}">
             </td>
             <td style="width: 1%"></td>
             <td style="width: 20%">
-                <label class="label-micro">RAZÃO SOCIAL</label>
+                <label class="col-sm-8 control-label">RAZÃO SOCIAL</label>
                 <input type="text" name="RazaoSocial" id="razao_social"  autocomplete="off" class="layui-input form-control field-text" value="{{.m.RazaoSocial}}">
             </td>
             <td style="width: 1%"></td>
             <td style="width: 20%">
-                <label class="label-micro">INSCR. ESTADUAL</label>
+                <label class="col-sm-8 control-label">INSCR. ESTAUAL</label>
                 <input type="text" name="inscr_estadual" id="InscrEstadual"  autocomplete="off" class="layui-input form-control field-text" value="{{.m.InscrEstadual}}">
             </td>
         </tr>
@@ -54,22 +54,22 @@
 
         <tr>
             <td>
-                <label class="label-micro">TEL 1</label>
+                <label class="col-sm-8 control-label">TEL 1</label>
                 <input type="text" name="Telefone1" id="telefone1" class="layui-input form-control field-text" value="{{.m.Telefone1}}">
             </td>
             <td style="width: 1%"></td>
             <td>
-                <label class="label-micro">TEL 2</label>
+                <label class="col-sm-8 control-label">TEL 2</label>
                 <input type="text" name="Telefone2" id="telefone2" class="layui-input form-control field-text" value="{{.m.Telefone2}}">
             </td>
             <td style="width: 1%"></td>
             <td>
-                <label class="label-micro">TEL 3</label>
+                <label class="col-sm-8 control-label">TEL 3</label>
                 <input type="text" name="Telefone3" id="telefone3" class="layui-input form-control field-text" value="{{.m.Telefone3}}">
             </td>
             <td style="width: 1%"></td>
             <td style="width: 50%">
-                <label class="label-micro">EMAIL</label>
+                <label class="col-sm-8 control-label">EMAIL</label>
                 <input type="text" name="Email" id="email" class="layui-input form-control field-text" value="{{.m.Email}}">
             </td>
         </tr>
@@ -78,23 +78,23 @@
      <table>
         <tr>
             <td style="width: 40%">
-                <label class="label-micro">LOGRADORO</label>
+                <label class="col-sm-6 control-label">LOGRADORO</label>
                 <input type="text" name="Endereco" id="endereco" class="layui-input form-control field-text" value="{{.m.Endereco}}" />
             </td>
 
             <td style="width: 1%"></td>
             <td style="width: 20%">
-                <label class="label-micro">MUNICÍPIO</label>
+                <label class="col-sm-6 control-label">MUNICÍPIO</label>
                 <input type="text" name="Cidade" id="cidade" class="layui-input form-control field-text" value="{{.m.Cidade}}" />
             </td>
             <td style="width: 0.2%"></td>                <td style="width: 1%"></td>
             <td style="width: 10%">
-                <label class="label-micro">CEP</label>
+                <label class="col-sm-6 control-label">CEP</label>
                 <input type="text" name="Cep" id="cep" class="layui-input form-control field-text" value="{{.m.Cep}}" />
             </td>
              <td style="width: 1%"></td> 
             <td style="width: 10%">
-                <label class="label-micro">UF</label>
+                <label class="col-sm-6 control-label">UF</label>
                 <select name="Uf" id="uf" value="{{.m.Uf}}">
                     {{range $key,$item := .ufs}}
                         <option value="{{$item}}" {{if compare $.m.Uf $item}}selected{{end}}>{{$item}}
@@ -103,17 +103,17 @@
             </td>
         </tr>
     </table>
-    <table width="95%">
+    <table width="100%">
         <tr>
-            <td style="width: 70%">
+            <td style="width: 65%">
                 <label class="col-sm-3 control-label">OBSERVAÇÃO</label>
                 <div class="col-sm-10">
                     <textarea name="obs" class="form-control" rows="3" cols="70" placeholder="" onfocus=this.select()>{{.m.Obs}}</textarea>
                 </div>
             </td>
-            <td style="width: 5%"></td>
-            <td style="width: 20%">
-                <label class="label-micro">PREÇO BASE</label>
+            <td style="width: 1%"></td>
+            <td style="width: 10%">
+                <label class="col-sm-2 control-label">PREÇO</label>
                 <input type="number" name="PrecoBase" id="preco_base" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.PrecoBase}}">
             </td>
         </tr>

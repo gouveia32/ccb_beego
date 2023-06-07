@@ -289,40 +289,40 @@
 
     $.fn.bootstrapTable.locales['en-US'] = {
         formatLoadingMessage: function () {
-            return 'Loading, please wait...';
+            return 'Carregando, aguarde...';
         },
         formatRecordsPerPage: function (pageNumber) {
-            return pageNumber + ' lin por pag';
+            return pageNumber + ' lin/pag';
         },
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
-            return 'Showing ' + pageFrom + ' to ' + pageTo + ' of ' + totalRows + ' rows';
+            return 'Mostrando ' + pageFrom + ' até ' + pageTo + ' de ' + totalRows + ' linhas';
         },
         formatSearch: function () {
-            return 'Search';
+            return 'Procurar';
         },
         formatNoMatches: function () {
-            return 'No matching records found';
+            return 'Nenhum registro encontrado';
         },
         formatPaginationSwitch: function () {
-            return 'Hide/Show pagination';
+            return 'mostrar/esconder paginação';
         },
         formatRefresh: function () {
-            return 'Refresh';
+            return 'Atualizar';
         },
         formatToggle: function () {
-            return 'Toggle';
+            return 'Alternar';
         },
         formatColumns: function () {
-            return 'Columns';
+            return 'Colunas';
         },
         formatAllRows: function () {
-            return 'All';
+            return 'Todos';
         },
         formatExport: function () {
-            return 'Export data';
+            return 'Exportar';
         },
         formatClearFilters: function () {
-            return 'Clear filters';
+            return 'Limpar filtros';
         }
     };
 

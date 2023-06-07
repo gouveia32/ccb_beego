@@ -114,10 +114,6 @@ func ClienteOne(id int) (*Cliente, error) {
 	return &m, nil
 }
 
-// GetUFs
-func (*Cliente) GetUFs() []string {
-	return []string{"--", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PR", "PB", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SE", "SP", "PA", "TO"}
-}
 
 func (this *Cliente) TableName() string {
 	return ClienteTBName()

@@ -75,6 +75,62 @@ INSERT INTO `cliente` (`id`, `nome`, `contato_funcao`, `contato_nome`, `cgc_cpf`
 	(30, 'Aragão Alfaiataria', '', ' ', '', '', '', 'Rua Campo do Brito / 1362', '', '--', '', '', '', '', '', '\r\naragaoalfaiate@gmail.com', NULL, '2023-05-09 06:01:57', 0, 0);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 
+-- Copiando estrutura para tabela ccb_beego.fornecedores
+CREATE TABLE IF NOT EXISTS `fornecedores` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `contato_funcao` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `contato_nome` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `cgc_cpf` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `razao_social` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `inscr_estadual` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `endereco` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `cidade` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `uf` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `cep` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `telefone_1` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `telefone_2` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `telefone_3` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `obs` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `criado_em` datetime NOT NULL,
+  `alterado_em` datetime NOT NULL,
+  `estado` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Copiando dados para a tabela ccb_beego.fornecedores: ~1 rows (aproximadamente)
+/*!40000 ALTER TABLE `fornecedores` DISABLE KEYS */;
+INSERT INTO `fornecedores` (`id`, `nome`, `contato_funcao`, `contato_nome`, `cgc_cpf`, `razao_social`, `inscr_estadual`, `endereco`, `cidade`, `uf`, `cep`, `telefone_1`, `telefone_2`, `telefone_3`, `email`, `obs`, `criado_em`, `alterado_em`, `estado`) VALUES
+	(1, 'Barudan do Brasil', '', 'Ricardo', '', '', '', '', '', 'RJ', '', '', '', '', '', '', '2023-06-08 03:08:28', '2023-06-08 03:12:38', 0);
+/*!40000 ALTER TABLE `fornecedores` ENABLE KEYS */;
+
+-- Copiando estrutura para tabela ccb_beego.linha
+CREATE TABLE IF NOT EXISTS `linha` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `nome` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `material_nome` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `material_fabricante` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `material_ipo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `cor_hex` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `estoque_1` int(11) NOT NULL DEFAULT '0',
+  `estoque_2` int(11) NOT NULL DEFAULT '0',
+  `minimo` int(11) NOT NULL DEFAULT '0',
+  `pedido` int(11) NOT NULL DEFAULT '0',
+  `estado` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Copiando dados para a tabela ccb_beego.linha: ~4 rows (aproximadamente)
+/*!40000 ALTER TABLE `linha` DISABLE KEYS */;
+INSERT INTO `linha` (`id`, `codigo`, `nome`, `material_nome`, `material_fabricante`, `material_ipo`, `cor_hex`, `estoque_1`, `estoque_2`, `minimo`, `pedido`, `estado`) VALUES
+	(1, '5310', 'Branco', 'Lumina', 'Setta', 'Poliester', 'ffffff', 32, 0, 10, 0, 0),
+	(2, '5311', 'Preto', 'Lumina', 'Setta', 'Poliester', '000000', 30, 0, 10, 0, 0),
+	(3, '5208', 'Vermelho', 'Lumina', 'Setta', 'Poliester', 'f50f0f', 14, 0, 5, 0, 0),
+	(4, '5066', 'Vermelho', 'Lumina', 'Setta', 'Poliester', 'a01818', 3, 0, 5, 0, 0);
+/*!40000 ALTER TABLE `linha` ENABLE KEYS */;
+
 -- Copiando estrutura para tabela ccb_beego.sys_backend_user
 CREATE TABLE IF NOT EXISTS `sys_backend_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -92,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `sys_backend_user` (
 -- Copiando dados para a tabela ccb_beego.sys_backend_user: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `sys_backend_user` DISABLE KEYS */;
 INSERT INTO `sys_backend_user` (`id`, `real_name`, `user_name`, `user_pwd`, `is_super`, `status`, `mobile`, `email`, `avatar`) VALUES
-	(1, 'Administrador', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 1, 1, '32115232', 'gouveia32@gmail.com', '/static/upload/a290X290.jpg'),
+	(1, 'Administrador', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 1, 1, '988015232', 'gouveia32@gmail.com', '/static/upload/a290X290.jpg'),
 	(2, 'José Gouveia', 'gouveia', 'e10adc3949ba59abbe56e057f20f883e', 0, 1, '79988015232', 'gouveia32@gmail.com', '');
 /*!40000 ALTER TABLE `sys_backend_user` ENABLE KEYS */;
 
@@ -103,10 +159,61 @@ CREATE TABLE IF NOT EXISTS `sys_logintrace` (
   `remoteAddr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `loginTime` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Copiando dados para a tabela ccb_beego.sys_logintrace: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela ccb_beego.sys_logintrace: ~50 rows (aproximadamente)
 /*!40000 ALTER TABLE `sys_logintrace` DISABLE KEYS */;
+INSERT INTO `sys_logintrace` (`id`, `user`, `remoteAddr`, `loginTime`) VALUES
+	(1, 'admin', 'localhost', '2023-05-10 18:47:34'),
+	(2, 'admin', 'localhost', '2023-05-10 18:49:14'),
+	(3, 'admin', 'localhost', '2023-05-10 19:04:39'),
+	(4, 'admin', 'localhost', '2023-05-10 19:18:57'),
+	(5, 'admin', 'localhost', '2023-05-10 19:29:31'),
+	(6, 'admin', 'localhost', '2023-05-10 19:30:40'),
+	(7, 'admin', 'localhost', '2023-05-10 19:32:24'),
+	(8, 'admin', 'localhost', '2023-05-10 19:44:24'),
+	(9, 'admin', 'localhost', '2023-05-10 19:44:51'),
+	(10, 'admin', 'localhost', '2023-05-10 19:46:56'),
+	(11, 'admin', 'localhost', '2023-05-10 19:47:52'),
+	(12, 'admin', 'localhost', '2023-05-10 19:52:54'),
+	(13, 'admin', 'localhost', '2023-05-11 03:08:31'),
+	(14, 'admin', 'localhost', '2023-05-11 03:13:11'),
+	(15, 'admin', 'localhost', '2023-05-11 03:22:11'),
+	(16, 'admin', 'localhost', '2023-05-11 03:30:11'),
+	(17, 'admin', 'localhost', '2023-05-11 20:24:38'),
+	(18, 'admin', 'localhost', '2023-05-11 21:00:38'),
+	(19, 'admin', 'localhost', '2023-05-11 21:09:56'),
+	(20, 'admin', 'localhost', '2023-05-11 21:14:09'),
+	(21, 'admin', 'localhost', '2023-05-11 21:33:25'),
+	(22, 'admin', 'localhost', '2023-05-11 22:20:31'),
+	(23, 'admin', 'localhost', '2023-05-11 22:32:56'),
+	(24, 'admin', 'localhost', '2023-05-11 22:54:07'),
+	(25, 'admin', 'localhost', '2023-05-11 22:58:11'),
+	(26, 'admin', 'localhost', '2023-05-11 23:01:26'),
+	(27, 'admin', 'localhost', '2023-05-18 22:18:55'),
+	(28, 'admin', 'localhost', '2023-05-19 03:28:31'),
+	(29, 'admin', 'localhost', '2023-05-19 03:30:37'),
+	(30, 'admin', 'localhost', '2023-05-19 03:34:05'),
+	(31, 'admin', 'localhost', '2023-05-19 03:51:58'),
+	(32, 'admin', 'localhost', '2023-05-19 19:24:52'),
+	(33, 'admin', 'localhost', '2023-06-06 01:59:16'),
+	(34, 'admin', 'localhost', '2023-06-06 02:07:14'),
+	(35, 'admin', 'localhost', '2023-06-06 02:10:34'),
+	(36, 'admin', 'localhost', '2023-06-06 04:02:24'),
+	(37, 'admin', 'localhost', '2023-06-06 22:50:03'),
+	(38, 'admin', 'localhost', '2023-06-06 23:01:27'),
+	(39, 'admin', 'localhost', '2023-06-07 18:56:37'),
+	(40, 'admin', 'localhost', '2023-06-07 21:01:27'),
+	(41, 'admin', 'localhost', '2023-06-07 22:09:58'),
+	(42, 'admin', 'localhost', '2023-06-07 22:12:02'),
+	(43, 'admin', 'localhost', '2023-06-07 22:28:28'),
+	(44, 'admin', 'localhost', '2023-06-07 22:50:11'),
+	(45, 'admin', 'localhost', '2023-06-07 23:05:26'),
+	(46, 'admin', 'localhost', '2023-06-08 02:22:05'),
+	(47, 'admin', 'localhost', '2023-06-08 02:44:37'),
+	(48, 'admin', 'localhost', '2023-06-08 02:50:43'),
+	(49, 'admin', 'localhost', '2023-06-08 02:54:27'),
+	(50, 'admin', 'localhost', '2023-06-08 03:12:26');
 /*!40000 ALTER TABLE `sys_logintrace` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela ccb_beego.sys_resource
@@ -119,9 +226,9 @@ CREATE TABLE IF NOT EXISTS `sys_resource` (
   `icon` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `url_for` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Copiando dados para a tabela ccb_beego.sys_resource: ~18 rows (aproximadamente)
+-- Copiando dados para a tabela ccb_beego.sys_resource: ~20 rows (aproximadamente)
 /*!40000 ALTER TABLE `sys_resource` DISABLE KEYS */;
 INSERT INTO `sys_resource` (`id`, `name`, `parent_id`, `rtype`, `seq`, `icon`, `url_for`) VALUES
 	(1, 'Sistema', NULL, 1, 30, 'fa fa-gears', ''),
@@ -135,13 +242,19 @@ INSERT INTO `sys_resource` (`id`, `name`, `parent_id`, `rtype`, `seq`, `icon`, `
 	(12, 'editar', 84, 2, 100, 'fa fa-pencil', 'SystemValController.Edit'),
 	(13, 'excluir', 84, 2, 101, 'fa fa-trash', 'SystemValController.Delete'),
 	(14, 'Cadastro', NULL, 1, 1, 'fa fa-address-book-o', ''),
-	(15, 'Cliente', 14, 1, 100, 'fa fa-ship', 'ClienteController.Index'),
+	(15, 'Cliente', 14, 1, 2, 'fa fa-ship', 'ClienteController.Index'),
 	(92, 'Ger. dos Recursos', 1, 1, 100, 'fa fa-gear', 'ResourceController.Index'),
 	(93, 'Usuários', 1, 1, 100, 'fa fa-reddit', 'BackendUserController.Index'),
 	(94, 'Funções', 1, 1, 100, 'fa fa-eyedropper', 'RoleController.Index'),
 	(95, 'Alterar Cliente', 15, 2, 100, 'fa fa-user-secret', 'ClienteController.Edit'),
 	(96, 'Excluir Cliente', 15, 2, 100, 'fa fa-user-times', 'ClienteController.Delete'),
-	(97, 'Alocar Funções', 94, 2, 100, 'fa fa-random', 'RoleController.Allocate');
+	(97, 'Alocar Funções', 94, 2, 100, 'fa fa-random', 'RoleController.Allocate'),
+	(98, 'Linha', 14, 1, 6, 'fa fa-navicon', 'LinhaController.Index'),
+	(99, 'Alterar Linha', 98, 2, 100, 'fa fa-wrench', 'LinhaController.Edit'),
+	(100, 'Excluir Linha', 98, 2, 100, 'fa fa-close', 'LinhaController.Delete'),
+	(101, 'Fornecedor', 14, 1, 3, 'fa fa-bus', 'FornecedorController.Index'),
+	(102, 'Alterar Fornecedor', 101, 2, 100, '', 'FornecedorController.Edit'),
+	(103, 'Excluir Fornecedor', 101, 2, 100, '', 'FornecedorController.Delete');
 /*!40000 ALTER TABLE `sys_resource` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela ccb_beego.sys_role
@@ -168,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `sys_role_backenduser_rel` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Copiando dados para a tabela ccb_beego.sys_role_backenduser_rel: ~1 rows (aproximadamente)
+-- Copiando dados para a tabela ccb_beego.sys_role_backenduser_rel: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `sys_role_backenduser_rel` DISABLE KEYS */;
 INSERT INTO `sys_role_backenduser_rel` (`id`, `role_id`, `backend_user_id`, `created`) VALUES
 	(1, 2, 2, '2023-05-10 01:39:06');

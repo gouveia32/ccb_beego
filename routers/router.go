@@ -68,6 +68,14 @@ func init() {
 	beego.Router("/cliente/edit/?:id", &controllers.ClienteController{}, "Get,Post:Edit")
 	beego.Router("/cliente/delete", &controllers.ClienteController{}, "Post:Delete")
 
+
+	//Fornecedor
+	beego.Router("/fornecedor/index", &controllers.FornecedorController{}, "*:Index")
+	beego.Router("/fornecedor/datagrid", &controllers.FornecedorController{}, "Get,Post:DataGrid")
+	beego.Router("/fornecedor/datalist", &controllers.FornecedorController{}, "Post:DataList")
+	beego.Router("/fornecedor/edit/?:id", &controllers.FornecedorController{}, "Get,Post:Edit")
+	beego.Router("/fornecedor/delete", &controllers.FornecedorController{}, "Post:Delete")
+
 	//Linha
 	beego.Router("/linha/index", &controllers.LinhaController{}, "*:Index")
 	beego.Router("/linha/datagrid", &controllers.LinhaController{}, "Get,Post:DataGrid")

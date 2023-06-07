@@ -83,9 +83,9 @@
             showColumns: true,
             toolbar: '#toolbar',
             pageSize: 10,
-            pageList: [5, 10, 20, 100, 200],
-            paginationShowPageGo: true,    //20170812 lht Estender a seleção para saltar
-            paginationUseBSSelect: true,   //20170812 lht Ative o BoostrapSelect (as páginas devem fazer referência a botstrap-select.min.js)
+            pageList: [7, 10, 20, 100, 200],
+            paginationShowPageGo: true,    //Extender a seleção para saltar
+            paginationUseBSSelect: true,   //Ative o BoostrapSelect (as páginas devem fazer referência a botstrap-select.min.js)
             cookie: true,
             classes: 'table table-bordered table-hover',
             undefinedText: '',
@@ -108,7 +108,7 @@
                     title: 'Id',
                     width: '80px',
                     align: 'center',
-                    visible: false,
+                    visible: true,
                     sortable: true
                 }, {
                     field: 'Nome',
@@ -195,7 +195,6 @@
 
     function nomeFormatter(value, row) {
         return '<span style="white-space: nowrap;">' + value + '</span>'
-        
     }
 
 
@@ -245,7 +244,7 @@
             shade: 0.2,
             maxmin: true,
             shift: 1,
-            area: ['800px', '520px'],
+            area: ['800px', '540px'],
             content: url,
             btn: ['Salvar', 'Fechar'],
             yes: function (index, layero) {

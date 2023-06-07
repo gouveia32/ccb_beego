@@ -101,7 +101,7 @@ func (c *ClienteController) Edit() {
 		m.Estado = 0
 	}
 
-	ufs := m.GetUFs()
+	ufs := models.GetUFs()
 
 	c.Data["ufs"] = ufs
 	c.Data["m"] = m
