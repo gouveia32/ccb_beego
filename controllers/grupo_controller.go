@@ -25,7 +25,7 @@ func (c *GrupoController) Prepare() {
 	c.BaseController.Prepare()
 
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
-	c.checkAuthor("DataGrid", "DataList", "UpdateSeq")
+	c.checkAuthor("DataGrid", "DataList")
 
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
@@ -34,7 +34,7 @@ func (c *GrupoController) Prepare() {
 
 // Index 角色管理首页
 func (c *GrupoController) Index() {
-	c.Data["pageTitle"] = "Ger. de Funções"
+	c.Data["pageTitle"] = "Ger. de Grupos"
 
 	//是否显示更多查询条件的按钮
 	c.Data["showMoreQuery"] = false
@@ -50,10 +50,9 @@ func (c *GrupoController) Index() {
 	//页面里按钮权限控制
 	c.Data["canEdit"] = c.checkActionAuthor("GrupoController", "Edit")
 	c.Data["canDelete"] = c.checkActionAuthor("GrupoController", "Delete")
-	c.Data["canAllocate"] = c.checkActionAuthor("GrupoController", "Allocate")
 }
 
-// DataGrid 角色管理首页 表格获取数据
+// DataGrid Dados de aquisição da tabela da página inicial de gerenciamento de grupo
 func (c *GrupoController) DataGrid() {
 	//直接反序化获取json格式的requestbody里的值
 	var params models.GrupoQueryParam
@@ -71,18 +70,18 @@ func (c *GrupoController) DataGrid() {
 	c.ServeJSON()
 }
 
-// DataList 角色列表
+// DataList 
 func (c *GrupoController) DataList() {
 	var params = models.GrupoQueryParam{}
 
-	//获取数据列表和总数
+	//Obter lista de dados e total
 	data := models.GrupoDataList(&params)
 
-	//定义返回的数据结构
+	//Definir a estrutura de dados retornada
 	c.jsonResult(enums.JRCodeSucc, "", data)
 }
 
-// Edit 添加、编辑角色界面
+// Edit
 func (c *GrupoController) Edit() {
 	if c.Ctx.Request.Method == "POST" {
 		c.Save()
@@ -103,12 +102,12 @@ func (c *GrupoController) Edit() {
 	c.LayoutSections["footerjs"] = "grupo/edit_footerjs.html"
 }
 
-// Save 添加、编辑页面 保存
+// Save
 func (c *GrupoController) Save() {
 	var err error
 	m := models.Grupo{}
 
-	//获取form里的值
+	//Obtenha o valor no formulário
 	if err = c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao obter dados", m.Id)
 	}
@@ -130,7 +129,7 @@ func (c *GrupoController) Save() {
 	}
 }
 
-// Delete 批量删除
+// Delete
 func (c *GrupoController) Delete() {
 	strs := c.GetString("ids")
 	ids := make([]int, 0, len(strs))
@@ -148,49 +147,5 @@ func (c *GrupoController) Delete() {
 	}
 }
 
-// Allocate
-func (c *GrupoController) Allocate() {
-	grupoId, _ := c.GetInt("id", 0)
-	strs := c.GetString("ids")
 
-	o := orm.NewOrm()
-	m := models.Grupo{Id: grupoId}
-	if err := o.Read(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "Os dados são inválidos, atualize e tente novamente", "")
-	}
 
-	var relations []models.GrupoBordadoRel
-	for _, str := range strings.Split(strs, ",") {
-		if _, err := strconv.Atoi(str); err == nil {
-			relation := models.GrupoBordadoRel{Grupo: &m}
-			relations = append(relations, relation)
-		}
-	}
-
-	if len(relations) > 0 {
-		//批量添加
-		if _, err := o.InsertMulti(len(relations), relations); err == nil {
-			c.jsonResult(enums.JRCodeSucc, "Salvo com sucesso", "")
-		}
-	}
-
-	c.jsonResult(0, "Falha ao Salvar", "")
-}
-
-func (c *GrupoController) UpdateSeq() {
-	Id, _ := c.GetInt("pk", 0)
-	oM, err := models.GrupoOne(Id)
-	if err != nil || oM == nil {
-		c.jsonResult(enums.JRCodeFailed, "Dados inválidos selecionados", 0)
-	}
-
-	value, _ := c.GetInt("value", 0)
-	oM.Seq = value
-
-	o := orm.NewOrm()
-	if _, err := o.Update(oM); err == nil {
-		c.jsonResult(enums.JRCodeSucc, "Modificado com sucesso", oM.Id)
-	} else {
-		c.jsonResult(enums.JRCodeFailed, "Falha ao Modificar", oM.Id)
-	}
-}

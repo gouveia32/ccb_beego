@@ -30,8 +30,12 @@
                 <input type="text" name="Descricao" id="descricao"  autocomplete="off" placeholder="descrição" class="form-control field-text" value="{{.m.Descricao}}">
             </td>
             <td style="width: 20%">
-                <label class="col-sm-8 label-micro">GRUPOS</label>
-                <select name="GrupoIds" id="Grupos" class="form-control" multiple></select>
+                <label class="col-sm-6 label-micro">GRUPO</label>
+                <select name="GrupoId" id="GrupoId" value="{{.m.GrupoId}}">
+                    {{range $key,$item := .grupos}}
+                        <option value="{{$item}}" {{if compare $.m.GrupoId $item}}selected{{end}}>{{$item.Nome}}
+                    {{end}}
+                </select>
             </td>
             <td style="width: 20%">
                 <label class="col-sm-8 label-micro">CATALOGOS</label>

@@ -95,9 +95,6 @@ func (c *BordadoController) Edit() {
 		if err != nil {
 			c.pageError("Os dados são inválidos, atualize e tente novamente")
 		}
-		g := orm.NewOrm()
-		g.LoadRelated(m, "GrupoBordadoRel")
-		fmt.Println("m.GrupoBordadoRel:",m.GrupoBordadoRel)
 
 		ct := orm.NewOrm()
 		ct.LoadRelated(m, "CatalogoBordadoRel")
@@ -108,18 +105,17 @@ func (c *BordadoController) Edit() {
 	}
 
 	ufs := models.GetUFs()
-
 	c.Data["ufs"] = ufs
+
+	var params = models.GrupoQueryParam{}
+	grupos := models.GrupoDataList(&params)
+
+	fmt.Println("grupos:",grupos)
+	c.Data["grupos"] = grupos
+
 	c.Data["m"] = m
 
-	//Obtenha a lista de grupoId associada
-	var grupoIds []string
-	for _, item := range m.GrupoBordadoRel {
-		grupoIds = append(grupoIds, strconv.Itoa(item.Grupo.Id))
-		//fmt.Println("GrupoIds:",grupoIds)
-	}
-	fmt.Println("grupoIds final:",strings.Join(grupoIds, ","))
-
+	
 	//Obtenha a lista de catalogoId associada
 	var catalogoIds []string
 	for _, item := range m.CatalogoBordadoRel {
@@ -128,7 +124,6 @@ func (c *BordadoController) Edit() {
 
 	fmt.Println("catalogoIds final:",strings.Join(catalogoIds, ","))
 
-	c.Data["grupos"] = strings.Join(grupoIds, ",")
 	c.Data["catalogos"] = strings.Join(catalogoIds, ",")
 	c.setTpl("bordado/edit.html", "shared/layout_pullbox.html")
 	c.LayoutSections = make(map[string]string)
@@ -153,7 +148,7 @@ func (c *BordadoController) Save() {
 	}
 
 	//Excluir dados históricos associados
-	if _, err := o.QueryTable(models.GrupoBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
+	if _, err := o.QueryTable(models.CatalogoBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
 	}
 
@@ -186,14 +181,14 @@ func (c *BordadoController) Save() {
 		}
 	} else {
 
-		//fmt.Println("Desc:",m.Descricao)
+		fmt.Println("Grupo_id:",b.GrupoId)
 		if _, err = o.Update(&b,
 			"Arquivo",
 			"Descricao",
 			"Caminho",
 			"Disquete",
 			"Bastidor",
-			//"GrupoId",
+			"GrupoId",
 			"Preco",
 			"Pontos",    
 			"Cores",     
@@ -225,24 +220,6 @@ func (c *BordadoController) Save() {
 		if len(relscat) > 0 {
 			//adicionar lote
 			if _, err := o.InsertMulti(len(relscat), relscat); err != nil {
-				c.jsonResult(enums.JRCodeFailed, "Falha ao Salvar", b.Id)
-			}
-		} 
-
-		//adicionar relacionamento grupo
-		var relations []models.GrupoBordadoRel
-		for _, grupoId := range b.GrupoIds {
-			g := models.Grupo{Id: grupoId}
-			relation := models.GrupoBordadoRel{Bordado: &b, Grupo: &g}
-			relations = append(relations, relation)
-		}
-
-		fmt.Println("rel:",b.GrupoIds)
-		if len(relations) > 0 {
-			//adicionar lote
-			if _, err := o.InsertMulti(len(relations), relations); err == nil {
-				c.jsonResult(enums.JRCodeSucc, "Salvo com sucesso", b.Id)
-			} else {
 				c.jsonResult(enums.JRCodeFailed, "Falha ao Salvar", b.Id)
 			}
 		} else {

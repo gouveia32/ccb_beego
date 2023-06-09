@@ -96,8 +96,6 @@ func init() {
 	beego.Router("/grupo/edit/?:id", &controllers.GrupoController{}, "Get,Post:Edit")
 	beego.Router("/grupo/delete", &controllers.GrupoController{}, "Post:Delete")
 	beego.Router("/grupo/datalist", &controllers.GrupoController{}, "Post:DataList")
-	beego.Router("/grupo/allocate", &controllers.GrupoController{}, "Post:Allocate")
-	beego.Router("/grupo/updateseq", &controllers.GrupoController{}, "Post:UpdateSeq")
 
 	//Roteamento do catalogo
 	beego.Router("/catalogo/index", &controllers.CatalogoController{}, "*:Index")

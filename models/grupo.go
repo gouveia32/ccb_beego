@@ -15,8 +15,6 @@ type GrupoQueryParam struct {
 type Grupo struct {
 	Id				int    `form:"Id"`
 	Nome			string `form:"Nome"`
-	Seq             int
-	GrupoBordadoRel []*GrupoBordadoRel `orm:"reverse(many)" json:"-"` // Configurar uma relação inversa de um para muitos
 }
 
 func init() {
@@ -42,8 +40,6 @@ func GrupoPageList(params *GrupoQueryParam) ([]*Grupo, int64) {
 	switch params.Sort {
 	case "Id":
 		sortorder = "Id"
-	case "Seq":
-		sortorder = "Seq"
 	}
 
 	if params.Order == "desc" {
@@ -58,7 +54,7 @@ func GrupoPageList(params *GrupoQueryParam) ([]*Grupo, int64) {
 //Obter lista de grupos
 func GrupoDataList(params *GrupoQueryParam) []*Grupo {
 	params.Limit = -1
-	params.Sort = "Seq"
+	params.Sort = "Id"
 	params.Order = "asc"
 	data, _ := GrupoPageList(params)
 	return data

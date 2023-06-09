@@ -13,7 +13,7 @@ type Bordado struct {
 	Caminho   string  	 `orm:"size(225)"`
 	Disquete  string  	 `orm:"size(12)"`
 	Bastidor  string   `orm:"size(12)"`
-	//GrupoId   int64   `orm:"column(grupo_id);default(1);" form:"GrupoId"`
+	GrupoId   int   	`orm:"column(grupo_id);default(1);" form:"GrupoId"`
 	Preco     float64 
 	Pontos    int64   
 	Cores     int16   
@@ -30,8 +30,6 @@ type Bordado struct {
 	CriadoEm      time.Time `orm:"column(criadoEm)" form:"CriadoEm"`
 	AlteradoEm    time.Time `orm:"column(alteradoEm)" form:"AlteradoEm"`
 	Estado      int
-	GrupoIds		[]int	`orm:"-" form:"GrupoIds"`
-	GrupoBordadoRel	[]*GrupoBordadoRel `orm:"reverse(many)"` // Configurar uma relação inversa de um para muitos
 	CatalogoIds		[]int	`orm:"-" form:"CatalogoIds"`
 	CatalogoBordadoRel	[]*CatalogoBordadoRel `orm:"reverse(many)"` // Configurar uma relação inversa de um para muitos
 }
