@@ -2711,6 +2711,16 @@ table.text-center th {
   color: #444;
 }
 /*
+ * Component: Label
+ * ----------------
+ */
+ .label-micro {
+  background-color: #ffffff;
+  color: #0f1d49;
+  font-size: 10px;
+  font-weight: bold;
+}
+/*
  * Component: Direct Chat
  * ----------------------
  */

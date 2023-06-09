@@ -54,7 +54,7 @@ func init() {
 }
 
 func FornecedorTBName() string {
-	return "fornecedores"
+	return "fornecedor"
 }
 
 func FornecedorPageList(params *FornecedorQueryParam) ([]*Fornecedor, int64) {

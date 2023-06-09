@@ -295,7 +295,7 @@
             return pageNumber + ' lin/pag';
         },
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
-            return 'Mostrando ' + pageFrom + ' até ' + pageTo + ' de ' + totalRows + ' linhas';
+            return 'Mostrando ' + pageFrom + ' - ' + pageTo + ' de ' + totalRows + ' linhas';
         },
         formatSearch: function () {
             return 'Procurar';
@@ -1307,7 +1307,7 @@
             return pageNumber + ' registros por página';
         },
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
-            return 'Exibindo ' + pageFrom + ' até ' + pageTo + ' de ' + totalRows + ' linhas';
+            return 'Exibindo ' + pageFrom + ' - ' + pageTo + ' de ' + totalRows + ' linhas';
         },
         formatSearch: function () { 
             return 'Pesquisar';

@@ -1,0 +1,102 @@
+<!-- Verifique o plugin -->
+<script src="/static/plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="/static/plugins/jquery-validation/localization/messages_pt_BR.js"></script>
+<!-- Encapsulamento simples para o tópico atual, código condensado -->
+<script src="/static/sdtheme/scripts/sdvalidate.js"></script>
+
+<script>
+	var index = parent.layer.getFrameIndex(window.name); //Primeiro, obtenha o índice da camada iframe atual
+   $(function () {
+       pageInit();
+   });
+
+    function pageInit(){
+        $("#Id").attr("readonly", true);
+
+        //Inicialização da caixa suspensa de grupos
+        grupoSelectInit('{{.grupos}}');
+        //Inicialização da caixa suspensa de catalogo
+        catalogoSelectInit('{{.catalogos}}');
+
+        $("#Estado").selectpicker('val', '{{.m.Estado}}');
+
+        //verificar
+        validateInfo();
+    }
+
+    //Inicialização da caixa suspensa de grupo
+    function grupoSelectInit(selecteds) {
+        var url = '{{urlfor "GrupoController.DataList"}}';
+        var $select = $("#Grupos");
+        $select.html('');
+
+        $.sdpost(url, {}, function (gr) {
+            if (gr.code === 0) {
+                var html = [];
+                $(gr.obj).each(function (i, e) {
+                    html.push('<option value="' + e.Id + '">' + e.Nome + '</option>');
+                });
+                $select.html(html.join(''));
+                $select.selectpicker({liveSearch: true});
+
+                $select.selectpicker('val', selecteds.split(','));
+            } else {
+                layer.alert("Falha ao obter dados", {icon: 2, title: 'Falha'});
+            }
+        });
+    }
+
+    //Inicialização da caixa suspensa de catalogo
+    function catalogoSelectInit(selecteds) {
+        var url = '{{urlfor "CatalogoController.DataList"}}';
+        var $select = $("#Catalogos");
+        $select.html('');
+
+        $.sdpost(url, {}, function (gr) {
+            if (gr.code === 0) {
+                var html = [];
+                $(gr.obj).each(function (i, e) {
+                    html.push('<option value="' + e.Id + '">' + e.Nome + '</option>');
+                });
+                $select.html(html.join(''));
+                $select.selectpicker({liveSearch: true});
+
+                $select.selectpicker('val', selecteds.split(','));
+            } else {
+                layer.alert("Falha ao obter dados", {icon: 2, title: 'Falha'});
+            }
+        });
+    }
+
+    //Validação de formulário e envio AJAX
+    function validateInfo() {
+        var $thisForm = $('#thisForm');
+        $thisForm.sdvalidate({
+            rules: {
+                VendorDesc:{
+                    required: true
+                }
+            },
+            messages: {},
+            submitHandler: function (form) {
+				var url ='{{ urlfor "BordadoController.Edit"}}';
+				var params = $thisForm.serialize();
+				$.sdpost(url, params, function(re){
+					if(re.code === 0){
+						parent.layer.msg(re.msg);
+						parent.refresh(re.obj);
+						parent.layer.close(index)
+					}else{
+						parent.layer.alert(re.msg,{icon:2,title:'Falha'})
+					}
+				});
+               return false;
+            }
+        });
+    }
+
+    function FormSubmit() {
+        $("#thisForm").submit();		
+    }
+
+</script>

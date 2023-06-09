@@ -472,7 +472,7 @@
             return sprintf('%s lin por pag', pageNumber);
         },
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
-            return sprintf('Mostrando %s até %s de %s linhas', pageFrom, pageTo, totalRows);
+            return sprintf('Mostrando %s - %s de %s linhas', pageFrom, pageTo, totalRows);
         },
         formatDetailPagination: function (totalRows) {
             return sprintf('Mostrando %s linhas', totalRows);

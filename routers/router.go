@@ -83,5 +83,31 @@ func init() {
 	beego.Router("/linha/edit/?:id", &controllers.LinhaController{}, "Get,Post:Edit")
 	beego.Router("/linha/delete", &controllers.LinhaController{}, "Post:Delete")
 
+	//Bordado
+	beego.Router("/bordado/index", &controllers.BordadoController{}, "*:Index")
+	beego.Router("/bordado/datagrid", &controllers.BordadoController{}, "Get,Post:DataGrid")
+	beego.Router("/bordado/datalist", &controllers.BordadoController{}, "Post:DataList")
+	beego.Router("/bordado/edit/?:id", &controllers.BordadoController{}, "Get,Post:Edit")
+	beego.Router("/bordado/delete", &controllers.BordadoController{}, "Post:Delete")
+
+	//Roteamento do grupo
+	beego.Router("/grupo/index", &controllers.GrupoController{}, "*:Index")
+	beego.Router("/grupo/datagrid", &controllers.GrupoController{}, "Get,Post:DataGrid")
+	beego.Router("/grupo/edit/?:id", &controllers.GrupoController{}, "Get,Post:Edit")
+	beego.Router("/grupo/delete", &controllers.GrupoController{}, "Post:Delete")
+	beego.Router("/grupo/datalist", &controllers.GrupoController{}, "Post:DataList")
+	beego.Router("/grupo/allocate", &controllers.GrupoController{}, "Post:Allocate")
+	beego.Router("/grupo/updateseq", &controllers.GrupoController{}, "Post:UpdateSeq")
+
+	//Roteamento do catalogo
+	beego.Router("/catalogo/index", &controllers.CatalogoController{}, "*:Index")
+	beego.Router("/catalogo/datagrid", &controllers.CatalogoController{}, "Get,Post:DataGrid")
+	beego.Router("/catalogo/edit/?:id", &controllers.CatalogoController{}, "Get,Post:Edit")
+	beego.Router("/catalogo/delete", &controllers.CatalogoController{}, "Post:Delete")
+	beego.Router("/catalogo/datalist", &controllers.CatalogoController{}, "Post:DataList")
+	beego.Router("/catalogo/allocate", &controllers.CatalogoController{}, "Post:Allocate")
+	beego.Router("/catalogo/updateseq", &controllers.CatalogoController{}, "Post:UpdateSeq")
+
+
 	beego.Router("/", &controllers.HomeController{}, "*:Index")
 }

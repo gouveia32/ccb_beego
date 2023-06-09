@@ -1,0 +1,82 @@
+<form id="thisForm">
+    <input type="hidden" name="Id" id="Id" value="{{.m.Id}}">
+    <table>
+        <tr>
+            <td style="width: 20%">
+                <label class="col-sm-8 label-micro">ARQUIVO</label>
+                <input type="text" name="Arquivo" id="arquivo"  autocomplete="off" placeholder="nome do arquivo" class="form-control field-text" value="{{.m.Arquivo}}">
+            </td>
+            <td style="width: 3%"> </td>
+            <td style="width: 40%">
+                <label class="col-sm-8 label-micro">CAMINHO</label>
+                <input type="text" name="Caminho" id="caminho"  autocomplete="off" placeholder="caminho" class="form-control field-text" value="{{.m.Caminho}}">
+            </td>
+            <td style="width: 3%"> </td>
+            <td style="width: 25%">
+                <label for="Estado" class="col-sm-8 label-micro">ESTADO</label>
+                <div class="col-sm-8">
+                    <select name="Estado" id="Estado" class="form-control bs-select">
+                        <option value="1">Inativo</option>
+                        <option value="0">Ativo</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table width="95%">
+        <tr>
+            <td style="width: 60%">
+                <label class="col-sm-8 label-micro">DESCIÇÃO</label>
+                <input type="text" name="Descricao" id="descricao"  autocomplete="off" placeholder="descrição" class="form-control field-text" value="{{.m.Descricao}}">
+            </td>
+            <td style="width: 20%">
+                <label class="col-sm-8 label-micro">GRUPOS</label>
+                <select name="GrupoIds" id="Grupos" class="form-control" multiple></select>
+            </td>
+            <td style="width: 20%">
+                <label class="col-sm-8 label-micro">CATALOGOS</label>
+                <select name="CatalogoIds" id="Catalogos" class="form-control" multiple></select>
+            </td>
+        </tr>
+        </tr>
+    </table>
+
+
+
+    <table>
+
+        <tr>
+            <td>
+                <label class="col-sm-11 label-micro">LARGURA</label>
+                <input type="number" name="Largura" id="largura" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.Largura}}">
+            </td>
+            <td style="width: 1%"></td>
+            <td>
+                <label class="col-sm-11 label-micro">ALTURA</label>
+                <input type="number" name="Altura" id="altura" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.Altura}}">
+            </td>
+            <td style="width: 1%"></td>
+            <td>
+                <label class="col-sm-11 label-micro">PONTOS</label>
+                <input type="number" name="Pontos" id="pontos" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.Pontos}}">
+            </td>
+            <td style="width: 1%"></td>
+            <td>
+                <label class="col-sm-11 label-micro">CORES</label>
+                <input type="number" name="Cores" id="cores" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.Cores}}">
+            </td>
+            <td style="width: 1%"></td>
+            <td>
+                <label class="col-sm-11 label-micro">METRAGEM</label>
+                <input type="number" name="Metragem" id="metragem" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.Metragem}}">
+            </td>
+            <td style="width: 1%"></td>            
+            <td>
+                <label class="col-sm-11 label-micro">PREÇO</label>
+                <input type="number" name="Preco" id="preco" style="text-align: right;" class="layui-input form-control field-text" value="{{.m.Preco}}">
+            </td>
+        </tr>
+    </table>
+
+</form>
+</div>

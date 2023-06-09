@@ -106,6 +106,7 @@ func (c *BackendUserController) Edit() {
 	for _, item := range m.RoleBackendUserRel {
 		roleIds = append(roleIds, strconv.Itoa(item.Role.Id))
 	}
+	fmt.Println("roles final:",strings.Join(roleIds, ","))
 	c.Data["roles"] = strings.Join(roleIds, ",")
 	c.setTpl("backenduser/edit.html", "shared/layout_pullbox.html")
 
@@ -122,7 +123,7 @@ func (c *BackendUserController) Save() {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao obter dados", m.Id)
 	}
 
-	//删除已关联的历史数据
+	//Excluir dados históricos associados
 	if _, err := o.QueryTable(models.RoleBackendUserRelTBName()).Filter("backenduser__id", m.Id).Delete(); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
 	}
