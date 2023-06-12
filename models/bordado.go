@@ -2,6 +2,7 @@ package models
 
 import (
 	"time"
+	"fmt"
 
 	"github.com/beego/beego/v2/client/orm"
 )
@@ -24,7 +25,7 @@ type Bordado struct {
 	Alerta    bool
 	Imagem    string  `form:imagem orm:"column(imagem);type(blob)`
 	//Imagem      string  `orm:"column(imagem);type(blob)"                      description:"imagem derada a partir do dst" form:"imagem"`
-	CorFundo    string `orm:"column(cor_fundo);nil" 					     description:"cor de fundo" form:"CorFundo"`
+	CorFundo    string `orm:"column(cor_fundo);nil" description:"cor de fundo" form:"CorFundo"`
 	ObsPublica 	string `orm:"size(1024)"`
 	ObsRestrita string	`orm:"size(1024)"`
 	CriadoEm      time.Time `orm:"column(criadoEm)" form:"CriadoEm"`
@@ -32,6 +33,8 @@ type Bordado struct {
 	Estado      int
 	CatalogoIds		[]int	`orm:"-" form:"CatalogoIds"`
 	CatalogoBordadoRel	[]*CatalogoBordadoRel `orm:"reverse(many)"` // Configurar uma relação inversa de um para muitos
+	LinhaIds		[]int	`orm:"-" form:"LinhaIds"`
+	LinhaBordadoRel	[]*LinhaBordadoRel `orm:"reverse(many)"` // Configurar uma relação inversa de um para muitos
 }
 
 type BordadoQueryParam struct {
@@ -67,9 +70,9 @@ func BordadoPageList(params *BordadoQueryParam) ([]*Bordado, int64) {
 		sortorder = "-" + sortorder
 	}
 
-	//fmt.Println("nome:", params.Nome)
+	fmt.Println("ArquivoLike:", params.ArquivoLike)
 
-	//fmt.Println("contato:", params.Contato)
+	fmt.Println("DescricaoLike:", params.DescricaoLike)
 
 	query = query.Filter("Arquivo__icontains", params.ArquivoLike)
 	query = query.Filter("Descricao__icontains", params.DescricaoLike)

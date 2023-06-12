@@ -82,7 +82,7 @@
             dragTitle: '移动 / 重置',
             indicatorNewTitle: '没有上传',
             indicatorSuccessTitle: '上传',
-            indicatorErrorTitle: '上传错误',
+            indicatorErrorTitle: 'erro de upload',
             indicatorLoadingTitle: '上传 ...'
         },
         previewZoomButtonTitles: {

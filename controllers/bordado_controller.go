@@ -1,17 +1,3 @@
-// Copyright 2018 ccb_beego Author. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package controllers
 
 import (
@@ -98,10 +84,12 @@ func (c *BordadoController) Edit() {
 
 		ct := orm.NewOrm()
 		ct.LoadRelated(m, "CatalogoBordadoRel")
-		fmt.Println("m.CatalogoBordadoRel:",m.CatalogoBordadoRel)
+		ct.LoadRelated(m, "LinhaBordadoRel")
+		
+		//fmt.Println("m.CatalogoBordadoRel:",m.CatalogoBordadoRel)
 	} else {
 		//Ativado por padrão ao adicionar bordados
-		m.Estado = enums.Enabled
+		m.Estado = 0
 	}
 
 	ufs := models.GetUFs()
@@ -114,7 +102,6 @@ func (c *BordadoController) Edit() {
 	c.Data["grupos"] = grupos
 
 	c.Data["m"] = m
-
 	
 	//Obtenha a lista de catalogoId associada
 	var catalogoIds []string
@@ -122,8 +109,22 @@ func (c *BordadoController) Edit() {
 		catalogoIds = append(catalogoIds, strconv.Itoa(item.Catalogo.Id))
 	}
 
-	fmt.Println("catalogoIds final:",strings.Join(catalogoIds, ","))
+	//Obtenha a lista de linhaId associada
+	//linhas := make(map[string]string)
+	linhas := make([]*models.LinhaBordadoRel, 0)
+	for _, item := range m.LinhaBordadoRel {
+		linha,_ := models.LinhaOne(item.Linha.Id)
 
+		item.Linha.Codigo = linha.Codigo
+		item.Linha.Nome = linha.Nome
+		item.Linha.CorHex = linha.CorHex
+
+		linhas = append(linhas, item)
+	}
+	
+	fmt.Println("linhaIds final:",linhas)
+
+	c.Data["linhas"] = linhas
 	c.Data["catalogos"] = strings.Join(catalogoIds, ",")
 	c.setTpl("bordado/edit.html", "shared/layout_pullbox.html")
 	c.LayoutSections = make(map[string]string)
@@ -147,12 +148,47 @@ func (c *BordadoController) Save() {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao obter dados", b.Id)
 	}
 
-	//Excluir dados históricos associados
+	//Excluir catalogos históricos associados
 	if _, err := o.QueryTable(models.CatalogoBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
 	}
 
-	b.AlteradoEm = time.Now()
+	fmt.Println("AQUI")
+	//adicionar relacionamento catalogo
+	var relscat []models.CatalogoBordadoRel
+	for _, catalogoId := range b.CatalogoIds {
+		ct := models.Catalogo{Id: catalogoId}
+		rel := models.CatalogoBordadoRel{Bordado: &b, Catalogo: &ct}
+		relscat = append(relscat, rel)
+	}
+
+	if len(relscat) > 0 {
+		//adicionar lote
+		if _, err := o.InsertMulti(len(relscat), relscat); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "Falha ao Salvar", b.Id)
+		}
+	}
+
+	//Excluir linhas históricos associados
+	if _, err := o.QueryTable(models.LinhaBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
+	}
+
+	fmt.Println("AQUI :  linhas")
+	//adicionar relacionamento linha
+	var relslin []models.LinhaBordadoRel
+	for _, linhaId := range b.LinhaIds {
+		ln := models.Linha{Id: linhaId}
+		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln}
+		relslin = append(relslin, rel)
+	}
+
+	if len(relslin) > 0 {
+		//adicionar lote
+		if _, err := o.InsertMulti(len(relslin), relslin); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "Falha ao Salvar", b.Id)
+		}
+	}
 
 	//fmt.Println("SAVE:", m.Estado)
 
@@ -164,6 +200,7 @@ func (c *BordadoController) Save() {
 		}
 
 		b.CriadoEm = time.Now()
+		//b.Estado = enums.Enabled
 
 		if _, err = o.Insert(&b); err == nil {
 			if err = to.Commit(); err != nil {
@@ -180,7 +217,7 @@ func (c *BordadoController) Save() {
 			}
 		}
 	} else {
-
+		b.AlteradoEm = time.Now()
 		fmt.Println("Grupo_id:",b.GrupoId)
 		if _, err = o.Update(&b,
 			"Arquivo",
@@ -204,28 +241,12 @@ func (c *BordadoController) Save() {
 			"ObsRestrita",
 			"CriadoEm",   
 			"AlteradoEm", 
-			"Estado");  err != nil {
-			c.jsonResult(enums.JRCodeFailed, "Falha ao modificar", b.Id)
-		}
-
-		fmt.Println("AQUI")
-		//adicionar relacionamento catalogo
-		var relscat []models.CatalogoBordadoRel
-		for _, catalogoId := range b.CatalogoIds {
-			ct := models.Catalogo{Id: catalogoId}
-			rel := models.CatalogoBordadoRel{Bordado: &b, Catalogo: &ct}
-			relscat = append(relscat, rel)
-		}
-
-		if len(relscat) > 0 {
-			//adicionar lote
-			if _, err := o.InsertMulti(len(relscat), relscat); err != nil {
-				c.jsonResult(enums.JRCodeFailed, "Falha ao Salvar", b.Id)
-			}
+			"Estado");  err == nil {
+			c.jsonResult(enums.JRCodeSucc, "Atualizado com sucesso", b.Id)
 		} else {
-			c.jsonResult(enums.JRCodeSucc, "Salvo com sucesso", b.Id)
-		}
-	}
+			c.jsonResult(enums.JRCodeFailed, "Falha ao modificar", b.Id)
+		}  
+	} 
 }
 
 func (c *BordadoController) Delete() {

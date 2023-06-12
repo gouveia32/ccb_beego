@@ -13,8 +13,6 @@
     function pageInit(){
         $("#Id").attr("readonly", true);
 
-        //Inicialização da caixa suspensa de grupos
-        grupoSelectInit('{{.grupos}}');
         //Inicialização da caixa suspensa de catalogo
         catalogoSelectInit('{{.catalogos}}');
 
@@ -22,28 +20,6 @@
 
         //verificar
         validateInfo();
-    }
-
-    //Inicialização da caixa suspensa de grupo
-    function grupoSelectInit(selecteds) {
-        var url = '{{urlfor "GrupoController.DataList"}}';
-        var $select = $("#Grupos");
-        $select.html('');
-
-        $.sdpost(url, {}, function (gr) {
-            if (gr.code === 0) {
-                var html = [];
-                $(gr.obj).each(function (i, e) {
-                    html.push('<option value="' + e.Id + '">' + e.Nome + '</option>');
-                });
-                $select.html(html.join(''));
-                $select.selectpicker({liveSearch: true});
-
-                $select.selectpicker('val', selecteds.split(','));
-            } else {
-                layer.alert("Falha ao obter dados", {icon: 2, title: 'Falha'});
-            }
-        });
     }
 
     //Inicialização da caixa suspensa de catalogo

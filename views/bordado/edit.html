@@ -23,32 +23,28 @@
             </td>
         </tr>
     </table>
-    <table width="95%">
+    <table width="98%">
         <tr>
-            <td style="width: 60%">
+            <td >
                 <label class="col-sm-8 label-micro">DESCIÇÃO</label>
                 <input type="text" name="Descricao" id="descricao"  autocomplete="off" placeholder="descrição" class="form-control field-text" value="{{.m.Descricao}}">
-            </td>
-            <td style="width: 20%">
-                <label class="col-sm-6 label-micro">GRUPO</label>
-                <select name="GrupoId" id="GrupoId" value="{{.m.GrupoId}}">
-                    {{range $key,$item := .grupos}}
-                        <option value="{{$item}}" {{if compare $.m.GrupoId $item}}selected{{end}}>{{$item.Nome}}
-                    {{end}}
-                </select>
             </td>
             <td style="width: 20%">
                 <label class="col-sm-8 label-micro">CATALOGOS</label>
                 <select name="CatalogoIds" id="Catalogos" class="form-control" multiple></select>
             </td>
-        </tr>
+            <td style="width: 8%">
+                <label class="col-sm-2 label-micro">GRUPO</label>
+                <select name="GrupoId" id="grupo_id" value="{{.m.GrupoId}}">
+                    {{range $key,$item := .grupos}}
+                        <option value="{{$item.Id}}" {{if compare $.m.GrupoId $item.Id}}selected{{end}}>{{$item.Nome}}
+                    {{end}}
+                </select>
+            </td>
         </tr>
     </table>
 
-
-
     <table>
-
         <tr>
             <td>
                 <label class="col-sm-11 label-micro">LARGURA</label>
@@ -81,6 +77,26 @@
             </td>
         </tr>
     </table>
+
+    <table  border="2px" width="30%" cellpadding="1px" cellspacing="2">
+        {{range $key,$item := .linhas}}
+        <tr>
+            <td>
+                {{$item.Seq}}
+            </td>
+            <td>
+                {{$item.Linha.Codigo}}
+            </td>
+            <td>
+                {{$item.Linha.Nome}}
+            </td>
+            <td>
+                <span style="border: 1px solid black; background-color: #{{$item.Linha.CorHex}}">_</span>
+            </td>
+        </tr>
+        {{end}}
+    </table>
+
 
 </form>
 </div>

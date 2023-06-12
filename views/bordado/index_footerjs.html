@@ -73,8 +73,8 @@
             queryParams: function (params) {
                 //O tipo de parâmetros próprios dos parâmetros é determinado por queryParamsType
                 params.Id = $('.searchForm input[name="Id"]').val();
-                params.Nome = $('.searchForm input[name="Arquivo"]').val();
-                params.Contato = $('.searchForm input[name="Descricao"]').val();
+                params.ArquivoLike = $('.searchForm input[name="Arquivo"]').val();
+                params.DescricaoLike = $('.searchForm input[name="Descricao"]').val();
                 params.Estado = $('.searchForm select[name="Estado"]').selectpicker('val');
                 return params;
             },
@@ -105,30 +105,30 @@
                     radio: false
                 }, {
                     field: 'Id',
-                    title: 'Id',
+                    title: 'ID',
                     width: '80px',
                     align: 'center',
                     visible: true,
                     sortable: true
                 }, {
                     field: 'Arquivo',
-                    title: 'Arquivo',
+                    title: 'ARQUIVO',
                     sortable: true
                 }, {
                     field: 'Descricao',
-                    title: 'Descrição',
+                    title: 'DESCRIÇÃO',
                     visible: true,
                     sortable: true
                 }, {
                     field: 'Pontos',
-                    title: 'Pontos',
+                    title: 'PONTOS',
                     width: '80px',
                     visible: true,
                     align: 'right',
                     sortable: false
                 }, {
                     field: 'Cores',
-                    title: 'Cores',
+                    title: 'CORES',
                     width: '80px',
                     visible: true,
                     align: 'right',
@@ -151,14 +151,14 @@
                     formatter: sdtheme.formatterDateTimeBySpan
                 }, {
                     field: 'Estado',
-                    title: 'Estado',
+                    title: 'ESTADO',
                     width: '100px',
                     align: 'center',
                     sortable: false,
                     formatter: sdtheme.showTwoState
                 }, {
                     field: 'operate',
-                    title: 'Ação',
+                    title: 'AÇÃO',
                     width: '100px',
                     align: 'center',
                     visible: isVisible(),
@@ -201,11 +201,9 @@
         });
     }
 
-
     function nomeFormatter(value, row) {
         return '<span style="white-space: nowrap;">' + value + '</span>'
     }
-
 
     ///Encapsular o valor com uma extensão com o valor do título
     function formatterWapBySpan(value, row, index) {
