@@ -20,7 +20,7 @@ func init() {
 
 //Tabela de relacionamento muitos-para-muitos de função e usuário
 func LinhaBordadoRelTBName() string {
-	return "Linha_bordado_rel"
+	return "linha_bordado_rel"
 }
 
 func (c *LinhaBordadoRel) TableName() string {

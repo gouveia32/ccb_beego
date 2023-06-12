@@ -78,25 +78,28 @@
         </tr>
     </table>
 
-    <table  border="2px" width="30%" cellpadding="1px" cellspacing="2">
+    <table name="LinhaIds" width="30%">
+        <th class="label-micro">SEQ</th>
+        <th class="label-micro">COD</th>
+        <th class="label-micro">NOME</th>
+        <th class="label-micro">COR</th>
         {{range $key,$item := .linhas}}
-        <tr>
-            <td>
-                {{$item.Seq}}
-            </td>
-            <td>
-                {{$item.Linha.Codigo}}
-            </td>
-            <td>
-                {{$item.Linha.Nome}}
-            </td>
-            <td>
-                <span style="border: 1px solid black; background-color: #{{$item.Linha.CorHex}}">_</span>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    {{$item.Seq}}
+                </td>
+                <td>
+                    {{$item.Linha.Codigo}}
+                </td>
+                <td>
+                    {{$item.Linha.Nome}}
+                </td>
+                <td>
+                    <span style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>
+                </td>
+            </tr>
         {{end}}
     </table>
-
 
 </form>
 </div>

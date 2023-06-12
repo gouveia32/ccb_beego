@@ -170,9 +170,9 @@ func (c *BordadoController) Save() {
 	}
 
 	//Excluir linhas históricos associados
-	if _, err := o.QueryTable(models.LinhaBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
+/* 	if _, err := o.QueryTable(models.LinhaBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
-	}
+	} */
 
 	fmt.Println("AQUI :  linhas")
 	//adicionar relacionamento linha
@@ -182,6 +182,7 @@ func (c *BordadoController) Save() {
 		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln}
 		relslin = append(relslin, rel)
 	}
+	fmt.Println("linhaIds", b.LinhaIds )
 
 	if len(relslin) > 0 {
 		//adicionar lote
