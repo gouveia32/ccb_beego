@@ -28,11 +28,11 @@
         var params = {id: $("#Id").val()};
         $.sdpost(url, params, function (re) {
             if (re.code === 0) {
-                var html = ['<option value="0">- 无 -</option>'];
+                var html = ['<option value="0">- Nenhum -</option>'];
                 var $select = $("#Parent");
                 $select.html('');
                 $(re.obj).each(function (i, e) {
-                    //下拉菜单里只显示区域和菜单
+                    //Apenas a área e o menu são exibidos no menu suspenso
                     if (e.Rtype > 1) {
                         return true
                     }
@@ -49,7 +49,7 @@
                 $select.selectpicker();
                 $select.selectpicker('val', curPid);
             } else {
-                parent.layer.alert("获取资源树Falha", {icon: 2, title: 'Falha'})
+                parent.layer.alert("Falha em obter árvore de recursos", {icon: 2, title: 'Falha'})
             }
         });
     }

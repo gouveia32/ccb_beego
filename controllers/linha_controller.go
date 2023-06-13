@@ -97,7 +97,7 @@ func (c *LinhaController) Edit() {
 			c.pageError("Os dados são inválidos, atualize e tente novamente")
 		}
 	} else {
-		m.Estado = 0
+		m.Estado = enums.Enabled
 	}
 
 	c.Data["m"] = m

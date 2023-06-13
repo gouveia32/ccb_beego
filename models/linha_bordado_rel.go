@@ -9,9 +9,9 @@ import (
 type LinhaBordadoRel struct {
 	Id          int
 	Bordado		*Bordado	`orm:"rel(fk)" ` //chave estrangeira
-	Linha		*Linha		`orm:"rel(fk)"`  //chave estrangeira
-	Seq			int
-	CriadoEm    time.Time	`orm:"auto_now_add;type(datetime)"`
+	Linha		*Linha		`orm:"rel(fk);index;"`  //chave estrangeira
+	Seq			int			`orm:"index;"`
+	CriadoEm    time.Time	`orm:"auto_now_add;type(datetime);null"`
 }
 
 func init() {

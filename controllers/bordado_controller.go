@@ -89,7 +89,7 @@ func (c *BordadoController) Edit() {
 		//fmt.Println("m.CatalogoBordadoRel:",m.CatalogoBordadoRel)
 	} else {
 		//Ativado por padrão ao adicionar bordados
-		m.Estado = 0
+		m.Estado = enums.Enabled
 	}
 
 	ufs := models.GetUFs()
@@ -241,7 +241,9 @@ func (c *BordadoController) Save() {
 			"ObsPublica", 
 			"ObsRestrita",
 			"CriadoEm",   
-			"AlteradoEm", 
+			"AlteradoEm",
+			"ObsPublica",
+			"ObsRestrita",
 			"Estado");  err == nil {
 			c.jsonResult(enums.JRCodeSucc, "Atualizado com sucesso", b.Id)
 		} else {
@@ -265,3 +267,8 @@ func (c *BordadoController) Delete() {
 		c.jsonResult(enums.JRCodeFailed, "Falha da rxclusão", 0)
 	}
 }
+
+
+
+
+

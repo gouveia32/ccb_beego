@@ -98,7 +98,7 @@ func (c *ClienteController) Edit() {
 			c.pageError("Os dados são inválidos, atualize e tente novamente")
 		}
 	} else {
-		m.Estado = 0
+		m.Estado = enums.Enabled
 	}
 
 	ufs := models.GetUFs()

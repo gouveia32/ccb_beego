@@ -102,14 +102,14 @@ var sdtheme = function () {
         }
     };
 
-    //状态：-1.删除 0.禁用 1.启用
+    //Status: -1. Excluído 0. Desativado 1. Ativado
     showEnable = function (val) {
         if (val === 1 || val === "1") {
-            return '<label class="label label-success label-sm"><i class="fa fa-check"></i> Estado</label>';
+            return '<label class="label label-success label-sm"><i class="fa fa-check"></i> Ativo</label>';
         } else if (val === 0 || val === "0") {
-            return '<label class="label label-danger label-sm"><i class="fa fa-ban"></i> Ativo</label>';
+            return '<label class="label label-danger label-sm"><i class="fa fa-ban"></i> Inativo</label>';
         } else if (val === -1 || val === "-1")
-            return '<label class="label label-info label-sm"><i class="fa fa-trash"></i> Inativo</label>';
+            return '<label class="label label-info label-sm"><i class="fa fa-trash"></i> Excluído</label>';
         else {
             return "";
         }
@@ -118,10 +118,10 @@ var sdtheme = function () {
     //Status: 0.Enabled 1.Disabled
     showTwoState = function (val) {
         if (val === 0 || val === "0") {
-            return '<label class="label label-success label-sm"><i class="fa fa-check"></i> Ativo</label>';
+            return '<label class="label label-danger label-sm"><i class="fa fa-ban"></i> Inativo</label>';
             // return '<i class="fa fa-toggle-on text-primary fa-2x"></i>';
         } else if (val === 1 || val === "1")
-            return '<label class="label label-danger label-sm"><i class="fa fa-ban"></i> Inativo</label>';
+            return '<label class="label label-success label-sm"><i class="fa fa-check"></i> Ativo</label>';
             // return '<i class="fa fa-toggle-off text-danger fa-2x"></i>';
         else {
             return "";
