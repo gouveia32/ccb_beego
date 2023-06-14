@@ -28,9 +28,9 @@ import (
 
 type BaseController struct {
 	beego.Controller
-	controllerName string             //nome do controle
-	actionName     string             //nome da ação
-	curUser        models.BackendUser //Usuário
+	controllerName		string             //nome do controle
+	actionName     		string             //nome da ação
+	curUser        		models.BackendUser //Usuário
 }
 
 func (c *BaseController) Prepare() {

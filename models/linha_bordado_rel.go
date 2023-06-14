@@ -8,9 +8,9 @@ import (
 //Linha e Relacionamento com o Bordado
 type LinhaBordadoRel struct {
 	Id          int
-	Bordado		*Bordado	`orm:"rel(fk)" ` //chave estrangeira
-	Linha		*Linha		`orm:"rel(fk);index;"`  //chave estrangeira
+	Bordado		*Bordado	`orm:"rel(fk);index;" ` //chave estrangeira
 	Seq			int			`orm:"index;"`
+	Linha		*Linha		`orm:"rel(fk);"`  //chave estrangeira
 	CriadoEm    time.Time	`orm:"auto_now_add;type(datetime);null"`
 }
 

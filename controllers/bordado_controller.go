@@ -148,12 +148,14 @@ func (c *BordadoController) Save() {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao obter dados", b.Id)
 	}
 
+	fmt.Printf("\n\nc: %+v\n\n", b) // annot call non-function r.Form (type url.Values)
+   
 	//Excluir catalogos históricos associados
 	if _, err := o.QueryTable(models.CatalogoBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
 	}
 
-	fmt.Println("AQUI")
+	//fmt.Println("AQUI")
 	//adicionar relacionamento catalogo
 	var relscat []models.CatalogoBordadoRel
 	for _, catalogoId := range b.CatalogoIds {

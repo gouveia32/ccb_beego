@@ -8,30 +8,30 @@ import (
 )
 
 type Bordado struct {
-	Id        int       `orm:"column(id)" form:"Id"`
-	Arquivo   string  	 `orm:"size(40)"`
-	Descricao string  	 `orm:"size(50)"`
-	Caminho   string  	 `orm:"size(225)"`
-	Disquete  string  	 `orm:"size(12)"`
-	Bastidor  string   `orm:"size(12)"`
-	GrupoId   int   	`orm:"column(grupo_id);default(1);" form:"GrupoId"`
-	Preco     float64 
-	Pontos    int64   
-	Cores     int16   
-	Largura   int64   
-	Altura    int64   
-	Metragem  int64   
-	Aprovado  bool
-	Alerta    bool
-	Imagem    string  `form:imagem orm:"column(imagem);type(blob)`
-	//Imagem      string  `orm:"column(imagem);type(blob)"                      description:"imagem derada a partir do dst" form:"imagem"`
+	Id        	int       `orm:"column(id)" form:"Id"`
+	Arquivo   	string  	`orm:"size(40)"`
+	Descricao 	string  	`orm:"size(50)"`
+	Caminho   	string  	`orm:"size(225)"`
+	Disquete  	string  	`orm:"size(12)"`
+	Bastidor  	string   	`orm:"size(12)"`
+	GrupoId   	int   	`orm:"column(grupo_id);default(1);" form:"GrupoId"`
+	Preco     	float64 
+	Pontos    	int64   
+	Cores     	int16   
+	Largura   	int64   
+	Altura    	int64   
+	Metragem  	int64   
+	Aprovado  	bool
+	Alerta		bool
+	Imagem		string  `form:imagem orm:"column(imagem);type(blob)`
+	//Imagem    string  `orm:"column(imagem);type(blob)"                      description:"imagem derada a partir do dst" form:"imagem"`
 	CorFundo    string `orm:"column(cor_fundo);nil" description:"cor de fundo" form:"CorFundo"`
 	ObsPublica 	string `orm:"size(1024)"`
 	ObsRestrita string	`orm:"size(1024)"`
-	CriadoEm      time.Time `orm:"column(criadoEm)" form:"CriadoEm"`
-	AlteradoEm    time.Time `orm:"column(alteradoEm)" form:"AlteradoEm"`
-	Estado      int
-	CatalogoIds		[]int	`orm:"-" form:"CatalogoIds"`
+	CriadoEm	time.Time `orm:"column(criadoEm)" form:"CriadoEm"`
+	AlteradoEm	time.Time `orm:"column(alteradoEm)" form:"AlteradoEm"`
+	Estado		int
+	CatalogoIds	[]int	`orm:"-" form:"CatalogoIds"`
 	CatalogoBordadoRel	[]*CatalogoBordadoRel `orm:"reverse(many)"` // Configurar uma relação inversa de um para muitos
 	LinhaIds		[]int	`orm:"-" form:"LinhaIds"`
 	LinhaBordadoRel	[]*LinhaBordadoRel `orm:"reverse(many)"` // Configurar uma relação inversa de um para muitos
