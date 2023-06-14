@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"sort"
 
 	"github.com/beego/beego/v2/client/orm"
 )
@@ -85,6 +86,11 @@ func (c *BordadoController) Edit() {
 		ct := orm.NewOrm()
 		ct.LoadRelated(m, "CatalogoBordadoRel")
 		ct.LoadRelated(m, "LinhaBordadoRel")
+		//Ordena por bordado_it + seq
+		sort.SliceStable(m.LinhaBordadoRel, func(i, j int) bool {
+			return m.LinhaBordadoRel[i].Seq < m.LinhaBordadoRel[j].Seq
+		})
+
 		
 		//fmt.Println("m.CatalogoBordadoRel:",m.CatalogoBordadoRel)
 	} else {
@@ -110,7 +116,6 @@ func (c *BordadoController) Edit() {
 	}
 
 	//Obtenha a lista de linhaId associada
-	//linhas := make(map[string]string)
 	linhas := make([]*models.LinhaBordadoRel, 0)
 	for _, item := range m.LinhaBordadoRel {
 		linha,_ := models.LinhaOne(item.Linha.Id)
@@ -176,7 +181,7 @@ func (c *BordadoController) Save() {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
 	} */
 
-	fmt.Println("AQUI :  linhas")
+	fmt.Println("AQUI :  linhas", b.LinhaIds)
 	//adicionar relacionamento linha
 	var relslin []models.LinhaBordadoRel
 	for _, linhaId := range b.LinhaIds {

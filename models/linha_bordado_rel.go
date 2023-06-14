@@ -8,11 +8,19 @@ import (
 //Linha e Relacionamento com o Bordado
 type LinhaBordadoRel struct {
 	Id          int
-	Bordado		*Bordado	`orm:"rel(fk);index;" ` //chave estrangeira
-	Seq			int			`orm:"index;"`
+	Bordado		*Bordado	`orm:"rel(fk);" ` //chave estrangeira
+	Seq			int	
 	Linha		*Linha		`orm:"rel(fk);"`  //chave estrangeira
 	CriadoEm    time.Time	`orm:"auto_now_add;type(datetime);null"`
 }
+
+// multiple fields index
+func (l *LinhaBordadoRel) TableIndex() [][]string {
+	return [][]string{
+		[]string{"Bordado","Seq"},
+	}
+}
+
 
 func init() {
 	orm.RegisterModel(new(LinhaBordadoRel))
