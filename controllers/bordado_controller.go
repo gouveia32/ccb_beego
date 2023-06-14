@@ -127,7 +127,7 @@ func (c *BordadoController) Edit() {
 		linhas = append(linhas, item)
 	}
 	
-	fmt.Println("linhaIds final:",linhas)
+	//fmt.Println("linhaIds final:",linhas)
 
 	c.Data["linhas"] = linhas
 	c.Data["catalogos"] = strings.Join(catalogoIds, ",")
@@ -177,19 +177,20 @@ func (c *BordadoController) Save() {
 	}
 
 	//Excluir linhas históricos associados
-/* 	if _, err := o.QueryTable(models.LinhaBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
+ 	if _, err := o.QueryTable(models.LinhaBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
-	} */
+	} 
 
-	fmt.Println("AQUI :  linhas", b.LinhaIds)
+	//fmt.Println("AQUI :  linhas", b.LinhaIds)
 	//adicionar relacionamento linha
 	var relslin []models.LinhaBordadoRel
-	for _, linhaId := range b.LinhaIds {
+	for i, linhaId := range b.LinhaIds {
 		ln := models.Linha{Id: linhaId}
-		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln}
+		
+		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln, Seq: i + 1}
 		relslin = append(relslin, rel)
 	}
-	fmt.Println("linhaIds", b.LinhaIds )
+	fmt.Println("linhaIds", relslin )
 
 	if len(relslin) > 0 {
 		//adicionar lote

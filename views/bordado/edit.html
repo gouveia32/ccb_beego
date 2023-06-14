@@ -87,7 +87,8 @@
             <tr>
                 <td>{{$item.Seq}}</td>
                 <td>
-                    <input type="text" style="width: 45px;" name="seq_{{$item.Seq}}" value="{{$item.Linha.Codigo}}">
+                    <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Id}}">
+                    <input type="Text" style="width: 45px;" name="LinhaCods" value="{{$item.Linha.Codigo}}">
                 </td>
                 <td>{{$item.Linha.Nome}}</td>
                 <td>

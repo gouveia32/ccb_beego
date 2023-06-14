@@ -7,8 +7,9 @@ import (
 )
 
 type Linha struct {
-	Id                 int    `orm:"column(id)" form:"Id"`
-	Codigo             string `orm:"column(codigo)" form:"Codigo"`
+	//Id                 int    `orm:"column(id)" form:"Id"`
+	
+	Codigo             string `orm:"rel(pk); column(codigo)" form:"Codigo"`
 	Nome               string `orm:"column(nome)" form:"Nome"`
 	MaterialNome       string `orm:"column(material_nome)" form:"MaterialNome"`
 	MaterialFabricante string `orm:"column(material_fabricante)" form:"MaterialFabricante"`
@@ -41,11 +42,11 @@ func LinhaPageList(params *LinhaQueryParam) ([]*Linha, int64) {
 	query := orm.NewOrm().QueryTable(LinhaTBName())
 	data := make([]*Linha, 0)
 
-	sortorder := "Id"
+	sortorder := "Codigo"
 	switch params.Sort {
-	case "Id":
+/* 	case "Id":
 		sortorder = "Id"
-	case "Nome":
+ */	case "Nome":
 		sortorder = "Nome"
 	case "Codigo":
 		sortorder = "Codigo"
@@ -76,7 +77,7 @@ func LinhaPageList(params *LinhaQueryParam) ([]*Linha, int64) {
 
 func LinhaDataList(params *LinhaQueryParam) []*Linha {
 	params.Limit = -1
-	params.Sort = "Id"
+	params.Sort = "Codigo"
 	params.Order = "asc"
 	data, _ := LinhaPageList(params)
 	return data
@@ -84,7 +85,7 @@ func LinhaDataList(params *LinhaQueryParam) []*Linha {
 
 func LinhaBatchDelete(ids []int) (int64, error) {
 	query := orm.NewOrm().QueryTable(LinhaTBName())
-	num, err := query.Filter("id__in", ids).Delete()
+	num, err := query.Filter("codigo__in", ids).Delete()
 	return num, err
 }
 

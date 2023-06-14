@@ -58,6 +58,7 @@
             submitHandler: function (form) {
 				var url ='{{ urlfor "BordadoController.Edit"}}';
 				var params = $thisForm.serialize();
+                console.log("params:",params)
 				$.sdpost(url, params, function(re){
 					if(re.code === 0){
 						parent.layer.msg(re.msg);
@@ -67,7 +68,7 @@
 						parent.layer.alert(re.msg,{icon:2,title:'Falha'})
 					}
 				});
-                console.log("params:",params);
+                
                return false;
             }
         });
