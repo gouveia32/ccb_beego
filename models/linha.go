@@ -9,7 +9,7 @@ import (
 type Linha struct {
 	//Id                 int    `orm:"column(id)" form:"Id"`
 	
-	Codigo             string `orm:"rel(pk); column(codigo)" form:"Codigo"`
+	Codigo             string `orm:"pk; column(codigo)" form:"Codigo"`
 	Nome               string `orm:"column(nome)" form:"Nome"`
 	MaterialNome       string `orm:"column(material_nome)" form:"MaterialNome"`
 	MaterialFabricante string `orm:"column(material_fabricante)" form:"MaterialFabricante"`
@@ -20,6 +20,7 @@ type Linha struct {
 	Minimo             int    `orm:"column(minimo)" form:"Minimo"`
 	Pedido             int    `orm:"column(pedido)" form:"Pedido"`
 	Estado             int8   `orm:"column(estado)" form:"Estado"`
+	New					bool
 }
 
 type LinhaQueryParam struct {
@@ -83,15 +84,15 @@ func LinhaDataList(params *LinhaQueryParam) []*Linha {
 	return data
 }
 
-func LinhaBatchDelete(ids []int) (int64, error) {
+func LinhaBatchDelete(cods []string) (int64, error) {
 	query := orm.NewOrm().QueryTable(LinhaTBName())
-	num, err := query.Filter("codigo__in", ids).Delete()
+	num, err := query.Filter("codigo__in", cods).Delete()
 	return num, err
 }
 
-func LinhaOne(id int) (*Linha, error) {
+func LinhaOne(codigo string) (*Linha, error) {
 	o := orm.NewOrm()
-	m := Linha{Id: id}
+	m := Linha{Codigo: codigo}
 	err := o.Read(&m)
 	if err != nil {
 		return nil, err

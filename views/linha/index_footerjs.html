@@ -90,13 +90,13 @@
             cookie: true,
             classes: 'table table-bordered table-hover',
             undefinedText: '',
-            sortName: 'Id',
+            sortName: 'Codigo',
             sortOrder: 'asc',
             stickyHeader: true,
             resizable: true,
 
             rowAttributes: function (row, index) {
-                return {'data-pk': row.Id}
+                return {'data-pk': row.Codigo}
             },
 
             columns: [
@@ -104,14 +104,7 @@
                     field: 'state',
                     checkbox: true,
                     radio: false
-                }, {
-                    field: 'Id',
-                    title: 'ID',
-                    width: '80px',
-                    align: 'center',
-                    visible: false,
-                    sortable: true
-                }, {
+                },  {
                     field: 'Codigo',
                     title: 'CÓDIGO',
                     width: '100px',
@@ -215,7 +208,7 @@
         var html = [];
         html.push('<div class="btn-group">');
         if ('{{.canEdit}}' === 'true') {
-            html.push('<button title="Alterar Cliente" class="btn btn-primary btn-xs" onclick="EditFun(' + row.Id + ')">' +
+            html.push('<button title="Alterar Cliente" class="btn btn-primary btn-xs" onclick="EditFun(' + row.Codigo + ')">' +
                     '<i class="fa fa-pencil"></i></button>');
         }
         html.push('</div>');
@@ -230,16 +223,17 @@
         }
     }
 
-    function EditFun(Id) {
+    function EditFun(Codigo) {
         var title = 'Novo ';
-        if (Id > 0) {
+        if (Codigo != '') {
             title = "Alterar "
         }
         title += "Cliente";
 
-        //console.log('row.Id:',Id);
+        //console.log('row.Codigo:',Codigo);
+        //alert(Codigo);
 
-        var url = '{{ urlfor "LinhaController.Edit"}}' + '/' + Id;
+        var url = '{{ urlfor "LinhaController.Edit"}}' + '/' + Codigo;
         layer.open({
             type: 2,
             title: title,
@@ -265,15 +259,15 @@
             layer.alert('Selecione o item que você deseja excluir', {icon: 0, title: 'Rápido'});
             return;
         }
-        var ids = [];
+        var cods = [];
         $(rows).each(function (i, e) {
-            ids.push(e.Id);
+            cods.push(e.Codigo);
         });
 
         layer.confirm('Deseja excluir o item selecionado? ', {
             btn: ['Sim', 'Não'], icon: 3, title: 'Favor confirmar'
         }, function () {
-            var params = {ids: ids.join(',')};
+            var params = {cods: cods.join(',')};
             $.sdpost(url, params, function (re) {
                 if (re.code === 0) {
                     layer.msg(re.msg, {icon: 1, title: 'Sucesso'});

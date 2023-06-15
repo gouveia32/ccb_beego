@@ -33,7 +33,7 @@ type Bordado struct {
 	Estado		int
 	CatalogoIds	[]int	`orm:"-" form:"CatalogoIds"`
 	CatalogoBordadoRel	[]*CatalogoBordadoRel `orm:"reverse(many)"` // Configurar uma relação inversa de um para muitos
-	LinhaIds		[]int	`orm:"-" form:"LinhaIds"`
+	LinhaCods		[]string	`orm:"-" form:"LinhaCods"`
 	LinhaBordadoRel	[]*LinhaBordadoRel `orm:"reverse(many)"` // Configurar uma relação inversa de um para muitos
 }
 

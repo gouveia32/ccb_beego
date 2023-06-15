@@ -118,7 +118,7 @@ func (c *BordadoController) Edit() {
 	//Obtenha a lista de linhaId associada
 	linhas := make([]*models.LinhaBordadoRel, 0)
 	for _, item := range m.LinhaBordadoRel {
-		linha,_ := models.LinhaOne(item.Linha.Id)
+		linha,_ := models.LinhaOne(item.Linha.Codigo)
 
 		item.Linha.Codigo = linha.Codigo
 		item.Linha.Nome = linha.Nome
@@ -181,16 +181,16 @@ func (c *BordadoController) Save() {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
 	} 
 
-	//fmt.Println("AQUI :  linhas", b.LinhaIds)
+	//fmt.Println("AQUI :  linhas", b.linhaCod)
 	//adicionar relacionamento linha
 	var relslin []models.LinhaBordadoRel
-	for i, linhaId := range b.LinhaIds {
-		ln := models.Linha{Id: linhaId}
+	for i, linhaCod := range b.LinhaCods {
+		ln := models.Linha{Codigo: linhaCod}
 		
 		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln, Seq: i + 1}
 		relslin = append(relslin, rel)
 	}
-	fmt.Println("linhaIds", relslin )
+	fmt.Println("linhaCod", relslin )
 
 	if len(relslin) > 0 {
 		//adicionar lote

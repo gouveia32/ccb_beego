@@ -80,7 +80,7 @@ func init() {
 	beego.Router("/linha/index", &controllers.LinhaController{}, "*:Index")
 	beego.Router("/linha/datagrid", &controllers.LinhaController{}, "Get,Post:DataGrid")
 	beego.Router("/linha/datalist", &controllers.LinhaController{}, "Post:DataList")
-	beego.Router("/linha/edit/?:id", &controllers.LinhaController{}, "Get,Post:Edit")
+	beego.Router("/linha/edit/?:codigo", &controllers.LinhaController{}, "Get,Post:Edit")
 	beego.Router("/linha/delete", &controllers.LinhaController{}, "Post:Delete")
 
 	//Bordado
