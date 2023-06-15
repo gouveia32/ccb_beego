@@ -126,8 +126,16 @@ func (c *BordadoController) Edit() {
 
 		linhas = append(linhas, item)
 	}
+ 
+	if len(linhas) < int(m.Cores) {
+		for i := len(m.LinhaBordadoRel); i < int(m.Cores); i++ {
+			linha,_ := models.LinhaOne("5075")
+			item := models.LinhaBordadoRel{Bordado: m, Linha: linha, Seq: i + 1}
+			linhas = append(linhas, &item)				
+		}
+	}
 	
-	//fmt.Println("linhaIds final:",linhas)
+	fmt.Println("linhaIds final:",linhas)
 
 	c.Data["linhas"] = linhas
 	c.Data["catalogos"] = strings.Join(catalogoIds, ",")
@@ -183,13 +191,21 @@ func (c *BordadoController) Save() {
 
 	//fmt.Println("AQUI :  linhas", b.linhaCod)
 	//adicionar relacionamento linha
+	var seq = 1
 	var relslin []models.LinhaBordadoRel
-	for i, linhaCod := range b.LinhaCods {
+	for _, linhaCod := range b.LinhaCods {
 		ln := models.Linha{Codigo: linhaCod}
 		
-		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln, Seq: i + 1}
+		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln, Seq: seq}
 		relslin = append(relslin, rel)
+		seq = seq + 1
 	}
+/* 	if len(relslin) < int(b.Cores) {
+		ln := models.Linha{Codigo: "5208"}
+		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln, Seq: seq}
+		relslin = append(relslin, rel)
+		seq = seq + 1
+	} */
 	fmt.Println("linhaCod", relslin )
 
 	if len(relslin) > 0 {

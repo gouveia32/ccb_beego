@@ -78,25 +78,37 @@
         </tr>
     </table>
 
-    <table name="Linhas" width="30%">
-        <th class="label-micro">SEQ</th>
-        <th class="label-micro">COD</th>
-        <th class="label-micro">NOME</th>
-        <th class="label-micro">COR</th>
-        {{range $key,$item := .linhas}}
-            <tr>
-                <td>{{$item.Seq}}</td>
-                <td>
-                    <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Id}}">
-                    <input type="Text" style="width: 45px;" name="LinhaCods" value="{{$item.Linha.Codigo}}">
-                </td>
-                <td>{{$item.Linha.Nome}}</td>
-                <td>
-                    <span style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>
-                </td>
-            </tr>
-        {{end}}
-    </table>
+    <!-- Tab links -->
+    <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'Notas')">Notas</button>
+        <button class="tablinks" onclick="openCity(event, 'Linhas')">Linhas</button>
+    </div>
+
+    <!-- Tab content -->
+    <div id="Linhas" class="tabcontent">
+        <table name="Linhas" width="30%">
+            <th class="label-micro" style="text-align: center;">SEQ</th>
+            <th class="label-micro" style="text-align: center;">COD</th>
+            <th class="label-micro">NOME</th>
+            <th class="label-micro" style="text-align: center;">COR</th>
+            {{range $key,$item := .linhas}}
+                <tr style="height: 20px;">
+                    <td style="text-align: center;">{{$item.Seq}}</td>
+                    <td style="text-align: center;">
+                        <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}">
+                        <input type="Text" style="width: 45px; height: 19px;" name="LinhaCods" value="{{$item.Linha.Codigo}}">
+                    </td>
+                    <td>{{$item.Linha.Nome}}</td>
+                    <td style="text-align: center;">
+                        <span style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>
+                    </td>
+                </tr>
+            {{end}}
+        </table>
+    </div>
+    <div id="Notas" class="tabcontent">
+
+    </div>
 
 </form>
 </div>
