@@ -79,36 +79,117 @@
     </table>
 
     <!-- Tab links -->
-    <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'Notas')">Notas</button>
-        <button class="tablinks" onclick="openCity(event, 'Linhas')">Linhas</button>
-    </div>
-
-    <!-- Tab content -->
-    <div id="Linhas" class="tabcontent">
-        <table name="Linhas" width="30%">
-            <th class="label-micro" style="text-align: center;">SEQ</th>
-            <th class="label-micro" style="text-align: center;">COD</th>
-            <th class="label-micro">NOME</th>
-            <th class="label-micro" style="text-align: center;">COR</th>
-            {{range $key,$item := .linhas}}
-                <tr style="height: 20px;">
-                    <td style="text-align: center;">{{$item.Seq}}</td>
-                    <td style="text-align: center;">
-                        <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}">
-                        <input type="Text" style="width: 45px; height: 19px;" name="LinhaCods" value="{{$item.Linha.Codigo}}">
-                    </td>
-                    <td>{{$item.Linha.Nome}}</td>
-                    <td style="text-align: center;">
-                        <span style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>
-                    </td>
-                </tr>
-            {{end}}
-        </table>
-    </div>
-    <div id="Notas" class="tabcontent">
-
-    </div>
-
+    <table id="info" width="40%">
+        <tr>
+            <td width="65%">
+                <div class="tab">
+                    <a href="javascript:openTab(event,'Linhas');" id="opLinha" class="tablinks">Linha</a>
+                    <a href="javascript:openTab(event,'Notas');" id="opNota" class="tablinks">Notas</a>
+                </div>
+            
+                <!-- Tab content -->
+                <div id="Linhas" class="tabcontent">
+                    <div name="Linhas" class="row">
+                        <div class="label-micro col-md-2" style="text-align: center;">SEQ</div>
+                        <div class="label-micro col-md-3" style="text-align: center;">CÓDIGO</div>
+                        <div class="label-micro col-md-5">NOME</div>
+                        <div class="label-micro col-md-1" style="text-align: center;">COR</div>
+                    </div>
+                    <div name="Linhas" class="row">
+                        {{range $key,$item := .linhas}}
+                            <div style="text-align: center;" class="col-md-2">
+                                {{$item.Seq}}
+                            </div>
+                            <div style="text-align: center;" class="col-md-3">
+                                <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}">
+                                <input type="Text" style="width: 45px; height: 19px;" name="LinhaCods" value="{{$item.Linha.Codigo}}">
+                            </div>
+                            <div class="col-md-5">
+                                {{$item.Linha.Nome}}
+                            </div>
+                            <div class="col-md-2">
+                                <span style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>    
+                            </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div id="Notas" class="tabcontent">
+                    aqui serão colocadas as NOTAS
+                </div>
+            
+            </td>
+            <td width="50%">
+                <div id="Obs" class="tabcontent">
+            
+                </div>
+            </td>
+        </tr>
+    </table>
 </form>
+
 </div>
+
+<style>
+    /* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 4px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 4px 12px;
+  padding-left: 15px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
+
+<script>
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("opLinha").click();
+
+function openTab(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
