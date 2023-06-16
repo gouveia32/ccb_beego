@@ -104,7 +104,7 @@ func (c *BordadoController) Edit() {
 	var params = models.GrupoQueryParam{}
 	grupos := models.GrupoDataList(&params)
 
-	fmt.Println("grupos:",grupos)
+	//fmt.Println("grupos:",grupos)
 	c.Data["grupos"] = grupos
 
 	c.Data["m"] = m
@@ -127,15 +127,22 @@ func (c *BordadoController) Edit() {
 		linhas = append(linhas, item)
 	}
  
+	lps := models.GetLp()
+
+	fmt.Println("lps:",lps)
+
 	if len(linhas) < int(m.Cores) {
 		for i := len(m.LinhaBordadoRel); i < int(m.Cores); i++ {
-			linha,_ := models.LinhaOne("5075")
+			linha,err := models.LinhaOne(lps[i])
+			if err != nil {
+				linha,_ = models.LinhaOne("5311")
+			}
 			item := models.LinhaBordadoRel{Bordado: m, Linha: linha, Seq: i + 1}
 			linhas = append(linhas, &item)				
 		}
 	}
 	
-	fmt.Println("linhaIds final:",linhas)
+	//fmt.Println("linhaIds final:",linhas)
 
 	c.Data["linhas"] = linhas
 	c.Data["catalogos"] = strings.Join(catalogoIds, ",")

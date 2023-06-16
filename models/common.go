@@ -29,8 +29,12 @@ type BaseQueryParam struct {
 	Limit  int    `json:"limit"`
 }
 
-
 // GetUFs
 func GetUFs() []string {
 	return []string{"--", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PR", "PB", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SE", "SP", "PA", "TO"}
+}
+
+// linhasPadrao
+func GetLp() []string {
+	return []string{"5075", "5208", "5058", "5115", "5151", "5310", "5311", "5158", "5027", "5005"}
 }
