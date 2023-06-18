@@ -1,14 +1,15 @@
 package controllers
 
 import (
-	"encoding/json"
-	"fmt"
 	"ccb_beego/enums"
 	"ccb_beego/models"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
-	"sort"
 
 	"github.com/beego/beego/v2/client/orm"
 )
@@ -68,6 +69,13 @@ func (c *BordadoController) DataList() {
 	c.jsonResult(enums.JRCodeSucc, "", data)
 }
 
+func toBase64(b []byte) string {
+	return base64.StdEncoding.EncodeToString(b)
+}
+
+// *
+// *
+// ***************** Edit **************************
 func (c *BordadoController) Edit() {
 	//fmt.Println("Method:", c.Ctx.Request.Method)
 	if c.Ctx.Request.Method == "POST" {
@@ -91,12 +99,25 @@ func (c *BordadoController) Edit() {
 			return m.LinhaBordadoRel[i].Seq < m.LinhaBordadoRel[j].Seq
 		})
 
-		
 		//fmt.Println("m.CatalogoBordadoRel:",m.CatalogoBordadoRel)
 	} else {
 		//Ativado por padrão ao adicionar bordados
 		m.Estado = enums.Enabled
 	}
+
+	byteSlice := make([]byte, len(m.Imagem))
+
+	for i, v := range m.Imagem {
+		byteSlice[i] = byte(v)
+	}
+
+	base64Encoding := toBase64(byteSlice)
+	fmt.Println("Imagem antes:", m.Imagem)
+
+	fmt.Println("Imagem depois:", base64Encoding)
+	c.Data["imagem"] = base64Encoding
+
+	//c.Data["img"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 
 	ufs := models.GetUFs()
 	c.Data["ufs"] = ufs
@@ -108,7 +129,7 @@ func (c *BordadoController) Edit() {
 	c.Data["grupos"] = grupos
 
 	c.Data["m"] = m
-	
+
 	//Obtenha a lista de catalogoId associada
 	var catalogoIds []string
 	for _, item := range m.CatalogoBordadoRel {
@@ -118,7 +139,7 @@ func (c *BordadoController) Edit() {
 	//Obtenha a lista de linhaId associada
 	linhas := make([]*models.LinhaBordadoRel, 0)
 	for _, item := range m.LinhaBordadoRel {
-		linha,_ := models.LinhaOne(item.Linha.Codigo)
+		linha, _ := models.LinhaOne(item.Linha.Codigo)
 
 		item.Linha.Codigo = linha.Codigo
 		item.Linha.Nome = linha.Nome
@@ -126,23 +147,25 @@ func (c *BordadoController) Edit() {
 
 		linhas = append(linhas, item)
 	}
- 
+
 	lps := models.GetLp()
 
-	fmt.Println("lps:",lps)
+	//fmt.Println("lps:", lps)
 
 	if len(linhas) < int(m.Cores) {
 		for i := len(m.LinhaBordadoRel); i < int(m.Cores); i++ {
-			linha,err := models.LinhaOne(lps[i])
+			linha, err := models.LinhaOne(lps[i])
 			if err != nil {
-				linha,_ = models.LinhaOne("5311")
+				linha, _ = models.LinhaOne("5311")
 			}
+			//fmt.Println("linha:", linha.Codigo, " ", linha.Nome)
+
 			item := models.LinhaBordadoRel{Bordado: m, Linha: linha, Seq: i + 1}
-			linhas = append(linhas, &item)				
+			linhas = append(linhas, &item)
 		}
 	}
-	
-	//fmt.Println("linhaIds final:",linhas)
+
+	//fmt.Println("linhaIds final:", linhas)
 
 	c.Data["linhas"] = linhas
 	c.Data["catalogos"] = strings.Join(catalogoIds, ",")
@@ -169,7 +192,7 @@ func (c *BordadoController) Save() {
 	}
 
 	fmt.Printf("\n\nc: %+v\n\n", b) // annot call non-function r.Form (type url.Values)
-   
+
 	//Excluir catalogos históricos associados
 	if _, err := o.QueryTable(models.CatalogoBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
@@ -192,9 +215,9 @@ func (c *BordadoController) Save() {
 	}
 
 	//Excluir linhas históricos associados
- 	if _, err := o.QueryTable(models.LinhaBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
+	if _, err := o.QueryTable(models.LinhaBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao excluir", "")
-	} 
+	}
 
 	//fmt.Println("AQUI :  linhas", b.linhaCod)
 	//adicionar relacionamento linha
@@ -202,18 +225,18 @@ func (c *BordadoController) Save() {
 	var relslin []models.LinhaBordadoRel
 	for _, linhaCod := range b.LinhaCods {
 		ln := models.Linha{Codigo: linhaCod}
-		
+
 		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln, Seq: seq}
 		relslin = append(relslin, rel)
 		seq = seq + 1
 	}
-/* 	if len(relslin) < int(b.Cores) {
+	/* 	if len(relslin) < int(b.Cores) {
 		ln := models.Linha{Codigo: "5208"}
 		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln, Seq: seq}
 		relslin = append(relslin, rel)
 		seq = seq + 1
 	} */
-	fmt.Println("linhaCod", relslin )
+	fmt.Println("linhaCod", relslin)
 
 	if len(relslin) > 0 {
 		//adicionar lote
@@ -250,7 +273,7 @@ func (c *BordadoController) Save() {
 		}
 	} else {
 		b.AlteradoEm = time.Now()
-		fmt.Println("Grupo_id:",b.GrupoId)
+		fmt.Println("Grupo_id:", b.GrupoId)
 		if _, err = o.Update(&b,
 			"Arquivo",
 			"Descricao",
@@ -259,28 +282,28 @@ func (c *BordadoController) Save() {
 			"Bastidor",
 			"GrupoId",
 			"Preco",
-			"Pontos",    
-			"Cores",     
-			"Largura",   
-			"Altura",    			
-			"Metragem",  
-			"Aprovado",  
-			"Alerta",    
-			"Imagem",    
-			//Imagem,  
-			"CorFundo",   
-			"ObsPublica", 
+			"Pontos",
+			"Cores",
+			"Largura",
+			"Altura",
+			"Metragem",
+			"Aprovado",
+			"Alerta",
+			"Imagem",
+			//Imagem,
+			"CorFundo",
+			"ObsPublica",
 			"ObsRestrita",
-			"CriadoEm",   
+			"CriadoEm",
 			"AlteradoEm",
 			"ObsPublica",
 			"ObsRestrita",
-			"Estado");  err == nil {
+			"Estado"); err == nil {
 			c.jsonResult(enums.JRCodeSucc, "Atualizado com sucesso", b.Id)
 		} else {
 			c.jsonResult(enums.JRCodeFailed, "Falha ao modificar", b.Id)
-		}  
-	} 
+		}
+	}
 }
 
 func (c *BordadoController) Delete() {
@@ -298,8 +321,3 @@ func (c *BordadoController) Delete() {
 		c.jsonResult(enums.JRCodeFailed, "Falha da rxclusão", 0)
 	}
 }
-
-
-
-
-

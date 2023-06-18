@@ -8,19 +8,19 @@ import (
 
 type Linha struct {
 	//Id                 int    `orm:"column(id)" form:"Id"`
-	
+
 	Codigo             string `orm:"pk; column(codigo)" form:"Codigo"`
 	Nome               string `orm:"column(nome)" form:"Nome"`
 	MaterialNome       string `orm:"column(material_nome)" form:"MaterialNome"`
 	MaterialFabricante string `orm:"column(material_fabricante)" form:"MaterialFabricante"`
-	MaterialTipo       string `orm:"column(material_ipo)" form:"MaterialTipo"`
+	MaterialTipo       string `orm:"column(material_tipo)" form:"MaterialTipo"`
 	CorHex             string `orm:"column(cor_hex)" form:"CorHex"`
 	Estoque1           int    `orm:"column(estoque_1)" form:"Estoque1"`
 	Estoque2           int    `orm:"column(estoque_2)" form:"Estoque2"`
 	Minimo             int    `orm:"column(minimo)" form:"Minimo"`
 	Pedido             int    `orm:"column(pedido)" form:"Pedido"`
 	Estado             int8   `orm:"column(estado)" form:"Estado"`
-	New					bool
+	New                bool
 }
 
 type LinhaQueryParam struct {
@@ -45,9 +45,9 @@ func LinhaPageList(params *LinhaQueryParam) ([]*Linha, int64) {
 
 	sortorder := "Codigo"
 	switch params.Sort {
-/* 	case "Id":
-		sortorder = "Id"
- */	case "Nome":
+	/* 	case "Id":
+	sortorder = "Id"
+	*/case "Nome":
 		sortorder = "Nome"
 	case "Codigo":
 		sortorder = "Codigo"
