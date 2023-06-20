@@ -23,8 +23,8 @@ type Bordado struct {
 	Metragem  int64
 	Aprovado  bool
 	Alerta    bool
-	Imagem    []byte `form:imagem orm:"column(imagem)";type(blob)`
-	//Imagem    string  `orm:"column(imagem);type(blob)"                      description:"imagem derada a partir do dst" form:"imagem"`
+	//Imagem    []byte `orm:"longblob=true"`
+	Imagem    string  	`orm:"column(imagem);type(blob)" description:"imagem derada a partir do dst" form:"imagem"`
 	CorFundo           string    `orm:"column(cor_fundo);nil" description:"cor de fundo" form:"CorFundo"`
 	ObsPublica         string    `orm:"size(1024)"`
 	ObsRestrita        string    `orm:"size(1024)"`

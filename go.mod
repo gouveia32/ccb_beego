@@ -25,7 +25,7 @@ require (
 	github.com/yinheli/mahonia v0.0.0-20131226213531-0eef680515cc
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf // indirect
-	golang.org/x/tools v0.0.0-20201211185031-d93e913c1a58 // indirect
+	golang.org/x/tools v0.1.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
@@ -33,6 +33,28 @@ require (
 require github.com/mattn/go-sqlite3 v2.0.3+incompatible
 
 require (
+	github.com/ClickHouse/clickhouse-go v1.4.3 // indirect
+	github.com/apex/log v1.9.0 // indirect
+	github.com/bsm/redislock v0.7.0 // indirect
+	github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/go-redis/redis/v8 v8.6.0 // indirect
+	github.com/go-redis/redis_rate/v9 v9.1.1 // indirect
+	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
+	github.com/google/go-cmp v0.5.5 // indirect
+	github.com/jmoiron/sqlx v1.3.1 // indirect
+	github.com/josharian/intern v1.0.0 // indirect
+	github.com/json-iterator/go v1.1.11 // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/olivere/elastic/v7 v7.0.22 // indirect
+	github.com/polds/imgbase64 v0.0.0-20140820003345-cb7bf37298b7 // indirect
+	github.com/segmentio/fasthash v1.0.3 // indirect
+	github.com/summer-solutions/orm v1.79.2 // indirect
+	go.opentelemetry.io/otel v0.17.0 // indirect
+	go.opentelemetry.io/otel/metric v0.17.0 // indirect
+	go.opentelemetry.io/otel/trace v0.17.0 // indirect
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
 	golang.org/x/text v0.3.6 // indirect

@@ -1,6 +1,11 @@
 package controllers
 
 import (
+	"bytes"
+	"image/draw"
+	"image"
+	"image/color"
+	"image/png"
 	"ccb_beego/enums"
 	"ccb_beego/models"
 	"encoding/base64"
@@ -73,6 +78,37 @@ func toBase64(b []byte) string {
 	return base64.StdEncoding.EncodeToString(b)
 }
 
+
+// Desenha uma linha na imagem
+func drawLine(img *image.RGBA, x1 int, y1 int, x2 int, y2 int) {
+    drawLineLow(img, x1, y1, x2, y2)
+}
+
+// Desenha uma linha na imagem usando o algoritmo Bresenham
+func drawLineLow(img *image.RGBA, x1 int, y1 int, x2 int, y2 int) {
+    dx := x2 - x1
+    dy := y2 - y1
+    yi := 1
+
+    if dy < 0 {
+        yi = -1
+        dy = -dy
+    }
+
+    D := 2*dy - dx
+    y := y1
+
+    for x := x1; x <= x2; x++ {
+        img.Set(x, y, color.Black)
+
+        if D > 0 {
+            y += yi
+            D -= 2 * dx
+        }
+
+        D += 2 * dy
+    }
+}
 // *
 // *
 // ***************** Edit **************************
@@ -111,11 +147,29 @@ func (c *BordadoController) Edit() {
 		byteSlice[i] = byte(v)
 	}
 
-	base64Encoding := toBase64(byteSlice)
+	
 	fmt.Println("Imagem antes:", m.Imagem)
 
-	fmt.Println("Imagem depois:", base64Encoding)
-	c.Data["imagem"] = base64Encoding
+	
+	c.Data["imagem"] = byteSlice
+
+	 // Cria uma imagem com fundo branco
+	 img := image.NewRGBA(image.Rect(0, 0, 100, 100))
+	 draw.Draw(img, img.Bounds(), &image.Uniform{color.White}, image.Point{}, draw.Src)
+ 
+	 // Desenha uma linha horizontal
+	 drawLine(img, 0, 50, 100, 50)
+ 
+	 // Desenha uma linha vertical
+	 drawLine(img, 50, 0, 50, 100)
+ 
+	 // Codifica a imagem em base64
+	 var buf bytes.Buffer
+	 png.Encode(&buf, img)
+	 b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
+
+
+	c.Data["img"] = b64
 
 	//c.Data["img"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 
