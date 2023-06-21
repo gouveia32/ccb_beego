@@ -115,14 +115,14 @@
                         </div>
                     </div>
                     <div id="Notas" class="tabcontent">
-                        <img src="data:image/png;base64, {{.imagem}}" alt="Imagem" />
+                        <img name="imagem" src="data:image/png;base64, {{.imagem}}" alt="Imagem" />
                     </div>
                 </div>
             </td>
             <td width="30%">
                 
-                <div id="img" class="image col-md-12" style="background-color: rgb(220, 220, 220);">
-                    <img src="data:image/png;base64, {{.img}}" alt="Imagem" />
+                <div id="div_img" name="div_img" class="layui-input image col-md-12" style="background-color: rgb(220, 220, 220);">
+                    <img name="img" src="data:image/png;base64, {{.img}}" alt="Imagem" />
                 </div>
                 
             </td>
@@ -171,6 +171,8 @@
 }
 </style>
 
+<script src="/static/layui/layui.js"></script>
+
 <script>
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("opLinha").click();
@@ -197,28 +199,49 @@ function openTab(evt, cityName) {
 }
 
 
-function LerDst(cor){
-//alert('AQUI ' + cor)
+</script>
 
-// alert(urlfor);
-var form_data = $("form").serialize();
-$.ajax({
-    type: "POST",
-    url: "/bordado/lerdst",
-    data: {
-        codigo:   cor
-    },
-    dataType: 'json',
-    success: function(data) {
 
-        //console.log(data);
-        
-        if(data.id > 0){
-            alert('Ok');
+<script language="javascript">
+    var $,form;
+    
+    layui.config({
+            base : "js/"
+        }).use(['form','element','layer','jquery'],function(){
+          form = layui.form; //Somente após esta etapa ser realizada, alguns elementos do formulário serão decorados automaticamente com sucesso
+          $ = layui.jquery;
+          
+        });
+
+
+    function LerDst(cor){
+    //alert('AQUI ' + cor)
+
+    // alert(urlfor);
+    form = layui.form; //Somente após esta etapa ser realizada, alguns elementos do formulário serão decorados automaticamente com sucesso
+    $ = layui.jquery;
+    var $this = $(this);
+    //var form_data = $("form").serialize();
+    $.ajax({
+        type: "POST",
+        url: "/bordado/lerdst",
+        data: {
+            codigo:   cor
+        },
+        dataType: 'json',
+        success: function(data) {
+
+            console.log(data);
+            
+            if(data != ''){
+                $("form[name=thisForm]").find("img[name=img]").val(data);
+                $("form[name=thisForm]").find("input[name=Caminho]").val('/TESTE');
+                //alert('alterado')
+                return false;
+            }
         }
-        document.documentElement.style.cursor = 'default';
-    }
     }); 
 
 }
+
 </script>

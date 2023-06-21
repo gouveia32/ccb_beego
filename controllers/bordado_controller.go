@@ -345,7 +345,8 @@ func (c *BordadoController) LerDst() {
 		//if err != nil {
 		//	c.pageError("Linha inexistente!!e")
 		//}
-		c.Data["img"] = CarregaDst(color.NRGBA{0, 0, 240, 0})
+		c.Data["json"] = CarregaDst(color.NRGBA{0, 0, 240, 0})
+		c.ServeJSON()
 	}
 
 	fmt.Println("LerDst:", codigo)
