@@ -171,7 +171,6 @@
 }
 </style>
 
-<script src="/static/layui/layui.js"></script>
 
 <script>
 // Get the element with id="defaultOpen" and click on it
@@ -214,13 +213,11 @@ function openTab(evt, cityName) {
         });
 
 
-    function LerDst(cor){
+function LerDst(cor){
     //alert('AQUI ' + cor)
 
     // alert(urlfor);
-    form = layui.form; //Somente após esta etapa ser realizada, alguns elementos do formulário serão decorados automaticamente com sucesso
-    $ = layui.jquery;
-    var $this = $(this);
+
     //var form_data = $("form").serialize();
     $.ajax({
         type: "POST",
