@@ -2,15 +2,15 @@ package controllers
 
 import (
 	"bytes"
-	"image/draw"
-	"image"
-	"image/color"
-	"image/png"
 	"ccb_beego/enums"
 	"ccb_beego/models"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"image"
+	"image/color"
+	"image/draw"
+	"image/png"
 	"sort"
 	"strconv"
 	"strings"
@@ -74,41 +74,26 @@ func (c *BordadoController) DataList() {
 	c.jsonResult(enums.JRCodeSucc, "", data)
 }
 
-func toBase64(b []byte) string {
-	return base64.StdEncoding.EncodeToString(b)
+// *
+// *
+// ***************** CarregaDst **************************
+func CarregaDst(cor color.Color) (resp string) {
+	// Cria uma imagem com fundo branco
+	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
+	//draw.Draw(img, img.Bounds(), &image.Uniform{color.White}, image.Point{}, draw.Src)
+
+	// Desenha um retângulo preto na imagem
+	rect := image.Rect(50, 50, 100, 100)
+	draw.Draw(img, rect, &image.Uniform{cor}, image.ZP, draw.Src)
+
+	// Codifica a imagem em base64
+	var buf bytes.Buffer
+	png.Encode(&buf, img)
+	b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
+
+	return b64
 }
 
-
-// Desenha uma linha na imagem
-func drawLine(img *image.RGBA, x1 int, y1 int, x2 int, y2 int) {
-    drawLineLow(img, x1, y1, x2, y2)
-}
-
-// Desenha uma linha na imagem usando o algoritmo Bresenham
-func drawLineLow(img *image.RGBA, x1 int, y1 int, x2 int, y2 int) {
-    dx := x2 - x1
-    dy := y2 - y1
-    yi := 1
-
-    if dy < 0 {
-        yi = -1
-        dy = -dy
-    }
-
-    D := 2*dy - dx
-    y := y1
-
-    for x := x1; x <= x2; x++ {
-        img.Set(x, y, color.Black)
-
-        if D > 0 {
-            y += yi
-            D -= 2 * dx
-        }
-
-        D += 2 * dy
-    }
-}
 // *
 // *
 // ***************** Edit **************************
@@ -141,35 +126,8 @@ func (c *BordadoController) Edit() {
 		m.Estado = enums.Enabled
 	}
 
-	byteSlice := make([]byte, len(m.Imagem))
-
-	for i, v := range m.Imagem {
-		byteSlice[i] = byte(v)
-	}
-
-	
-	fmt.Println("Imagem antes:", m.Imagem)
-
-	
-	c.Data["imagem"] = byteSlice
-
-	 // Cria uma imagem com fundo branco
-	 img := image.NewRGBA(image.Rect(0, 0, 100, 100))
-	 draw.Draw(img, img.Bounds(), &image.Uniform{color.White}, image.Point{}, draw.Src)
- 
-	 // Desenha uma linha horizontal
-	 drawLine(img, 0, 50, 100, 50)
- 
-	 // Desenha uma linha vertical
-	 drawLine(img, 50, 0, 50, 100)
- 
-	 // Codifica a imagem em base64
-	 var buf bytes.Buffer
-	 png.Encode(&buf, img)
-	 b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
-
-
-	c.Data["img"] = b64
+	c.Data["imagem"] = m.Imagem
+	c.Data["img"] = CarregaDst(color.Black)
 
 	//c.Data["img"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 
@@ -374,4 +332,21 @@ func (c *BordadoController) Delete() {
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "Falha da rxclusão", 0)
 	}
+}
+
+// *
+// *
+// ***************** LerDst **************************
+func (c *BordadoController) LerDst() {
+	codigo := c.GetString("codigo")
+
+	if codigo != "" {
+		//l, err := models.LinhaOne(codigo)
+		//if err != nil {
+		//	c.pageError("Linha inexistente!!e")
+		//}
+		c.Data["img"] = CarregaDst(color.NRGBA{0, 0, 240, 0})
+	}
+
+	fmt.Println("LerDst:", codigo)
 }

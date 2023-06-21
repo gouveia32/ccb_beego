@@ -81,47 +81,50 @@
     <!-- Tab links -->
     <table id="info" width="50%">
         <tr>
-            <td width="65%">
-                <div class="tab">
-                    <a href="javascript:openTab(event,'Linhas');" id="opLinha" class="tablinks">Linha</a>
-                    <a href="javascript:openTab(event,'Notas');" id="opNota" class="tablinks">Notas</a>
-                </div>
-            
-                <!-- Tab content -->
-                <div id="Linhas" class="tabcontent">
-                    <div name="Linhas" class="row">
-                        <div class="label-micro col-md-2" style="text-align: center;">SEQ</div>
-                        <div class="label-micro col-md-3" style="text-align: center;">CÓDIGO</div>
-                        <div class="label-micro col-md-5">NOME</div>
-                        <div class="label-micro col-md-1" style="text-align: center;">COR</div>
+            <td width="50%" style="vertical-align: top;">
+                <div class="col-md-12">
+                    <div class="tab">
+                        <a href="javascript:openTab(event,'Linhas');" id="opLinha" class="tablinks">Linha</a>
+                        <a href="javascript:openTab(event,'Notas');" id="opNota" class="tablinks">Notas</a>
                     </div>
-                    <div name="Linhas" class="row">
-                        {{range $key,$item := .linhas}}
-                            <div style="text-align: center;" class="col-md-2">
-                                {{$item.Seq}}
-                            </div>
-                            <div style="text-align: center;" class="col-md-3">
-                                <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}">
-                                <input type="Text" style="width: 45px; height: 19px;" name="LinhaCods" value="{{$item.Linha.Codigo}}">
-                            </div>
-                            <div class="col-md-5" nowrap>
-                                {{$item.Linha.Nome}}
-                            </div>
-                            <div class="col-md-2">
-                                <span style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>    
-                            </div>
-                        {{end}}
+                
+                    <!-- Tab content -->
+                    <div id="Linhas" class="tabcontent">
+                        <div name="Linhas" class="row">
+                            <div class="label-micro col-md-2" style="text-align: center;">SEQ</div>
+                            <div class="label-micro col-md-3" style="text-align: center;">CÓDIGO</div>
+                            <div class="label-micro col-md-5">NOME</div>
+                            <div class="label-micro col-md-1" style="text-align: center;">COR</div>
+                        </div>
+                        <div name="Linhas" class="row">
+                            {{range $key,$item := .linhas}}
+                                <div style="text-align: center;" class="col-md-2">
+                                    {{$item.Seq}}
+                                </div>
+                                <div style="text-align: center;" class="col-md-3">
+                                    <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}">
+                                    <input type="Text" onchange="LerDst(this.value)" style="width: 45px; height: 19px;" name="LinhaCods" value="{{$item.Linha.Codigo}}">
+                                </div>
+                                <div class="col-md-5" nowrap>
+                                    {{$item.Linha.Nome}}
+                                </div>
+                                <div class="col-md-2">
+                                    <span style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>    
+                                </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div id="Notas" class="tabcontent">
+                        <img src="data:image/png;base64, {{.imagem}}" alt="Imagem" />
                     </div>
                 </div>
-                <div id="Notas" class="tabcontent">
+            </td>
+            <td width="30%">
+                
+                <div id="img" class="image col-md-12" style="background-color: rgb(220, 220, 220);">
                     <img src="data:image/png;base64, {{.img}}" alt="Imagem" />
                 </div>
-            
-            </td>
-            <td width="50%">
-                <div id="Obs" class="tabcontent">
-            
-                </div>
+                
             </td>
         </tr>
     </table>
@@ -191,5 +194,31 @@ function openTab(evt, cityName) {
   // Show the current tab, and add an "active" class to the button that opened the tab
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
+}
+
+
+function LerDst(cor){
+//alert('AQUI ' + cor)
+
+// alert(urlfor);
+var form_data = $("form").serialize();
+$.ajax({
+    type: "POST",
+    url: "/bordado/lerdst",
+    data: {
+        codigo:   cor
+    },
+    dataType: 'json',
+    success: function(data) {
+
+        //console.log(data);
+        
+        if(data.id > 0){
+            alert('Ok');
+        }
+        document.documentElement.style.cursor = 'default';
+    }
+    }); 
+
 }
 </script>

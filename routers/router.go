@@ -68,7 +68,6 @@ func init() {
 	beego.Router("/cliente/edit/?:id", &controllers.ClienteController{}, "Get,Post:Edit")
 	beego.Router("/cliente/delete", &controllers.ClienteController{}, "Post:Delete")
 
-
 	//Fornecedor
 	beego.Router("/fornecedor/index", &controllers.FornecedorController{}, "*:Index")
 	beego.Router("/fornecedor/datagrid", &controllers.FornecedorController{}, "Get,Post:DataGrid")
@@ -89,6 +88,7 @@ func init() {
 	beego.Router("/bordado/datalist", &controllers.BordadoController{}, "Post:DataList")
 	beego.Router("/bordado/edit/?:id", &controllers.BordadoController{}, "Get,Post:Edit")
 	beego.Router("/bordado/delete", &controllers.BordadoController{}, "Post:Delete")
+	beego.Router("/bordado/lerdst", &controllers.BordadoController{}, "Post:LerDst")
 
 	//Roteamento do grupo
 	beego.Router("/grupo/index", &controllers.GrupoController{}, "*:Index")
@@ -105,7 +105,6 @@ func init() {
 	beego.Router("/catalogo/datalist", &controllers.CatalogoController{}, "Post:DataList")
 	beego.Router("/catalogo/allocate", &controllers.CatalogoController{}, "Post:Allocate")
 	beego.Router("/catalogo/updateseq", &controllers.CatalogoController{}, "Post:UpdateSeq")
-
 
 	beego.Router("/", &controllers.HomeController{}, "*:Index")
 }
