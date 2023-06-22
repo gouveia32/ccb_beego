@@ -6,6 +6,7 @@ import (
 	"ccb_beego/models"
 	"encoding/base64"
 	"encoding/json"
+	//"github.com/go-playground/colors"
 	"fmt"
 	"image"
 	"image/color"
@@ -15,6 +16,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"encoding/hex"
+    "log"
 
 	"github.com/beego/beego/v2/client/orm"
 )
@@ -341,15 +345,40 @@ func (c *BordadoController) LerDst() {
 	codigo := c.GetString("codigo")
 
 	if codigo != "" {
-		//l, err := models.LinhaOne(codigo)
-		//if err != nil {
-		//	c.pageError("Linha inexistente!!e")
-		//}
-		c.Data["json"] = CarregaDst(color.White)
+		l, err := models.LinhaOne(codigo)
+		if err != nil {
+			c.pageError("Linha inexistente!!e")
+		}
+		fmt.Println("linha: ",l.Nome)
+
+		colorStr, err := normalize(l.CorHex)
+    	if err != nil {
+        	log.Fatal(err)
+    	}
+
+    	b, err := hex.DecodeString(colorStr)
+    	if err != nil {
+        	log.Fatal(err)
+    	}
+
+    	color := color.RGBA{b[0], b[1], b[2], b[3]}
+
+
+	
+
+		fmt.Println("hex: ",color)
+
+		c.Data["json"] = CarregaDst(color)
 
 		//c.Data["json"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 		c.ServeJSON()
 	}
 
 	fmt.Println("LerDst:", codigo)
+}
+
+
+func normalize(colorStr string) (string, error) {
+    // left as an exercise for the reader
+    return colorStr, nil
 }

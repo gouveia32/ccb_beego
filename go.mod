@@ -38,6 +38,7 @@ require (
 	github.com/bsm/redislock v0.7.0 // indirect
 	github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/go-playground/colors v1.3.1 // indirect
 	github.com/go-redis/redis/v8 v8.6.0 // indirect
 	github.com/go-redis/redis_rate/v9 v9.1.1 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
