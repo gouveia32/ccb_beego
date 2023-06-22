@@ -34,6 +34,7 @@ require github.com/mattn/go-sqlite3 v2.0.3+incompatible
 
 require (
 	github.com/ClickHouse/clickhouse-go v1.4.3 // indirect
+	github.com/StephaneBunel/bresenham v0.0.0-20211027152503-ec76d7b8e923 // indirect
 	github.com/apex/log v1.9.0 // indirect
 	github.com/bsm/redislock v0.7.0 // indirect
 	github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58 // indirect

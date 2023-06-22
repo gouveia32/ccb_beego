@@ -6,6 +6,7 @@ import (
 	"ccb_beego/models"
 	"encoding/base64"
 	"encoding/json"
+
 	//"github.com/go-playground/colors"
 	"fmt"
 	"image"
@@ -17,8 +18,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/StephaneBunel/bresenham"
+
 	"encoding/hex"
-    "log"
+	"log"
 
 	"github.com/beego/beego/v2/client/orm"
 )
@@ -80,26 +83,6 @@ func (c *BordadoController) DataList() {
 
 // *
 // *
-// ***************** CarregaDst **************************
-func CarregaDst(cor color.Color) (resp string) {
-	// Cria uma imagem com fundo branco
-	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
-	//draw.Draw(img, img.Bounds(), &image.Uniform{color.White}, image.Point{}, draw.Src)
-
-	// Desenha um retângulo preto na imagem
-	rect := image.Rect(50, 50, 100, 100)
-	draw.Draw(img, rect, &image.Uniform{cor}, image.ZP, draw.Src)
-
-	// Codifica a imagem em base64
-	var buf bytes.Buffer
-	png.Encode(&buf, img)
-	b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
-
-	return b64
-}
-
-// *
-// *
 // ***************** Edit **************************
 func (c *BordadoController) Edit() {
 	//fmt.Println("Method:", c.Ctx.Request.Method)
@@ -131,7 +114,7 @@ func (c *BordadoController) Edit() {
 	}
 
 	c.Data["imagem"] = m.Imagem
-	c.Data["img"] = CarregaDst(color.Black)
+	c.Data["img"] = CarregaDst(color.White)
 
 	//c.Data["img"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 
@@ -340,6 +323,46 @@ func (c *BordadoController) Delete() {
 
 // *
 // *
+// ***************** CarregaDst **************************
+func CarregaDst(cor color.Color) (resp string) {
+	// Cria uma imagem com fundo branco
+	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
+	//draw.Draw(img, img.Bounds(), &image.Uniform{color.White}, image.Point{}, draw.Src)
+
+	// Desenha um retângulo preto na imagem
+	rect := image.Rect(50, 50, 100, 100)
+	draw.Draw(img, rect, &image.Uniform{cor}, image.ZP, draw.Src)
+
+	// Codifica a imagem em base64
+	var buf bytes.Buffer
+	png.Encode(&buf, img)
+	b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
+
+	return b64
+}
+
+// *
+// *
+// ***************** DrawLine **************************
+func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
+	var imgRect = image.Rect(0, 0, 300, 300)
+	var img = image.NewRGBA(imgRect)
+	//var colBLUE = color.RGBA{0, 0, 255, 255}
+
+	// draw line
+	bresenham.DrawLine(img, x1, y1, x2, y2, cor)
+
+	// Codifica a imagem em base64
+	var buf bytes.Buffer
+	png.Encode(&buf, img)
+	b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
+
+	return b64
+
+}
+
+// *
+// *
 // ***************** LerDst **************************
 func (c *BordadoController) LerDst() {
 	codigo := c.GetString("codigo")
@@ -349,26 +372,26 @@ func (c *BordadoController) LerDst() {
 		if err != nil {
 			c.pageError("Linha inexistente!!e")
 		}
-		fmt.Println("linha: ",l.Nome)
+		fmt.Println("linha: ", l.Nome)
 
 		colorStr, err := normalize(l.CorHex)
-    	if err != nil {
-        	log.Fatal(err)
-    	}
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("colorStr: ", colorStr)
 
-    	b, err := hex.DecodeString(colorStr)
-    	if err != nil {
-        	log.Fatal(err)
-    	}
+		b, err := hex.DecodeString(colorStr)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-    	color := color.RGBA{b[0], b[1], b[2], b[3]}
+		fmt.Println("b: ", b)
 
+		color := color.RGBA{b[0], b[1], b[2], 255}
 
-	
+		fmt.Println("hex: ", color)
 
-		fmt.Println("hex: ",color)
-
-		c.Data["json"] = CarregaDst(color)
+		c.Data["json"] = DrawLine(14, 21, 241, 117, color)
 
 		//c.Data["json"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 		c.ServeJSON()
@@ -377,8 +400,7 @@ func (c *BordadoController) LerDst() {
 	fmt.Println("LerDst:", codigo)
 }
 
-
 func normalize(colorStr string) (string, error) {
-    // left as an exercise for the reader
-    return colorStr, nil
+	// left as an exercise for the reader
+	return colorStr, nil
 }
