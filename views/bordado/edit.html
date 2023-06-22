@@ -1,4 +1,5 @@
-<form id="thisForm">
+
+<form id="thisForm" name="thisForm">
     <input type="hidden" name="Id" id="Id" value="{{.m.Id}}">
     <table>
         <tr>
@@ -114,15 +115,15 @@
                             {{end}}
                         </div>
                     </div>
-                    <div id="Notas" class="tabcontent">
+                    <div id="Notas" class="tabcontent image col-md-12" style="background-color: rgb(230, 227, 227);">
                         <img name="imagem" src="data:image/png;base64, {{.imagem}}" alt="Imagem" />
                     </div>
                 </div>
             </td>
             <td width="30%">
                 
-                <div id="div_img" name="div_img" class="layui-input image col-md-12" style="background-color: rgb(220, 220, 220);">
-                    <img name="img" src="data:image/png;base64, {{.img}}" alt="Imagem" />
+                <div id="div_img" class="image col-md-12" style="background-color: rgb(243, 206, 206);">
+                    <img id="img" src="data:image/png;base64,{{.img}}" alt="Imagem" />
                 </div>
                 
             </td>
@@ -202,7 +203,8 @@ function openTab(evt, cityName) {
 
 
 <script language="javascript">
-    var $,form;
+
+var $,form;
     
     layui.config({
             base : "js/"
@@ -219,6 +221,7 @@ function LerDst(cor){
     // alert(urlfor);
 
     //var form_data = $("form").serialize();
+    
     $.ajax({
         type: "POST",
         url: "/bordado/lerdst",
@@ -227,13 +230,11 @@ function LerDst(cor){
         },
         dataType: 'json',
         success: function(data) {
-
-            console.log(data);
-            
             if(data != ''){
-                $("form[name=thisForm]").find("img[name=img]").val(data);
-                $("form[name=thisForm]").find("input[name=Caminho]").val('/TESTE');
+                document.getElementById('img').src = "data:image/png;base64," + data;
                 //alert('alterado')
+
+                console.log('data:',data);
                 return false;
             }
         }

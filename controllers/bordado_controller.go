@@ -345,7 +345,9 @@ func (c *BordadoController) LerDst() {
 		//if err != nil {
 		//	c.pageError("Linha inexistente!!e")
 		//}
-		c.Data["json"] = CarregaDst(color.NRGBA{0, 0, 240, 0})
+		c.Data["json"] = CarregaDst(color.White)
+
+		//c.Data["json"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 		c.ServeJSON()
 	}
 
