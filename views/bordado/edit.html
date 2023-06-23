@@ -125,7 +125,7 @@
                 <div id="div_img" class="image col-md-14" style="background-color: rgb(243, 206, 206);">
                     <img id="img" src="data:image/png;base64,{{.img}}" alt="Imagem" />
                 </div>
-                
+                <!-- <canvas id="myCanvas" width="300" height="300"></canvas> -->
             </td>
         </tr>
     </table>
@@ -174,6 +174,22 @@
 
 
 <script>
+
+/* window.onload = function() {
+    var canvas = document.getElementById("myCanvas");
+    var context = canvas.getContext("2d");
+    
+    context.beginPath();
+    context.moveTo(50, 50); // ponto de partida
+    context.lineTo(200, 200); // ponto final
+    context.strokeStyle = "red"; // cor da linha
+    context.lineWidth = 2; // espessura da linha
+    context.stroke(); // desenhar a linha
+}
+ */
+
+
+
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("opLinha").click();
 
@@ -220,13 +236,14 @@ function LerDst(cor){
 
     // alert(urlfor);
 
-    //var form_data = $("form").serialize();
+    var id = $("#Id").val();
     
     $.ajax({
         type: "POST",
         url: "/bordado/lerdst",
         data: {
-            codigo:   cor
+            id:     id,
+            cor:    cor
         },
         dataType: 'json',
         success: function(data) {

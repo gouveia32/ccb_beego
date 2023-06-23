@@ -347,8 +347,7 @@ func CarregaDst(cor color.Color) (resp string) {
 func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 	var imgRect = image.Rect(0, 0, 300, 300)
 	var img = image.NewRGBA(imgRect)
-	//var colBLUE = color.RGBA{0, 0, 255, 255}
-
+	
 	// draw line
 	bresenham.DrawLine(img, x1, y1, x2, y2, cor)
 
@@ -356,6 +355,7 @@ func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 	var buf bytes.Buffer
 	png.Encode(&buf, img)
 	b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
+
 
 	return b64
 
@@ -365,10 +365,39 @@ func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 // *
 // ***************** LerDst **************************
 func (c *BordadoController) LerDst() {
-	codigo := c.GetString("codigo")
+	cod_linha := c.GetString("cor")
+	id, _ := c.GetInt("id", 0) //id do bordado
+	var imgRect = image.Rect(0, 0, 300, 300)
+	var img = image.NewRGBA(imgRect)
 
-	if codigo != "" {
-		l, err := models.LinhaOne(codigo)
+	fmt.Println("id: ", id)
+
+	if id > 0 {
+
+		var err error
+		m := &models.Bordado{}
+		m, err = models.BordadoOne(id)
+		if err != nil {
+			c.pageError("Os dados são inválidos, atualize e tente novamente")
+		}
+
+		fmt.Println("Bordado1:",m.Id)
+
+		if err = c.ParseForm(&m); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "Falha ao obter dados", m.Id)
+		}
+
+		fmt.Println("Bordado2:",m.LinhaCods)
+
+
+		for _, linhaCod := range m.LinhaCods {
+			ln := models.Linha{Codigo: linhaCod}
+			fmt.Println("L:",ln.Codigo)
+		}
+
+
+
+		l, err := models.LinhaOne(cod_linha)
 		if err != nil {
 			c.pageError("Linha inexistente!!e")
 		}
@@ -380,24 +409,35 @@ func (c *BordadoController) LerDst() {
 		}
 		fmt.Println("colorStr: ", colorStr)
 
-		b, err := hex.DecodeString(colorStr)
-		if err != nil {
-			log.Fatal(err)
+		b, err1 := hex.DecodeString(colorStr)
+		if err1 != nil {
+			log.Fatal(err1)
 		}
 
 		fmt.Println("b: ", b)
 
-		color := color.RGBA{b[0], b[1], b[2], 255}
+		cor := color.RGBA{b[0], b[1], b[2], 255}
 
-		fmt.Println("hex: ", color)
+		fmt.Println("hex: ", cor)
 
-		c.Data["json"] = DrawLine(14, 21, 241, 117, color)
+		// draw line
+		bresenham.DrawLine(img, 14, 21, 241, 117, cor)
+
+		bresenham.DrawLine(img, 14, 21, 201, 137, color.Black)
+
+		// Codifica a imagem em base64
+		var buf bytes.Buffer
+		png.Encode(&buf, img)
+		b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
+
+
+		c.Data["json"] = b64
 
 		//c.Data["json"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 		c.ServeJSON()
 	}
 
-	fmt.Println("LerDst:", codigo)
+	fmt.Println("LerDst:", cod_linha)
 }
 
 func normalize(colorStr string) (string, error) {
