@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/beego/beego/v2/client/orm"
@@ -24,7 +23,7 @@ type Bordado struct {
 	Aprovado  bool
 	Alerta    bool
 	//Imagem    []byte `orm:"longblob=true"`
-	Imagem    string  	`orm:"column(imagem);type(blob)" description:"imagem derada a partir do dst" form:"imagem"`
+	Imagem             string    `orm:"column(imagem);type(blob)" description:"imagem derada a partir do dst" form:"Imagem"`
 	CorFundo           string    `orm:"column(cor_fundo);nil" description:"cor de fundo" form:"CorFundo"`
 	ObsPublica         string    `orm:"size(1024)"`
 	ObsRestrita        string    `orm:"size(1024)"`
@@ -70,10 +69,6 @@ func BordadoPageList(params *BordadoQueryParam) ([]*Bordado, int64) {
 		sortorder = "-" + sortorder
 	}
 
-	fmt.Println("ArquivoLike:", params.ArquivoLike)
-
-	fmt.Println("DescricaoLike:", params.DescricaoLike)
-
 	query = query.Filter("Arquivo__icontains", params.ArquivoLike)
 	query = query.Filter("Descricao__icontains", params.DescricaoLike)
 	query = query.Filter("estado__istartswith", params.Estado)
@@ -111,4 +106,15 @@ func BordadoBatchDelete(ids []int) (int64, error) {
 
 func (this *Bordado) TableName() string {
 	return BordadoTBName()
+}
+
+func (c *Bordado) getLinhasByBordado(bordado_id int) ([]*Linha, int64) {
+	query := orm.NewOrm().QueryTable(LinhaBordadoRelTBName())
+	data := make([]*Linha, 0)
+
+	query = query.Filter("bordado_id", bordado_id)
+	total, _ := query.Count()
+	query.All(&data)
+
+	return data, total
 }

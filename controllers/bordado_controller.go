@@ -6,6 +6,7 @@ import (
 	"ccb_beego/models"
 	"encoding/base64"
 	"encoding/json"
+	"io/ioutil"
 
 	//"github.com/go-playground/colors"
 	"fmt"
@@ -114,7 +115,7 @@ func (c *BordadoController) Edit() {
 	}
 
 	c.Data["imagem"] = m.Imagem
-	c.Data["img"] = CarregaDst(color.White)
+	//c.Data["img"] = CarregaDst(color.White)
 
 	//c.Data["img"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 
@@ -190,7 +191,9 @@ func (c *BordadoController) Save() {
 		c.jsonResult(enums.JRCodeFailed, "Falha ao obter dados", b.Id)
 	}
 
-	fmt.Printf("\n\nc: %+v\n\n", b) // annot call non-function r.Form (type url.Values)
+	//fmt.Printf("\n\nc: %+v\n\n", b) // annot call non-function r.Form (type url.Values)
+
+	//fmt.Println("Imagem:", b.Imagem)
 
 	//Excluir catalogos históricos associados
 	if _, err := o.QueryTable(models.CatalogoBordadoRelTBName()).Filter("bordado__id", b.Id).Delete(); err != nil {
@@ -229,13 +232,6 @@ func (c *BordadoController) Save() {
 		relslin = append(relslin, rel)
 		seq = seq + 1
 	}
-	/* 	if len(relslin) < int(b.Cores) {
-		ln := models.Linha{Codigo: "5208"}
-		rel := models.LinhaBordadoRel{Bordado: &b, Linha: &ln, Seq: seq}
-		relslin = append(relslin, rel)
-		seq = seq + 1
-	} */
-	fmt.Println("linhaCod", relslin)
 
 	if len(relslin) > 0 {
 		//adicionar lote
@@ -243,8 +239,6 @@ func (c *BordadoController) Save() {
 			c.jsonResult(enums.JRCodeFailed, "Falha ao Salvar", b.Id)
 		}
 	}
-
-	//fmt.Println("SAVE:", m.Estado)
 
 	if b.Id == 0 {
 		to, err := o.Begin()
@@ -347,7 +341,7 @@ func CarregaDst(cor color.Color) (resp string) {
 func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 	var imgRect = image.Rect(0, 0, 300, 300)
 	var img = image.NewRGBA(imgRect)
-	
+
 	// draw line
 	bresenham.DrawLine(img, x1, y1, x2, y2, cor)
 
@@ -356,10 +350,10 @@ func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 	png.Encode(&buf, img)
 	b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
 
-
 	return b64
 
 }
+
 
 // *
 // *
@@ -367,73 +361,159 @@ func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 func (c *BordadoController) LerDst() {
 	cod_linha := c.GetString("cor")
 	id, _ := c.GetInt("id", 0) //id do bordado
+	seq, _ := c.GetInt("seq", 0)
+
+	data, err := ioutil.ReadFile("C:/BORDADOS/flower15.DST")
+	if err != nil {
+		fmt.Println("Erro ao ler o arquivo:", err)
+		return
+	}
+
+	// Imprime o design
+	//fmt.Println(data)
+	type Stitch struct {
+		flags int
+		x     int
+		y     int
+		color int
+	}
+	type Color struct {
+		r           uint8
+		g           uint8
+		b           uint8
+		description string
+	}
+	
+	type Pattern struct {
+		colors            []Color
+		stitches          []Stitch
+		hoop              map[string]int
+		lastX             int
+		lastY             int
+		top               int
+		bottom            int
+		left              int
+		right             int
+		currentColorIndex int
+	}
+	
+	p := Pattern{}
+		p.colors = []Color{}
+		p.stitches = []Stitch{}
+		p.hoop = make(map[string]int)
+	
+		func (p *Pattern) addColorRgb(r uint8, g uint8, b uint8, description string) {
+			p.colors = append(p.colors, Color{r, g, b, description})
+		}
+		func (p *Pattern) addColor(c Color) {
+			p.colors = append(p.colors, c)
+		}
+		func (p *Pattern) addStitchAbs(x int, y int, flags int, isAutoColorIndex bool) {
+			if (flags & stitchTypes["end"]) == stitchTypes["end"] {
+				p.calculateBoundingBox()
+				p.fixColorCount()
+			}
+			if (flags & stitchTypes["stop"]) == stitchTypes["stop"] && len(p.stitches) == 0 {
+				return
+			}
+			if (flags & stitchTypes["stop"]) == stitchTypes["stop"] && isAutoColorIndex {
+				p.currentColorIndex += 1
+			}
+			p.stitches = append(p.stitches, Stitch{x, y, flags, p.currentColorIndex})
+		}
+		func (p *Pattern) addStitchRel(dx int, dy int, flags int, isAutoColorIndex bool) {
+			p.addStitchAbs(p.lastX+dx, p.lastY+dy, flags, isAutoColorIndex)
+		}
+		func (p *Pattern) calculateBoundingBox() {
+			for _, s := range p.stitches {
+				if s.x < p.left {
+					p.left = s.x
+				}
+				if s.x > p.right {
+					p.right = s.x
+				}
+				if s.y < p.top {
+					p.top = s.y
+				}
+				if s.y > p.bottom {
+					p.bottom = s.y
+				}
+			}
+		}
+		func (p *Pattern) fixColorCount() {
+			if p.currentColorIndex >= len(p.colors) {
+				p.currentColorIndex = len(p.colors) - 1
+			}
+		}
+		func rgbToColor(r uint8, g uint8, b uint8, description string) Color {
+			return Color{r, g, b, description}
+		}
+		func shadeColor(c color.RGBA, percent float64) color.RGBA {
+			f := 1 - percent
+			return color.RGBA{uint8(float64(c.R) * f), uint8(float64(c.G) * f), uint8(float64(c.B) * f), c.A}
+		}
+
 	var imgRect = image.Rect(0, 0, 300, 300)
 	var img = image.NewRGBA(imgRect)
 
-	fmt.Println("id: ", id)
-
 	if id > 0 {
 
-		var err error
-		m := &models.Bordado{}
-		m, err = models.BordadoOne(id)
-		if err != nil {
-			c.pageError("Os dados são inválidos, atualize e tente novamente")
+		linhas := models.LinhaBordadoPageList(id)
+
+		fmt.Println("Bord id:", id)
+		fmt.Println("linhas: ", linhas)
+
+		var pos = 0
+		var cod = ""
+		var corHex = ""
+		for _, linha := range linhas {
+			if linha.Seq == seq {
+				cod = cod_linha
+			} else {
+				cod = linha.Linha.Codigo
+			}
+			fmt.Println("L:", cod)
+			l, err := models.LinhaOne(cod)
+			if err != nil {
+				c.pageError("Linha inexistente!!e")
+			}
+			//fmt.Println("linha: ", l.Nome)
+			colorStr, err := normalize(l.CorHex)
+			if err != nil {
+				log.Fatal(err)
+			}
+			//fmt.Println("colorStr: ", colorStr)
+
+			b, err1 := hex.DecodeString(colorStr)
+			if err1 != nil {
+				log.Fatal(err1)
+			}
+			//fmt.Println("b: ", b)
+			cor := color.RGBA{b[0], b[1], b[2], 255}
+			//fmt.Println("hex: ", cor)
+
+			if linha.Seq == seq {
+				corHex = colorStr
+				fmt.Println("corHex: ", colorStr)
+			}
+			// draw line
+			bresenham.DrawLine(img, 14, 21, 241+pos, 117+pos, cor)
+			pos = pos + 40
 		}
-
-		fmt.Println("Bordado1:",m.Id)
-
-		if err = c.ParseForm(&m); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "Falha ao obter dados", m.Id)
-		}
-
-		fmt.Println("Bordado2:",m.LinhaCods)
-
-
-		for _, linhaCod := range m.LinhaCods {
-			ln := models.Linha{Codigo: linhaCod}
-			fmt.Println("L:",ln.Codigo)
-		}
-
-
-
-		l, err := models.LinhaOne(cod_linha)
-		if err != nil {
-			c.pageError("Linha inexistente!!e")
-		}
-		fmt.Println("linha: ", l.Nome)
-
-		colorStr, err := normalize(l.CorHex)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("colorStr: ", colorStr)
-
-		b, err1 := hex.DecodeString(colorStr)
-		if err1 != nil {
-			log.Fatal(err1)
-		}
-
-		fmt.Println("b: ", b)
-
-		cor := color.RGBA{b[0], b[1], b[2], 255}
-
-		fmt.Println("hex: ", cor)
-
-		// draw line
-		bresenham.DrawLine(img, 14, 21, 241, 117, cor)
-
-		bresenham.DrawLine(img, 14, 21, 201, 137, color.Black)
 
 		// Codifica a imagem em base64
 		var buf bytes.Buffer
 		png.Encode(&buf, img)
 		b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
 
+		if corHex == "" {
+			l, _ := models.LinhaOne(cod_linha)
+			corHex = l.CorHex
+			fmt.Println("NOVA:", corHex)
+		}
 
-		c.Data["json"] = b64
+		c.Data["json"] = corHex + b64
 
-		//c.Data["json"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 		c.ServeJSON()
 	}
 
