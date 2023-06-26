@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"io/ioutil"
+	"encoding/binary"
 
 	//"github.com/go-playground/colors"
 	"fmt"
@@ -355,6 +356,7 @@ func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 }
 
 
+
 // *
 // *
 // ***************** LerDst **************************
@@ -363,95 +365,48 @@ func (c *BordadoController) LerDst() {
 	id, _ := c.GetInt("id", 0) //id do bordado
 	seq, _ := c.GetInt("seq", 0)
 
-	data, err := ioutil.ReadFile("C:/BORDADOS/flower15.DST")
+	data, err := ioutil.ReadFile("C:/BORDADOS/DraPolianaM.DST")
 	if err != nil {
 		fmt.Println("Erro ao ler o arquivo:", err)
 		return
 	}
 
+	fmt.Println("Tamanho: ",binary.Size(data))
+
+	var b0, b1, b2 [100000]uint8
+	var p int8 = -1
+ 
+	for i, e := range data {
+        //fmt.Printf("%s ", string(e))
+		p += 1
+		if i >= 512 {
+			if i % 3 == 0 { b0[p] = e; }
+			if i % 3 == 1 { b1[p] = e; }
+			if i % 3 == 2 {
+				b2[p] = e;
+				fmt.Printf("Tupla: p%d b0:%d b1:%d b2:%d",p, b0[p],b1[p],b2[p])
+			}
+		}
+    }
+	
+	/* for i := 512; i < binary.Size(data); i += 3 {
+		fmt.Println(i)
+		b0[p] = binary. data[i]
+		b1[p] = data[i+1]
+		b2[p] = data[i+2]
+
+		fmt.Println("b0",b0[p])
+		fmt.Println("b1",b1[p])
+		fmt.Println("b2",b2[p])
+
+		p += 1
+
+
+	}
+	 */	
 	// Imprime o design
 	//fmt.Println(data)
-	type Stitch struct {
-		flags int
-		x     int
-		y     int
-		color int
-	}
-	type Color struct {
-		r           uint8
-		g           uint8
-		b           uint8
-		description string
-	}
-	
-	type Pattern struct {
-		colors            []Color
-		stitches          []Stitch
-		hoop              map[string]int
-		lastX             int
-		lastY             int
-		top               int
-		bottom            int
-		left              int
-		right             int
-		currentColorIndex int
-	}
-	
-	p := Pattern{}
-		p.colors = []Color{}
-		p.stitches = []Stitch{}
-		p.hoop = make(map[string]int)
-	
-		func (p *Pattern) addColorRgb(r uint8, g uint8, b uint8, description string) {
-			p.colors = append(p.colors, Color{r, g, b, description})
-		}
-		func (p *Pattern) addColor(c Color) {
-			p.colors = append(p.colors, c)
-		}
-		func (p *Pattern) addStitchAbs(x int, y int, flags int, isAutoColorIndex bool) {
-			if (flags & stitchTypes["end"]) == stitchTypes["end"] {
-				p.calculateBoundingBox()
-				p.fixColorCount()
-			}
-			if (flags & stitchTypes["stop"]) == stitchTypes["stop"] && len(p.stitches) == 0 {
-				return
-			}
-			if (flags & stitchTypes["stop"]) == stitchTypes["stop"] && isAutoColorIndex {
-				p.currentColorIndex += 1
-			}
-			p.stitches = append(p.stitches, Stitch{x, y, flags, p.currentColorIndex})
-		}
-		func (p *Pattern) addStitchRel(dx int, dy int, flags int, isAutoColorIndex bool) {
-			p.addStitchAbs(p.lastX+dx, p.lastY+dy, flags, isAutoColorIndex)
-		}
-		func (p *Pattern) calculateBoundingBox() {
-			for _, s := range p.stitches {
-				if s.x < p.left {
-					p.left = s.x
-				}
-				if s.x > p.right {
-					p.right = s.x
-				}
-				if s.y < p.top {
-					p.top = s.y
-				}
-				if s.y > p.bottom {
-					p.bottom = s.y
-				}
-			}
-		}
-		func (p *Pattern) fixColorCount() {
-			if p.currentColorIndex >= len(p.colors) {
-				p.currentColorIndex = len(p.colors) - 1
-			}
-		}
-		func rgbToColor(r uint8, g uint8, b uint8, description string) Color {
-			return Color{r, g, b, description}
-		}
-		func shadeColor(c color.RGBA, percent float64) color.RGBA {
-			f := 1 - percent
-			return color.RGBA{uint8(float64(c.R) * f), uint8(float64(c.G) * f), uint8(float64(c.B) * f), c.A}
-		}
+
 
 	var imgRect = image.Rect(0, 0, 300, 300)
 	var img = image.NewRGBA(imgRect)
