@@ -372,12 +372,13 @@ func (c *BordadoController) LerDst() {
 	//var p int = -1
 	var corHex = ""
 
-	X0 := 200
-	Y0 := 80
+	X0 := 450
+	Y0 := 250
 	X := 0
 	Y := 0
+	salto := false
 
-	var imgRect = image.Rect(0, 0, 300, 300)
+	var imgRect = image.Rect(0, 0, 900, 500)
 	var img = image.NewRGBA(imgRect)
 
 	if id > 0 {
@@ -394,16 +395,19 @@ func (c *BordadoController) LerDst() {
 		Y = Y0
 		for i, e := range data {
 
-			if i > 515 && i < 2000 {
-				reg[i%3] = int(e)
-				if i%3 == 2 { //terceiro byte
-					//fmt.Printf("\nTripla :%d (%d,%d,%d)", i, reg[0], reg[1], reg[2])
+			if i >= 512 && i < binary.Size(data) {
+				b := (i - 2) % 3
+				reg[b] = int(e)
+				//fmt.Printf("\nbyte :%d  %d (%d)", i, b, reg[b])
+				if b == 2 { //terceiro byte
+
 					if (reg[2] & 64) == 64 { //troca de cor
 
 						//fmt.Printf("\nTroca de cor :%d    =   %d", i, reg[2]&0x40)
 					}
+					salto = false
 					if (reg[2] & 128) == 128 {
-
+						salto = true
 					}
 					if (reg[2] & 4) == 4 {
 						X += 81
@@ -467,9 +471,14 @@ func (c *BordadoController) LerDst() {
 					if (reg[1] & 128) == 128 {
 						Y -= 1
 					}
+					if X-X0 > 64|Y-Y0 {
+						salto = true
+					}
 
-					bresenham.DrawLine(img, X0, Y0, X, Y, cor1)
-					fmt.Printf("\nbytes  %d : %d %d %d %d", i%3, X0, Y0, X, Y)
+					if !salto {
+						bresenham.DrawLine(img, X0, Y0, X, Y, cor1)
+					}
+					//fmt.Printf("\nbytes  %d : %d %d %d %d", i%3, X0, Y0, X, Y)
 
 					X0 = X
 					Y0 = Y
