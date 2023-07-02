@@ -358,28 +358,44 @@ func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 func (c *BordadoController) LerDst() {
 	cod_linha := c.GetString("cor")
 	id, _ := c.GetInt("id", 0) //id do bordado
-	/* seq, _ := c.GetInt("seq", 0) */
 
-	data, err := ioutil.ReadFile("C:/BORDADOS/flower15.DST")
+	seq := c.GetString("seq")
+
+	//fileName := c.GetString("arq")
+
+	fmt.Println("arq: ", seq)
+
+	var arq string
+	if seq != "" {
+		arq = "c:/bordados/Bota.dst"
+	} else {
+		arq = cod_linha
+	}
+
+	data, err := ioutil.ReadFile(arq)
 	if err != nil {
 		fmt.Println("Erro ao ler o arquivo:", err)
 		return
 	}
 
-	fmt.Println("Tamanho: ", binary.Size(data))
+	//fmt.Println("Tamanho: ", binary.Size(data))
 
 	var reg [3]int
 	//var p int = -1
 	var corHex = ""
 
-	X0 := 450
-	Y0 := 250
 	X := 0
 	Y := 0
 	salto := false
 
-	var imgRect = image.Rect(0, 0, 900, 500)
+	var imgRect = image.Rect(0, 0, 500, 500)
 	var img = image.NewRGBA(imgRect)
+
+	if corHex == "" {
+		l, _ := models.LinhaOne(cod_linha)
+		corHex = l.CorHex
+		//fmt.Println("NOVA:", corHex)
+	}
 
 	if id > 0 {
 
@@ -391,10 +407,35 @@ func (c *BordadoController) LerDst() {
 		cor1 := color.Black
 		fmt.Printf("data=%d ", binary.Size(data))
 
+		//sData := string(data)
+		//fmt.Println("sData", sData)
+
+		Xmais, _ := strconv.Atoi(string(data[41:46]))
+		Xmenos, _ := strconv.Atoi(string(data[50:55]))
+		Ymais, _ := strconv.Atoi(string(data[59:64]))
+		Ymenos, _ := strconv.Atoi(string(data[68:73]))
+
+		Largura := Xmais + Xmenos
+		Altura := Ymais + Ymenos
+		NrPontos, _ := strconv.Atoi(string(data[23:30]))
+		Cores, _ := strconv.Atoi(string(data[34:37]))
+		Cores++
+		X0 := Xmenos
+		Y0 := Ymais
+
+		zoom := 100
+		if Largura > Altura && Largura != 0 {
+			zoom = 500 * 79 / Largura
+		} else if Altura != 0 {
+			zoom = 500 * 79 / Altura
+		}
+
+		fmt.Printf("           Header: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
+
 		X = X0
 		Y = Y0
-		for i, e := range data {
 
+		for i, e := range data {
 			if i >= 512 && i < binary.Size(data) {
 				b := (i - 2) % 3
 				reg[b] = int(e)
@@ -471,12 +512,18 @@ func (c *BordadoController) LerDst() {
 					if (reg[1] & 128) == 128 {
 						Y -= 1
 					}
-					if X-X0 > 64|Y-Y0 {
+
+					XX0 := X0 * zoom / 100
+					YY0 := Y0 * zoom / 100
+					XX := X * zoom / 100
+					YY := Y * zoom / 100
+
+					if XX-XX0 > 64|YY-YY0 {
 						salto = true
 					}
 
 					if !salto {
-						bresenham.DrawLine(img, X0, Y0, X, Y, cor1)
+						bresenham.DrawLine(img, XX0, YY0, XX, YY, cor1)
 					}
 					//fmt.Printf("\nbytes  %d : %d %d %d %d", i%3, X0, Y0, X, Y)
 
@@ -486,98 +533,10 @@ func (c *BordadoController) LerDst() {
 			}
 		}
 
-		/* 		for i := 512; i < 10400; i += 3 {
-		   			p += 1
-		   			reg[0] = int(data[i])
-		   			reg[1] = int(data[i+1])
-		   			reg[2] = int(data[i+2])
-		   			if (reg[2] & 64) == 64 { //troca de cor
-
-		   				fmt.Printf("\nTroca de cor :%d    =   %d", p, reg[2]&0x40)
-		   			}
-		   			if (reg[2] & 128) == 128 {
-
-		   			}
-		   			if (reg[2] & 4) == 4 {
-		   				X += 81
-		   			}
-		   			if (reg[2] & 8) == 8 {
-		   				X -= 81
-		   			}
-		   			if (reg[2] & 16) == 16 {
-		   				Y += 81
-		   			}
-		   			if (reg[2] & 32) == 32 {
-		   				Y -= 81
-		   			}
-
-		   			if (reg[1] & 1) == 1 {
-		   				X += 3
-		   			}
-		   			if (reg[1] & 2) == 2 {
-		   				X -= 3
-		   			}
-		   			if (reg[1] & 4) == 4 {
-		   				X += 27
-		   			}
-		   			if (reg[1] & 8) == 8 {
-		   				X -= 27
-		   			}
-		   			if (reg[1] & 16) == 16 {
-		   				Y += 27
-		   			}
-		   			if (reg[1] & 32) == 32 {
-		   				Y -= 27
-		   			}
-		   			if (reg[1] & 64) == 64 {
-		   				Y += 3
-		   			}
-		   			if (reg[1] & 128) == 128 {
-		   				Y -= 3
-		   			}
-
-		   			if (reg[0] & 1) == 1 {
-		   				X += 1
-		   			}
-		   			if (reg[0] & 2) == 2 {
-		   				X -= 1
-		   			}
-		   			if (reg[0] & 4) == 4 {
-		   				X += 9
-		   			}
-		   			if (reg[0] & 8) == 8 {
-		   				X -= 9
-		   			}
-		   			if (reg[0] & 16) == 16 {
-		   				Y += 9
-		   			}
-		   			if (reg[0] & 32) == 32 {
-		   				Y -= 9
-		   			}
-		   			if (reg[1] & 64) == 64 {
-		   				Y += 1
-		   			}
-		   			if (reg[1] & 128) == 128 {
-		   				Y -= 1
-		   			}
-
-		   			bresenham.DrawLine(img, X0, Y0, X, Y, cor1)
-		   			//fmt.Printf("\nbytes :%d %d %d %d", X0, Y0, X, Y)
-
-		   			X0 = X
-		   			Y0 = Y
-		   		}
-		*/
 		// Codifica a imagem em base64
 		var buf bytes.Buffer
 		png.Encode(&buf, img)
 		b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
-
-		if corHex == "" {
-			l, _ := models.LinhaOne(cod_linha)
-			corHex = l.CorHex
-			//fmt.Println("NOVA:", corHex)
-		}
 
 		c.Data["json"] = corHex + b64
 

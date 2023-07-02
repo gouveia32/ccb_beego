@@ -39,11 +39,13 @@ require (
 	github.com/bsm/redislock v0.7.0 // indirect
 	github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200707082815-5321531c36a2 // indirect
 	github.com/go-playground/colors v1.3.1 // indirect
 	github.com/go-redis/redis/v8 v8.6.0 // indirect
 	github.com/go-redis/redis_rate/v9 v9.1.1 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/google/go-cmp v0.5.5 // indirect
+	github.com/hajimehoshi/ebiten v1.12.12 // indirect
 	github.com/jmoiron/sqlx v1.3.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
@@ -57,6 +59,9 @@ require (
 	go.opentelemetry.io/otel v0.17.0 // indirect
 	go.opentelemetry.io/otel/metric v0.17.0 // indirect
 	go.opentelemetry.io/otel/trace v0.17.0 // indirect
+	golang.org/x/exp v0.0.0-20200908183739-ae8ad444f925 // indirect
+	golang.org/x/image v0.0.0-20200801110659-972c09e46d76 // indirect
+	golang.org/x/mobile v0.0.0-20210208171126-f462b3930c8f // indirect
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
 	golang.org/x/text v0.3.6 // indirect
