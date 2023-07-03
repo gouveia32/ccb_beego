@@ -364,14 +364,13 @@ func (c *BordadoController) LerDst() {
 
 	var arq string
 	if seq != "" {
-		arq = "c:/bordados/DeltaImo.dst"
+		arq = "c:/bordados/Bota.dst"
 	} else {
 		arq = cod_linha
 		cod_linha = "5208"
 	}
 
-	fmt.Println("arq: ", arq)
-
+	//fmt.Println("arq: ", arq)
 
 	data, err := ioutil.ReadFile(arq)
 	if err != nil {
@@ -379,14 +378,13 @@ func (c *BordadoController) LerDst() {
 		return
 	}
 
-	//fmt.Println("Tamanho: ", binary.Size(data))
+	Header := string(data[0:511])
+
+	//fmt.Println("Header: ", Header)
 
 	var reg [3]int
 	//var p int = -1
 	var corHex = ""
-
-	X := 0
-	Y := 0
 	salto := false
 
 	var imgRect = image.Rect(0, 0, 500, 500)
@@ -409,27 +407,19 @@ func (c *BordadoController) LerDst() {
 		//fmt.Printf("data=%d ", binary.Size(data))
 
 		//sData := string(data)
-		
 
-		sXmais := string(data[41:46])
-		fmt.Println("sXmais: ", sXmais)
-
-		if Xmais, err := strconv.Atoi(sXmais); err != nil {
-			fmt.Println("FALHA: ", Xmais)
-		}
-
-		//Xmais, _ := strconv.Atoi(sXmais)
-		Xmenos, _ := strconv.Atoi(string(data[50:55]))
-		Ymais, _ := strconv.Atoi(string(data[59:64]))
-		Ymenos, _ := strconv.Atoi(string(data[68:73]))
+		Xmais, _ := strconv.Atoi(string(Header[41:46]))
+		Xmenos, _ := strconv.Atoi(string(Header[50:55]))
+		Ymais, _ := strconv.Atoi(string(Header[59:64]))
+		Ymenos, _ := strconv.Atoi(string(Header[68:73]))
 
 		Largura := Xmais + Xmenos
 		Altura := Ymais + Ymenos
-		NrPontos, _ := strconv.Atoi(string(data[23:30]))
-		Cores, _ := strconv.Atoi(string(data[34:37]))
+		NrPontos, _ := strconv.Atoi(string(Header[23:30]))
+		Cores, _ := strconv.Atoi(string(Header[34:37]))
 		Cores++
-		X0 := 250
-		Y0 := 250
+		X0 := Xmenos
+		Y0 := Xmais
 
 		zoom := 40
 		if (Largura > Altura) && Largura != 0 {
@@ -440,8 +430,8 @@ func (c *BordadoController) LerDst() {
 
 		fmt.Printf("     Header: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
 
-		X = X0
-		Y = Y0
+		X := X0
+		Y := Y0
 
 		for i, e := range data {
 			if i >= 512 && i < binary.Size(data) {
