@@ -349,7 +349,6 @@ func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 	b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
 
 	return b64
-
 }
 
 // *
@@ -363,14 +362,16 @@ func (c *BordadoController) LerDst() {
 
 	//fileName := c.GetString("arq")
 
-	fmt.Println("arq: ", seq)
-
 	var arq string
 	if seq != "" {
-		arq = "c:/bordados/Bota.dst"
+		arq = "c:/bordados/DeltaImo.dst"
 	} else {
 		arq = cod_linha
+		cod_linha = "5208"
 	}
+
+	fmt.Println("arq: ", arq)
+
 
 	data, err := ioutil.ReadFile(arq)
 	if err != nil {
@@ -405,12 +406,19 @@ func (c *BordadoController) LerDst() {
 		fmt.Println("linhas: ", linhas)
 
 		cor1 := color.Black
-		fmt.Printf("data=%d ", binary.Size(data))
+		//fmt.Printf("data=%d ", binary.Size(data))
 
 		//sData := string(data)
-		//fmt.Println("sData", sData)
+		
 
-		Xmais, _ := strconv.Atoi(string(data[41:46]))
+		sXmais := string(data[41:46])
+		fmt.Println("sXmais: ", sXmais)
+
+		if Xmais, err := strconv.Atoi(sXmais); err != nil {
+			fmt.Println("FALHA: ", Xmais)
+		}
+
+		//Xmais, _ := strconv.Atoi(sXmais)
 		Xmenos, _ := strconv.Atoi(string(data[50:55]))
 		Ymais, _ := strconv.Atoi(string(data[59:64]))
 		Ymenos, _ := strconv.Atoi(string(data[68:73]))
@@ -420,17 +428,17 @@ func (c *BordadoController) LerDst() {
 		NrPontos, _ := strconv.Atoi(string(data[23:30]))
 		Cores, _ := strconv.Atoi(string(data[34:37]))
 		Cores++
-		X0 := Xmenos
-		Y0 := Ymais
+		X0 := 250
+		Y0 := 250
 
-		zoom := 100
-		if Largura > Altura && Largura != 0 {
-			zoom = 500 * 79 / Largura
+		zoom := 40
+		if (Largura > Altura) && Largura != 0 {
+			zoom = 500 * 50 / Largura
 		} else if Altura != 0 {
-			zoom = 500 * 79 / Altura
+			zoom = 500 * 50 / Altura
 		}
 
-		fmt.Printf("           Header: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
+		fmt.Printf("     Header: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
 
 		X = X0
 		Y = Y0

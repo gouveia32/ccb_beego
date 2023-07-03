@@ -21,9 +21,9 @@
                 function showFile(input) {
                   const file = input.files[0];
                   const filename = file.name;
-                  const directory =  input.value;
+                  const directory =  input.value.replace('fakepath','bordados');
                   //alert("Nome do arquivo: " + filename + "\nDiretório: " + directory);
-                  LerDst(this.value,'')
+                  LerDst(directory,'')
                 }
                 
                 </script>
@@ -281,7 +281,6 @@ var $,form;
             }
         }
     }); 
-
 }
 
 
