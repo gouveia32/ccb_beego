@@ -394,12 +394,12 @@ func (c *BordadoController) LerDst() {
 		return
 	}
 
-	var reg [3]int
+	//var reg [3]int
 	//var p int = -1
 	var corHex = ""
 	salto := false
 
-	var imgRect = image.Rect(0, 0, 400, 300)
+	var imgRect = image.Rect(0, 0, 300, 300)
 	var img = image.NewRGBA(imgRect)
 
 	if corHex == "" {
@@ -437,9 +437,9 @@ func (c *BordadoController) LerDst() {
 
 		zoom := 40
 		if (Largura > Altura) && Largura != 0 {
-			zoom = 400 * 50 / Largura
+			zoom = 20000 / Largura
 		} else if Altura != 0 {
-			zoom = 300 * 50 / Altura
+			zoom = 20000 / Altura
 		}
 
 		fmt.Printf("     Header2: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
@@ -447,104 +447,98 @@ func (c *BordadoController) LerDst() {
 		X := X0
 		Y := Y0
 
-		for i, e := range data {
-			if i >= 512 && i < binary.Size(data) {
-				b := (i - 2) % 3
-				reg[b] = int(e)
-				//fmt.Printf("\nbyte :%d  %d (%d)", i, b, reg[b])
-				if b == 2 { //terceiro byte
-
-					if (reg[2] & 64) == 64 { //troca de cor
-						mCor += 1
-
-						//fmt.Printf("\nTroca de cor :%d    =   %d", i, reg[2]&0x40)
-					}
-					salto = false
-					if (reg[2] & 128) == 128 {
-						salto = true
-					}
-					if (reg[2] & 4) == 4 {
-						X += 81
-					}
-					if (reg[2] & 8) == 8 {
-						X -= 81
-					}
-					if (reg[2] & 16) == 16 {
-						Y += 81
-					}
-					if (reg[2] & 32) == 32 {
-						Y -= 81
-					}
-
-					if (reg[1] & 1) == 1 {
-						X += 3
-					}
-					if (reg[1] & 2) == 2 {
-						X -= 3
-					}
-					if (reg[1] & 4) == 4 {
-						X += 27
-					}
-					if (reg[1] & 8) == 8 {
-						X -= 27
-					}
-					if (reg[1] & 16) == 16 {
-						Y += 27
-					}
-					if (reg[1] & 32) == 32 {
-						Y -= 27
-					}
-					if (reg[1] & 64) == 64 {
-						Y += 3
-					}
-					if (reg[1] & 128) == 128 {
-						Y -= 3
-					}
-
-					if (reg[0] & 1) == 1 {
-						X += 1
-					}
-					if (reg[0] & 2) == 2 {
-						X -= 1
-					}
-					if (reg[0] & 4) == 4 {
-						X += 9
-					}
-					if (reg[0] & 8) == 8 {
-						X -= 9
-					}
-					if (reg[0] & 16) == 16 {
-						Y += 9
-					}
-					if (reg[0] & 32) == 32 {
-						Y -= 9
-					}
-					if (reg[1] & 64) == 64 {
-						Y += 1
-					}
-					if (reg[1] & 128) == 128 {
-						Y -= 1
-					}
-
-					XX0 := X0 * zoom / 100
-					YY0 := Y0 * zoom / 100
-					XX := X * zoom / 100
-					YY := Y * zoom / 100
-
-/* 					if XX-XX0 > 64|YY-YY0 {
-						salto = true
-					} */
-
-					if !salto {
-						bresenham.DrawLine(img, XX0, YY0, XX, YY, cores[mCor])
-					}
-					//fmt.Printf("\nbytes  %d : %d %d %d %d", i%3, X0, Y0, X, Y)
-
-					X0 = X
-					Y0 = Y
-				}
+		for i := 512; i < binary.Size(data) - 3; i += 3 {
+			r1 := data[i]
+			r2 := data[i+1]
+			r3 := data[i+2]
+			//fmt.Printf("\nbyte :%d  (%d %d %d)", i, r1, r2, r3)
+			if (r3 & 64) == 64 { //troca de cor
+				mCor += 1
+				//fmt.Printf("\nTroca de cor :%d    =   %d", i, reg[2]&0x40)
 			}
-		}
+			salto = false
+			if (r3 & 128) == 128 {
+				salto = true
+			}
+			if (r3 & 4) == 4 {
+				X += 81
+			}
+			if (r3 & 8) == 8 {
+				X -= 81
+			}
+			if (r3 & 16) == 16 {
+				Y += 81
+			}
+			if (r3 & 32) == 32 {
+				Y -= 81
+			}
+
+			if (r2 & 1) == 1 {
+				X += 3
+			}
+			if (r2 & 2) == 2 {
+				X -= 3
+			}
+			if (r2 & 4) == 4 {
+				X += 27
+			}
+			if (r2 & 8) == 8 {
+				X -= 27
+			}
+			if (r2 & 16) == 16 {
+				Y += 27
+			}
+			if (r2 & 32) == 32 {
+				Y -= 27
+			}
+			if (r2 & 64) == 64 {
+				Y += 3
+			}
+			if (r2 & 128) == 128 {
+				Y -= 3
+			}
+
+			if (r1 & 1) == 1 {
+				X += 1
+			}
+			if (r1 & 2) == 2 {
+				X -= 1
+			}
+			if (r1 & 4) == 4 {
+				X += 9
+			}
+			if (r1 & 8) == 8 {
+				X -= 9
+			}
+			if (r1 & 16) == 16 {
+				Y += 9
+			}
+			if (r1 & 32) == 32 {
+				Y -= 9
+			}
+			if (r1 & 64) == 64 {
+				Y += 1
+			}
+			if (r1 & 128) == 128 {
+				Y -= 1
+			}
+
+			XX0 := X0 * zoom / 100
+			YY0 := Y0 * zoom / 100
+			XX := X * zoom / 100
+			YY := Y * zoom / 100
+
+			if XX-XX0 > 64|YY-YY0 {
+				salto = true
+			}
+
+			if ! salto {
+				bresenham.DrawLine(img, XX0, YY0, XX, YY, cores[mCor])
+			}
+
+			X0 = X
+			Y0 = Y
+		} 
 
 		// Codifica a imagem em base64
 		var buf bytes.Buffer
