@@ -100,7 +100,7 @@
     <table id="info" width="70%">
         <tr>
             <td width="50%" style="vertical-align: top;">
-                <div class="col-md-14">
+                <div class="col-md-12">
                     <div class="tab">
                         <a href="javascript:openTab(event,'Linhas');" id="opLinha" class="tablinks">Linha</a>
                         <a href="javascript:openTab(event,'Notas');" id="opNota" class="tablinks">Notas</a>
@@ -137,9 +137,8 @@
                     </div>
                 </div>
             </td>
-            <td width="45px">
-                
-                <div id="div_img" class="image col-md-14" style="background-color: rgb(243, 206, 206);">
+            <td width="40%">
+                <div id="div_img" class="image col-md-10" style="background-color: rgb(243, 206, 206);">
                     <img id="img" name="img" src="data:image/png;base64,{{.m.Imagem}}" alt="Imagem" />
                     <input type="hidden" name="Imagem" id="imagem" value="{{.m.Imagem}}">
                 </div>

@@ -353,12 +353,28 @@ func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 
 // *
 // *
+// ***************** Corres **************************
+func Cores(id int) ( []color.Color) {
+	data := []color.Color{color.White}
+
+	data = append(data, color.Black)
+
+	data = append(data, color.RGBA{85, 165, 34, 1})
+	
+	return data
+
+}
+
+// *
+// *
 // ***************** LerDst **************************
 func (c *BordadoController) LerDst() {
 	cod_linha := c.GetString("cor")
 	id, _ := c.GetInt("id", 0) //id do bordado
-
 	seq := c.GetString("seq")
+
+	cores := Cores(0)
+	mCor := 0
 
 	//fileName := c.GetString("arq")
 
@@ -378,16 +394,12 @@ func (c *BordadoController) LerDst() {
 		return
 	}
 
-	Header := string(data[0:511])
-
-	//fmt.Println("Header: ", Header)
-
 	var reg [3]int
 	//var p int = -1
 	var corHex = ""
 	salto := false
 
-	var imgRect = image.Rect(0, 0, 500, 500)
+	var imgRect = image.Rect(0, 0, 400, 300)
 	var img = image.NewRGBA(imgRect)
 
 	if corHex == "" {
@@ -403,32 +415,34 @@ func (c *BordadoController) LerDst() {
 		fmt.Println("Bord id:", id)
 		fmt.Println("linhas: ", linhas)
 
-		cor1 := color.Black
+		//cor1 := color.Black
 		//fmt.Printf("data=%d ", binary.Size(data))
 
 		//sData := string(data)
 
-		Xmais, _ := strconv.Atoi(string(Header[41:46]))
-		Xmenos, _ := strconv.Atoi(string(Header[50:55]))
-		Ymais, _ := strconv.Atoi(string(Header[59:64]))
-		Ymenos, _ := strconv.Atoi(string(Header[68:73]))
+		Xmais, _ := strconv.Atoi(strings.TrimSpace(string(data[41:46])))
+		Xmenos, _ := strconv.Atoi(strings.TrimSpace(string(data[50:55])))
+		Ymais, _ := strconv.Atoi(strings.TrimSpace(string(data[59:64])))
+		Ymenos, _ := strconv.Atoi(strings.TrimSpace(string(data[68:73])))
 
 		Largura := Xmais + Xmenos
 		Altura := Ymais + Ymenos
-		NrPontos, _ := strconv.Atoi(string(Header[23:30]))
-		Cores, _ := strconv.Atoi(string(Header[34:37]))
+
+		NrPontos, _ := strconv.Atoi(strings.TrimSpace(string(data[23:30])))
+		Cores, _ := strconv.Atoi(strings.TrimSpace(string(data[34:37])))
+
 		Cores++
 		X0 := Xmenos
 		Y0 := Xmais
 
 		zoom := 40
 		if (Largura > Altura) && Largura != 0 {
-			zoom = 500 * 50 / Largura
+			zoom = 400 * 50 / Largura
 		} else if Altura != 0 {
-			zoom = 500 * 50 / Altura
+			zoom = 300 * 50 / Altura
 		}
 
-		fmt.Printf("     Header: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
+		fmt.Printf("     Header2: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
 
 		X := X0
 		Y := Y0
@@ -441,6 +455,7 @@ func (c *BordadoController) LerDst() {
 				if b == 2 { //terceiro byte
 
 					if (reg[2] & 64) == 64 { //troca de cor
+						mCor += 1
 
 						//fmt.Printf("\nTroca de cor :%d    =   %d", i, reg[2]&0x40)
 					}
@@ -516,12 +531,12 @@ func (c *BordadoController) LerDst() {
 					XX := X * zoom / 100
 					YY := Y * zoom / 100
 
-					if XX-XX0 > 64|YY-YY0 {
+/* 					if XX-XX0 > 64|YY-YY0 {
 						salto = true
-					}
+					} */
 
 					if !salto {
-						bresenham.DrawLine(img, XX0, YY0, XX, YY, cor1)
+						bresenham.DrawLine(img, XX0, YY0, XX, YY, cores[mCor])
 					}
 					//fmt.Printf("\nbytes  %d : %d %d %d %d", i%3, X0, Y0, X, Y)
 
@@ -541,7 +556,7 @@ func (c *BordadoController) LerDst() {
 		c.ServeJSON()
 	}
 
-	fmt.Println("LerDst:", cod_linha)
+	//fmt.Println("LerDst:", cod_linha)
 }
 
 func normalize(colorStr string) (string, error) {
