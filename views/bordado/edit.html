@@ -18,11 +18,22 @@
                 <!-- The `multiple` attribute lets users select multiple files. -->
                 <input type="file" id="dst" name="dst" onchange="showFile(this)" accept=".dst">
                 <script>
+                
                 function showFile(input) {
                   const file = input.files[0];
                   const filename = file.name;
                   const directory =  input.value.replace('fakepath','bordados');
-                  //alert("Nome do arquivo: " + filename + "\nDiretório: " + directory);
+
+                    var fReader = new FileReader();
+                    fReader.readAsDataURL(input.files[0])
+                    fReader.onloadend = function(event){
+                    var arq = document.getElementById("dst");
+
+                    arq.src = event.target.result;
+                    }
+                  console.log("Nome do arquivo: ", event);
+                  $("form[name=thisForm]").find("input[name=Arquivo]").val(filename);
+                  $("form[name=thisForm]").find("input[name=Caminho]").val(directory);
                   LerDst(directory,'')
                 }
                 
@@ -253,6 +264,7 @@ var $,form;
     // alert(urlfor);
 
     var id = $("#Id").val();
+    var file = $("#Id").val();
     
     $.ajax({
         type: "POST",

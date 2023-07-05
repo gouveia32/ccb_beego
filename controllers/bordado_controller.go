@@ -464,7 +464,7 @@ func (c *BordadoController) LerDst() {
 		Cores++
 
 		X0 := Xmenos
-		Y0 := Xmais
+		Y0 := Ymenos + 20
 
 		zoom := 40
 		if (Largura > Altura) && Largura != 0 {
@@ -488,7 +488,7 @@ func (c *BordadoController) LerDst() {
 				if mCor >= len(cores) {
 					cores = append(cores, cores_padrao[mCor])
 				}
-				fmt.Printf("\nTroca de cor :%d    =   %d", mCor, len(cores))
+				//fmt.Printf("\nTroca de cor :%d    =   %d", mCor, len(cores))
 			}
 			salto = false
 			if (r3 & 128) == 128 {
