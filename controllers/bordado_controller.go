@@ -6,6 +6,7 @@ import (
 	"ccb_beego/models"
 	"encoding/base64"
 	"encoding/binary"
+	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
 
@@ -15,6 +16,7 @@ import (
 	"image/color"
 	"image/draw"
 	"image/png"
+	"log"
 	"sort"
 	"strconv"
 	"strings"
@@ -354,13 +356,44 @@ func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
 // *
 // *
 // ***************** Corres **************************
-func Cores(id int) ( []color.Color) {
-	data := []color.Color{color.White}
+func Cores(id int) []color.Color {
+	data := []color.Color{}
+	if id > 0 {
+		linhas := models.LinhaBordadoPageList(id)
+		for _, linha := range linhas {
+			l, err := models.LinhaOne(linha.Linha.Codigo)
+			if err != nil {
+				fmt.Println("linha: ", l.Nome)
+			}
+			//fmt.Println("linha: ", l.Nome)
+			colorStr, err := normalize(l.CorHex)
+			if err != nil {
+				log.Fatal(err)
+			}
+			b, err1 := hex.DecodeString(colorStr)
+			if err1 != nil {
+				log.Fatal(err1)
+			}
+			//fmt.Println("b: ", b)
+			cor := color.RGBA{b[0], b[1], b[2], 255}
+			data = append(data, cor)
 
-	data = append(data, color.Black)
+		}
+	} else {
+		data = append(data, color.Black)
+		data = append(data, color.RGBA{255, 200, 3, 255})
+		data = append(data, color.RGBA{160, 1, 34, 255})
+		data = append(data, color.RGBA{85, 165, 34, 255})
+		data = append(data, color.RGBA{1, 150, 255, 255})
+		data = append(data, color.RGBA{85, 2, 255, 255})
+		data = append(data, color.White)
+		data = append(data, color.RGBA{100, 80, 15, 255})
+		data = append(data, color.Black)
+		data = append(data, color.RGBA{160, 1, 34, 255})
+	}
 
-	data = append(data, color.RGBA{85, 165, 34, 1})
-	
+	//linhas := models.LinhaBordadoPageList(id)
+
 	return data
 
 }
@@ -373,7 +406,8 @@ func (c *BordadoController) LerDst() {
 	id, _ := c.GetInt("id", 0) //id do bordado
 	seq := c.GetString("seq")
 
-	cores := Cores(0)
+	cores_padrao := Cores(0)
+	cores := Cores(id)
 	mCor := 0
 
 	//fileName := c.GetString("arq")
@@ -399,7 +433,7 @@ func (c *BordadoController) LerDst() {
 	var corHex = ""
 	salto := false
 
-	var imgRect = image.Rect(0, 0, 300, 300)
+	var imgRect = image.Rect(0, 0, 300, 200)
 	var img = image.NewRGBA(imgRect)
 
 	if corHex == "" {
@@ -410,12 +444,9 @@ func (c *BordadoController) LerDst() {
 
 	if id > 0 {
 
-		linhas := models.LinhaBordadoPageList(id)
+		//fmt.Println("Bord id:", id)
+		//fmt.Println("linhas: ", linhas)
 
-		fmt.Println("Bord id:", id)
-		fmt.Println("linhas: ", linhas)
-
-		//cor1 := color.Black
 		//fmt.Printf("data=%d ", binary.Size(data))
 
 		//sData := string(data)
@@ -430,8 +461,8 @@ func (c *BordadoController) LerDst() {
 
 		NrPontos, _ := strconv.Atoi(strings.TrimSpace(string(data[23:30])))
 		Cores, _ := strconv.Atoi(strings.TrimSpace(string(data[34:37])))
-
 		Cores++
+
 		X0 := Xmenos
 		Y0 := Xmais
 
@@ -447,14 +478,17 @@ func (c *BordadoController) LerDst() {
 		X := X0
 		Y := Y0
 
-		for i := 512; i < binary.Size(data) - 3; i += 3 {
+		for i := 512; i < binary.Size(data)-3; i += 3 {
 			r1 := data[i]
 			r2 := data[i+1]
 			r3 := data[i+2]
 			//fmt.Printf("\nbyte :%d  (%d %d %d)", i, r1, r2, r3)
 			if (r3 & 64) == 64 { //troca de cor
 				mCor += 1
-				//fmt.Printf("\nTroca de cor :%d    =   %d", i, reg[2]&0x40)
+				if mCor >= len(cores) {
+					cores = append(cores, cores_padrao[mCor])
+				}
+				fmt.Printf("\nTroca de cor :%d    =   %d", mCor, len(cores))
 			}
 			salto = false
 			if (r3 & 128) == 128 {
@@ -532,20 +566,26 @@ func (c *BordadoController) LerDst() {
 				salto = true
 			}
 
-			if ! salto {
+			if !salto {
 				bresenham.DrawLine(img, XX0, YY0, XX, YY, cores[mCor])
 			}
-
 			X0 = X
 			Y0 = Y
-		} 
-
+		}
 		// Codifica a imagem em base64
 		var buf bytes.Buffer
 		png.Encode(&buf, img)
 		b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
 
-		c.Data["json"] = corHex + b64
+		row := make(map[string]interface{})
+
+		row["largura"] = Largura
+		row["altura"] = Altura
+		row["cores"] = Cores
+		row["pontos"] = NrPontos
+		row["CorHex"] = corHex
+		row["img"] = b64
+		c.Data["json"] = row
 
 		c.ServeJSON()
 	}

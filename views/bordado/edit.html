@@ -266,57 +266,22 @@ var $,form;
         success: function(data) {
             //console.log("data",data)
             if(data != ''){
-                var cor = data.substring(0, 6);
-                var img = data.substring(6, data.length - 6);
-                document.getElementById('img').src = "data:image/png;base64," + img;
+                document.getElementById('img').src = "data:image/png;base64," + data.img;
                 //alert('alterado')
 
-                $("form[name=thisForm]").find("input[name=Imagem]").val(img);
-                $("form[name=thisForm]").find("span[name=span_cor_" + seq + "]").css('background-color', '#' + cor);
-                console.log('data:',data);
-                console.log('cor:',cor);
-                console.log('img:',img);
+                $("form[name=thisForm]").find("input[name=Imagem]").val(data.img);
+                $("form[name=thisForm]").find("span[name=span_cor_" + seq + "]").css('background-color', '#' + data.CorHex);
+
+                $("form[name=thisForm]").find("input[name=Largura]").val(data.largura);
+                $("form[name=thisForm]").find("input[name=Altura]").val(data.altura);
+                $("form[name=thisForm]").find("input[name=Cores]").val(data.cores);
+                $("form[name=thisForm]").find("input[name=Pontos]").val(data.pontos);
+                //console.log('cor:',data.CorHex);
+                //console.log('img:',data.img);
                 return false;
             }
         }
     }); 
-}
-
-
-function carregaDST(fileName){
-    //alert('AQUI ' + fileName)
-
-    // alert(urlfor);
-
-    var id = $("#Id").val();
-    
-    $.ajax({
-        type: "POST",
-        url: "/bordado/lerdst",
-        data: {
-            id:     id,
-            cor:    cor,
-            seq:    seq
-        },
-        dataType: 'json',
-        success: function(data) {
-            //console.log("data",data)
-            if(data != ''){
-                var cor = data.substring(0, 6);
-                var img = data.substring(6, data.length - 6);
-                document.getElementById('img').src = "data:image/png;base64," + img;
-                //alert('alterado')
-
-                $("form[name=thisForm]").find("input[name=Imagem]").val(img);
-                $("form[name=thisForm]").find("span[name=span_cor_" + seq + "]").css('background-color', '#' + cor);
-                console.log('data:',data);
-                console.log('cor:',cor);
-                console.log('img:',img);
-                return false;
-            }
-        }
-    }); 
-
 }
 
 </script>
