@@ -264,7 +264,7 @@ var $,form;
     // alert(urlfor);
 
     var id = $("#Id").val();
-    var file = $("#Id").val();
+    var file = document.getElementById('caminho').value;
     
     $.ajax({
         type: "POST",
@@ -272,7 +272,8 @@ var $,form;
         data: {
             id:     id,
             cor:    cor,
-            seq:    seq
+            seq:    seq,
+            file:   file
         },
         dataType: 'json',
         success: function(data) {

@@ -144,6 +144,10 @@ func (c *BordadoController) Edit() {
 		item.Linha.Codigo = linha.Codigo
 		item.Linha.Nome = linha.Nome
 		item.Linha.CorHex = linha.CorHex
+		item.Linha.CorRGB, err = models.ParseHexColor (linha.CorHex)
+		if err != nil {
+			item.Linha.CorRGB = color.RGBA{255,1,1,255}
+		}
 
 		linhas = append(linhas, item)
 	}
@@ -337,24 +341,6 @@ func CarregaDst(cor color.Color) (resp string) {
 
 // *
 // *
-// ***************** DrawLine **************************
-func DrawLine(x1, y1, x2, y2 int, cor color.Color) (resp string) {
-	var imgRect = image.Rect(0, 0, 300, 300)
-	var img = image.NewRGBA(imgRect)
-
-	// draw line
-	bresenham.DrawLine(img, x1, y1, x2, y2, cor)
-
-	// Codifica a imagem em base64
-	var buf bytes.Buffer
-	png.Encode(&buf, img)
-	b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
-
-	return b64
-}
-
-// *
-// *
 // ***************** Corres **************************
 func Cores(id int) []color.Color {
 	data := []color.Color{}
@@ -414,13 +400,13 @@ func (c *BordadoController) LerDst() {
 
 	var arq string
 	if seq != "" {
-		arq = "c:/bordados/Bota.dst"
+		arq = c.GetString("file")
 	} else {
 		arq = cod_linha
 		cod_linha = "5208"
 	}
 
-	//fmt.Println("arq: ", arq)
+	fmt.Println("arq: ", arq)
 
 	data, err := ioutil.ReadFile(arq)
 	if err != nil {
