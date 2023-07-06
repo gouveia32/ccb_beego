@@ -156,13 +156,13 @@ func (c *BordadoController) Edit() {
 
 	//fmt.Println("lps:", lps)
 
-	if len(linhas) < int(m.Cores) {
+	if len(linhas) != int(m.Cores) {
 		for i := len(m.LinhaBordadoRel); i < int(m.Cores); i++ {
 			linha, err := models.LinhaOne(lps[i])
 			if err != nil {
 				linha, _ = models.LinhaOne("5311")
 			}
-			//fmt.Println("linha:", linha.Codigo, " ", linha.Nome)
+			fmt.Println("linha:", linha.Codigo, " ", linha.Nome)
 
 			item := models.LinhaBordadoRel{Bordado: m, Linha: linha, Seq: i + 1}
 			linhas = append(linhas, &item)
@@ -395,15 +395,26 @@ func (c *BordadoController) LerDst() {
 	cores_padrao := Cores(0)
 	cores := Cores(id)
 	mCor := 0
+	var corHex = ""
 
 	//fileName := c.GetString("arq")
 
-	var arq string
+	var imgRect = image.Rect(0, 0, 300, 200)
+	var img = image.NewRGBA(imgRect)
+
+	if corHex == "" {
+		l, _ := models.LinhaOne(cod_linha)
+		corHex = l.CorHex
+		//fmt.Println("NOVA:", corHex)
+	}
+	arq := c.GetString("file")
+
 	if seq != "" {
-		arq = c.GetString("file")
-	} else {
-		arq = cod_linha
-		cod_linha = "5208"
+		if nSeq, err := strconv.Atoi(seq); err == nil {
+			cores[nSeq],_ = models.ParseHexColor(corHex)
+			fmt.Printf("\n\nCOR: seq=%d %s", nSeq, cores[nSeq])
+		}
+		//ajustar cor da seq	
 	}
 
 	fmt.Println("arq: ", arq)
@@ -414,28 +425,9 @@ func (c *BordadoController) LerDst() {
 		return
 	}
 
-	//var reg [3]int
-	//var p int = -1
-	var corHex = ""
 	salto := false
 
-	var imgRect = image.Rect(0, 0, 300, 200)
-	var img = image.NewRGBA(imgRect)
-
-	if corHex == "" {
-		l, _ := models.LinhaOne(cod_linha)
-		corHex = l.CorHex
-		//fmt.Println("NOVA:", corHex)
-	}
-
 	if id > 0 {
-
-		//fmt.Println("Bord id:", id)
-		//fmt.Println("linhas: ", linhas)
-
-		//fmt.Printf("data=%d ", binary.Size(data))
-
-		//sData := string(data)
 
 		Xmais, _ := strconv.Atoi(strings.TrimSpace(string(data[41:46])))
 		Xmenos, _ := strconv.Atoi(strings.TrimSpace(string(data[50:55])))
@@ -459,7 +451,7 @@ func (c *BordadoController) LerDst() {
 			zoom = 20000 / Altura
 		}
 
-		fmt.Printf("     Header2: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
+		//fmt.Printf("     Header2: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
 
 		X := X0
 		Y := Y0
