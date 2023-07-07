@@ -374,7 +374,7 @@ func Cores(id int) []color.Color {
 		data = append(data, color.RGBA{85, 2, 255, 255})
 		data = append(data, color.White)
 		data = append(data, color.RGBA{100, 80, 15, 255})
-		data = append(data, color.Black)
+		data = append(data, color.RGBA{10, 200, 180, 255})
 		data = append(data, color.RGBA{160, 1, 34, 255})
 	}
 
@@ -393,7 +393,11 @@ func (c *BordadoController) LerDst() {
 	seq := c.GetString("seq")
 
 	cores_padrao := Cores(0)
-	cores := Cores(id)
+	cores := cores_padrao
+	if (id > 0) {
+		cores = Cores(id)
+	}
+
 	mCor := 0
 	var corHex = ""
 
@@ -407,14 +411,19 @@ func (c *BordadoController) LerDst() {
 		corHex = l.CorHex
 		//fmt.Println("NOVA:", corHex)
 	}
-	arq := c.GetString("file")
 
-	if seq != "" {
+	var arq string
+	if arq == "" {
+		arq = c.GetString("file")
 		if nSeq, err := strconv.Atoi(seq); err == nil {
 			cores[nSeq],_ = models.ParseHexColor(corHex)
 			fmt.Printf("\n\nCOR: seq=%d %s", nSeq, cores[nSeq])
 		}
-		//ajustar cor da seq	
+		//ajustar cor da seq
+		
+	} else {
+		arq = cod_linha
+		cod_linha = "5208"
 	}
 
 	fmt.Println("arq: ", arq)
