@@ -391,6 +391,9 @@ func (c *BordadoController) LerDst() {
 	cod_linha := c.GetString("cor")
 	id, _ := c.GetInt("id", 0) //id do bordado
 	seq := c.GetString("seq")
+	arq := c.GetString("file")
+
+	fmt.Printf("\n\nPARAMS: cor:%s id:%d seq:%s arq:%s\n", cod_linha,id,seq,arq)
 
 	cores_padrao := Cores(0)
 	cores := cores_padrao
@@ -406,15 +409,20 @@ func (c *BordadoController) LerDst() {
 	var imgRect = image.Rect(0, 0, 300, 200)
 	var img = image.NewRGBA(imgRect)
 
+	fmt.Printf("\n\nAntes\n")
+
 	if corHex == "" {
-		l, _ := models.LinhaOne(cod_linha)
-		corHex = l.CorHex
-		//fmt.Println("NOVA:", corHex)
+		if l, err := models.LinhaOne(cod_linha); err == nil {
+			corHex = l.CorHex
+		} else {
+			corHex =  "f6f6f6"
+		}
 	}
 
-	var arq string
+	fmt.Printf("\n\ncorHex:%s\n", corHex)
+	
 	if arq == "" {
-		arq = c.GetString("file")
+		
 		if nSeq, err := strconv.Atoi(seq); err == nil {
 			cores[nSeq],_ = models.ParseHexColor(corHex)
 			fmt.Printf("\n\nCOR: seq=%d %s", nSeq, cores[nSeq])
@@ -426,7 +434,6 @@ func (c *BordadoController) LerDst() {
 		cod_linha = "5208"
 	}
 
-	fmt.Println("arq: ", arq)
 
 	data, err := ioutil.ReadFile(arq)
 	if err != nil {
@@ -434,9 +441,19 @@ func (c *BordadoController) LerDst() {
 		return
 	}
 
+	fmt.Println("data: ", data)
+
 	salto := false
 
 	if id > 0 {
+
+		/* fmt.Printf("     Header1: %s %s %s %s %s %s\n", 
+			strings.TrimSpace(string(data[41:46])), 
+			strings.TrimSpace(string(data[50:55])), 
+			strings.TrimSpace(string(data[59:64])),
+			strings.TrimSpace(string(data[68:73])),
+			strings.TrimSpace(string(data[23:30])),
+			strings.TrimSpace(string(data[34:37])) ) */
 
 		Xmais, _ := strconv.Atoi(strings.TrimSpace(string(data[41:46])))
 		Xmenos, _ := strconv.Atoi(strings.TrimSpace(string(data[50:55])))
@@ -460,7 +477,7 @@ func (c *BordadoController) LerDst() {
 			zoom = 20000 / Altura
 		}
 
-		//fmt.Printf("     Header2: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
+		fmt.Printf("     Header2: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
 
 		X := X0
 		Y := Y0
@@ -469,13 +486,13 @@ func (c *BordadoController) LerDst() {
 			r1 := data[i]
 			r2 := data[i+1]
 			r3 := data[i+2]
-			//fmt.Printf("\nbyte :%d  (%d %d %d)", i, r1, r2, r3)
+			fmt.Printf("\nbyte :%d  (%d %d %d)", i, r1, r2, r3)
 			if (r3 & 64) == 64 { //troca de cor
 				mCor += 1
 				if mCor >= len(cores) {
 					cores = append(cores, cores_padrao[mCor])
 				}
-				//fmt.Printf("\nTroca de cor :%d    =   %d", mCor, len(cores))
+				fmt.Printf("\nTroca de cor :%d    =   %d", mCor, len(cores))
 			}
 			salto = false
 			if (r3 & 128) == 128 {
