@@ -342,11 +342,11 @@ func CarregaDst(cor color.Color) (resp string) {
 // *
 // *
 // ***************** Corres **************************
-func CarregaCores(id int, nc int) []color.Color {
+func CarregaCoresO(id int, nc int) []color.Color {
 	cores_padrao := []color.Color{}
 	data := []color.Color{}
-	if id > 0 {
-		linhas := models.LinhaBordadoPageList(id)
+	linhas := models.LinhaBordadoPageList(id)
+	if len(linhas) > 0 {
 		for _, linha := range linhas {
 			l, err := models.LinhaOne(linha.Linha.Codigo)
 			if err != nil {
@@ -384,8 +384,58 @@ func CarregaCores(id int, nc int) []color.Color {
 			}
 		}
 	}
-
 	//linhas := models.LinhaBordadoPageList(id)
+	return data
+}
+
+// *
+// *
+// ***************** Corres **************************
+func CarregaCores(id int, nc int) []*models.Linha {
+	cores_padrao := []string{"5075","5208","5151","5115","5310","5311","5158","5058","5027","5198"}
+	data := []*models.Linha{}
+
+	linhas := models.LinhaBordadoPageList(id)
+	if len(linhas) > 0 {
+		for _, linha := range linhas {
+			l, err := models.LinhaOne(linha.Linha.Codigo)
+			if err != nil {
+				log.Fatal(err)
+			}
+			
+			colorStr, err := normalize(l.CorHex)
+			if err != nil {
+				log.Fatal(err)
+			}
+			b, err := hex.DecodeString(colorStr)
+			if err != nil {
+				log.Fatal(err)
+			}
+			//fmt.Println("b: ", b)
+			cor := color.RGBA{b[0], b[1], b[2], 255}
+			l.CorRGB = cor
+			data = append(data, l)
+		}
+	
+	} else {
+		for i, cor := range cores_padrao {
+			l, err := models.LinhaOne(cor)
+			if i < nc && err == nil {
+				colorStr, err := normalize(l.CorHex)
+				if err != nil {
+					log.Fatal(err)
+				}
+				b, err1 := hex.DecodeString(colorStr)
+				if err1 != nil {
+					log.Fatal(err1)
+				}
+				//fmt.Println("b: ", b)
+				cor := color.RGBA{b[0], b[1], b[2], 255}
+				l.CorRGB = cor
+				data = append(data, l)
+			}
+		}
+	}
 
 	return data
 
@@ -401,7 +451,6 @@ func (c *BordadoController) LerDst() {
 	arq := c.GetString("file")
 
 	fmt.Printf("\n\nPARAMS: cor:%s id:%d seq:%s arq:%s\n", cod_linha,id,seq,arq)
-
 
 	mCor := 0
 	var corHex = ""
@@ -466,7 +515,7 @@ func (c *BordadoController) LerDst() {
 		Cores, _ := strconv.Atoi(strings.TrimSpace(string(data[34:37])))
 		Cores++
 
-		cores_padrao := CarregaCores(0, Cores)
+		cores_padrao := CarregaCores(0, Cores + 1)
 		cores_utilizada := cores_padrao
 		if (id > 0) {
 			cores_utilizada = CarregaCores(id, Cores)
@@ -478,7 +527,6 @@ func (c *BordadoController) LerDst() {
 	
 		fmt.Printf("\n\ncores_utilizada: %d\n", len(cores_utilizada))
 	
-
 		X0 := Xmenos
 		Y0 := Ymenos + 20
 
@@ -585,7 +633,7 @@ func (c *BordadoController) LerDst() {
 			}
 
 			if !salto {
-				bresenham.DrawLine(img, XX0, YY0, XX, YY, cores_utilizada[mCor])
+				bresenham.DrawLine(img, XX0, YY0, XX, YY, cores_utilizada[mCor].CorRGB)
 			}
 			X0 = X
 			Y0 = Y
@@ -610,6 +658,7 @@ func (c *BordadoController) LerDst() {
 
 		row := make(map[string]interface{})
 
+		row["linhas"] = cores_utilizada
 		row["largura"] = Largura
 		row["altura"] = Altura
 		row["cores"] = Cores

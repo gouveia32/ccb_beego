@@ -132,7 +132,7 @@
                                 </div>
                                 <div style="text-align: center;" class="col-md-3">
                                     <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}">
-                                    <input type="Text" onchange="LerDst(this.value,{{$item.Seq}})" style="width: 45px; height: 19px;" name="LinhaCods" value="{{$item.Linha.Codigo}}">
+                                    <input type="Text" onchange="LerDst(this.value,{{$item.Seq}})" style="width: 45px; height: 19px;" name="LinhaCods{{$item.Seq}}" value="{{$item.Linha.Codigo}}">
                                 </div>
                                 <div class="col-md-5" nowrap>
                                     {{$item.Linha.Nome}}
@@ -268,14 +268,17 @@ var $,form;
                 //alert('alterado')
 
                 $("form[name=thisForm]").find("input[name=Imagem]").val(data.img);
-                $("form[name=thisForm]").find("span[name=span_cor_" + seq + "]").css('background-color', '#' + data.CorHex);
+                //$("form[name=thisForm]").find("span[name=span_cor_" + seq + "]").css('background-color', '#' + data.CorHex);
 
                 $("form[name=thisForm]").find("input[name=Largura]").val(data.largura);
                 $("form[name=thisForm]").find("input[name=Altura]").val(data.altura);
                 $("form[name=thisForm]").find("input[name=Cores]").val(data.cores);
                 $("form[name=thisForm]").find("input[name=Pontos]").val(data.pontos);
                 //console.log('cor:',data.CorHex);
-                //console.log('img:',data.img);
+                console.log('linhas:',data.linhas);
+                for (let i = 0; i < data.linhas.length; i++) {
+                    $("form[name=thisForm]").find("input[name=LinhaCods" + i + "]").val(data.linhas[i].Codigo);
+                }
                 return true;
             }
         }
