@@ -342,7 +342,7 @@ func CarregaDst(cor color.Color) (resp string) {
 // *
 // *
 // ***************** Corres **************************
-func Cores(id int) []color.Color {
+func CarregaCores(id int) []color.Color {
 	data := []color.Color{}
 	if id > 0 {
 		linhas := models.LinhaBordadoPageList(id)
@@ -395,10 +395,10 @@ func (c *BordadoController) LerDst() {
 
 	fmt.Printf("\n\nPARAMS: cor:%s id:%d seq:%s arq:%s\n", cod_linha,id,seq,arq)
 
-	cores_padrao := Cores(0)
-	cores := cores_padrao
+	cores_padrao := CarregaCores(0)
+	cores_utilizada := cores_padrao
 	if (id > 0) {
-		cores = Cores(id)
+		cores_utilizada = CarregaCores(id)
 	}
 
 	mCor := 0
@@ -424,15 +424,12 @@ func (c *BordadoController) LerDst() {
 	if arq == "" {
 		
 		if nSeq, err := strconv.Atoi(seq); err == nil {
-			cores[nSeq],_ = models.ParseHexColor(corHex)
-			fmt.Printf("\n\nCOR: seq=%d %s", nSeq, cores[nSeq])
+			cores_utilizada[nSeq],_ = models.ParseHexColor(corHex)
+			fmt.Printf("\n\nCOR: seq=%d %s", nSeq, cores_utilizada[nSeq])
 		}
 		//ajustar cor da seq
 		
-	} else {
-		arq = cod_linha
-		cod_linha = "5208"
-	}
+	} 
 
 
 	data, err := ioutil.ReadFile(arq)
@@ -441,7 +438,7 @@ func (c *BordadoController) LerDst() {
 		return
 	}
 
-	fmt.Println("data: ", data)
+	//fmt.Println("data: ", data)
 
 	salto := false
 
@@ -486,13 +483,13 @@ func (c *BordadoController) LerDst() {
 			r1 := data[i]
 			r2 := data[i+1]
 			r3 := data[i+2]
-			fmt.Printf("\nbyte :%d  (%d %d %d)", i, r1, r2, r3)
+			//fmt.Printf("\nbyte :%d  (%d %d %d)", i, r1, r2, r3)
 			if (r3 & 64) == 64 { //troca de cor
 				mCor += 1
-				if mCor >= len(cores) {
-					cores = append(cores, cores_padrao[mCor])
+				if mCor >= len(cores_utilizada) {
+					cores_utilizada = append(cores_utilizada, cores_padrao[mCor])
 				}
-				fmt.Printf("\nTroca de cor :%d    =   %d", mCor, len(cores))
+				fmt.Printf("\nTroca de cor :%d    =   %d", mCor, len(cores_utilizada))
 			}
 			salto = false
 			if (r3 & 128) == 128 {
@@ -571,7 +568,7 @@ func (c *BordadoController) LerDst() {
 			}
 
 			if !salto {
-				bresenham.DrawLine(img, XX0, YY0, XX, YY, cores[mCor])
+				bresenham.DrawLine(img, XX0, YY0, XX, YY, cores_utilizada[mCor])
 			}
 			X0 = X
 			Y0 = Y
