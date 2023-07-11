@@ -342,7 +342,8 @@ func CarregaDst(cor color.Color) (resp string) {
 // *
 // *
 // ***************** Corres **************************
-func CarregaCores(id int) []color.Color {
+func CarregaCores(id int, nc int) []color.Color {
+	cores_padrao := []color.Color{}
 	data := []color.Color{}
 	if id > 0 {
 		linhas := models.LinhaBordadoPageList(id)
@@ -366,16 +367,22 @@ func CarregaCores(id int) []color.Color {
 
 		}
 	} else {
-		data = append(data, color.Black)
-		data = append(data, color.RGBA{255, 200, 3, 255})
-		data = append(data, color.RGBA{160, 1, 34, 255})
-		data = append(data, color.RGBA{85, 165, 34, 255})
-		data = append(data, color.RGBA{1, 150, 255, 255})
-		data = append(data, color.RGBA{85, 2, 255, 255})
-		data = append(data, color.White)
-		data = append(data, color.RGBA{100, 80, 15, 255})
-		data = append(data, color.RGBA{10, 200, 180, 255})
-		data = append(data, color.RGBA{160, 1, 34, 255})
+		cores_padrao = append(cores_padrao, color.Black)
+		cores_padrao = append(cores_padrao, color.RGBA{255, 200, 3, 255})
+		cores_padrao = append(cores_padrao, color.RGBA{160, 1, 34, 255})
+		cores_padrao = append(cores_padrao, color.RGBA{85, 165, 34, 255})
+		cores_padrao = append(cores_padrao, color.RGBA{1, 150, 255, 255})
+		cores_padrao = append(cores_padrao, color.RGBA{85, 2, 255, 255})
+		cores_padrao = append(cores_padrao, color.White)
+		cores_padrao = append(cores_padrao, color.RGBA{100, 80, 15, 255})
+		cores_padrao = append(cores_padrao, color.RGBA{10, 200, 180, 255})
+		cores_padrao = append(cores_padrao, color.RGBA{160, 1, 34, 255})
+
+		for i, cor := range cores_padrao {
+			if i < nc {
+				data = append(data, cor)
+			}
+		}
 	}
 
 	//linhas := models.LinhaBordadoPageList(id)
@@ -395,11 +402,6 @@ func (c *BordadoController) LerDst() {
 
 	fmt.Printf("\n\nPARAMS: cor:%s id:%d seq:%s arq:%s\n", cod_linha,id,seq,arq)
 
-	cores_padrao := CarregaCores(0)
-	cores_utilizada := cores_padrao
-	if (id > 0) {
-		cores_utilizada = CarregaCores(id)
-	}
 
 	mCor := 0
 	var corHex = ""
@@ -421,7 +423,7 @@ func (c *BordadoController) LerDst() {
 
 	fmt.Printf("\n\ncorHex:%s\n", corHex)
 	
-	if arq == "" {
+/* 	if arq == "" {
 		
 		if nSeq, err := strconv.Atoi(seq); err == nil {
 			cores_utilizada[nSeq],_ = models.ParseHexColor(corHex)
@@ -430,7 +432,7 @@ func (c *BordadoController) LerDst() {
 		//ajustar cor da seq
 		
 	} 
-
+ */
 
 	data, err := ioutil.ReadFile(arq)
 	if err != nil {
@@ -464,6 +466,19 @@ func (c *BordadoController) LerDst() {
 		Cores, _ := strconv.Atoi(strings.TrimSpace(string(data[34:37])))
 		Cores++
 
+		cores_padrao := CarregaCores(0, Cores)
+		cores_utilizada := cores_padrao
+		if (id > 0) {
+			cores_utilizada = CarregaCores(id, Cores)
+		}
+	
+		if len(cores_utilizada) < 1 {
+			cores_utilizada = cores_padrao
+		}
+	
+		fmt.Printf("\n\ncores_utilizada: %d\n", len(cores_utilizada))
+	
+
 		X0 := Xmenos
 		Y0 := Ymenos + 20
 
@@ -474,7 +489,8 @@ func (c *BordadoController) LerDst() {
 			zoom = 20000 / Altura
 		}
 
-		fmt.Printf("     Header2: %d %d %d %d %d %d %d %d zoom:%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, zoom)
+		fmt.Printf("     Header2: %d %d %d %d %d %d %d %d zoom:%d len(cores):%d\n", Xmais, Xmenos, Ymais, Ymenos, Largura, Altura, NrPontos, Cores, 
+					zoom, len(cores_utilizada))
 
 		X := X0
 		Y := Y0
@@ -487,6 +503,7 @@ func (c *BordadoController) LerDst() {
 			if (r3 & 64) == 64 { //troca de cor
 				mCor += 1
 				if mCor >= len(cores_utilizada) {
+					fmt.Printf("\nMuitas trocas de cor :%d    =   %d", mCor, len(cores_utilizada))
 					cores_utilizada = append(cores_utilizada, cores_padrao[mCor])
 				}
 				fmt.Printf("\nTroca de cor :%d    =   %d", mCor, len(cores_utilizada))
@@ -573,7 +590,20 @@ func (c *BordadoController) LerDst() {
 			X0 = X
 			Y0 = Y
 		}
-		// Codifica a imagem em base64
+
+		//Ajusta as linhas
+/* 		linhas := make([]*models.LinhaBordadoRel, 0)
+		for i := len(m.LinhaBordadoRel); i < int(Cores); i++ {
+			linha, err := models.LinhaOne(lps[i])
+			if err != nil {
+				linha, _ = models.LinhaOne("5311")
+			}
+			fmt.Println("linha:", linha.Codigo, " ", linha.Nome)
+
+			item := models.LinhaBordadoRel{Bordado: m, Linha: linha, Seq: i + 1}
+			linhas = append(linhas, &item)
+		}
+ */		// Codifica a imagem em base64
 		var buf bytes.Buffer
 		png.Encode(&buf, img)
 		b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
