@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
-	"image/draw"
+	//"image/draw"
 	"image/png"
 	"log"
 	"sort"
@@ -319,74 +319,6 @@ func (c *BordadoController) Delete() {
 	}
 }
 
-// *
-// *
-// ***************** CarregaDst **************************
-func CarregaDst(cor color.Color) (resp string) {
-	// Cria uma imagem com fundo branco
-	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
-	//draw.Draw(img, img.Bounds(), &image.Uniform{color.White}, image.Point{}, draw.Src)
-
-	// Desenha um retângulo preto na imagem
-	rect := image.Rect(50, 50, 100, 100)
-	draw.Draw(img, rect, &image.Uniform{cor}, image.ZP, draw.Src)
-
-	// Codifica a imagem em base64
-	var buf bytes.Buffer
-	png.Encode(&buf, img)
-	b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
-
-	return b64
-}
-
-// *
-// *
-// ***************** Corres **************************
-func CarregaCoresO(id int, nc int) []color.Color {
-	cores_padrao := []color.Color{}
-	data := []color.Color{}
-	linhas := models.LinhaBordadoPageList(id)
-	if len(linhas) > 0 {
-		for _, linha := range linhas {
-			l, err := models.LinhaOne(linha.Linha.Codigo)
-			if err != nil {
-				fmt.Println("linha: ", l.Nome)
-			}
-			//fmt.Println("linha: ", l.Nome)
-			colorStr, err := normalize(l.CorHex)
-			if err != nil {
-				log.Fatal(err)
-			}
-			b, err1 := hex.DecodeString(colorStr)
-			if err1 != nil {
-				log.Fatal(err1)
-			}
-			//fmt.Println("b: ", b)
-			cor := color.RGBA{b[0], b[1], b[2], 255}
-			data = append(data, cor)
-
-		}
-	} else {
-		cores_padrao = append(cores_padrao, color.Black)
-		cores_padrao = append(cores_padrao, color.RGBA{255, 200, 3, 255})
-		cores_padrao = append(cores_padrao, color.RGBA{160, 1, 34, 255})
-		cores_padrao = append(cores_padrao, color.RGBA{85, 165, 34, 255})
-		cores_padrao = append(cores_padrao, color.RGBA{1, 150, 255, 255})
-		cores_padrao = append(cores_padrao, color.RGBA{85, 2, 255, 255})
-		cores_padrao = append(cores_padrao, color.White)
-		cores_padrao = append(cores_padrao, color.RGBA{100, 80, 15, 255})
-		cores_padrao = append(cores_padrao, color.RGBA{10, 200, 180, 255})
-		cores_padrao = append(cores_padrao, color.RGBA{160, 1, 34, 255})
-
-		for i, cor := range cores_padrao {
-			if i < nc {
-				data = append(data, cor)
-			}
-		}
-	}
-	//linhas := models.LinhaBordadoPageList(id)
-	return data
-}
 
 // *
 // *
