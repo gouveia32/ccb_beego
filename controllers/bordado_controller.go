@@ -244,6 +244,8 @@ func (c *BordadoController) Save() {
 		}
 	}
 
+	fmt.Println("Linhas: ", relslin)
+
 	if b.Id == 0 {
 		to, err := o.Begin()
 		if err != nil {
@@ -384,10 +386,8 @@ func (c *BordadoController) LerDst() {
 
 	fmt.Printf("\n\nPARAMS: cor:%s id:%d seq:%s arq:%s\n", cod_linha,id,seq,arq)
 
-	mCor := 0
+	mCor := 1
 	var corHex = ""
-
-	//fileName := c.GetString("arq")
 
 	var imgRect = image.Rect(0, 0, 300, 200)
 	var img = image.NewRGBA(imgRect)
@@ -482,11 +482,12 @@ func (c *BordadoController) LerDst() {
 			//fmt.Printf("\nbyte :%d  (%d %d %d)", i, r1, r2, r3)
 			if (r3 & 64) == 64 { //troca de cor
 				mCor += 1
-				if mCor >= len(cores_utilizada) {
+				if mCor > len(cores_utilizada) {
+					fmt.Printf("\nbyte :%d  (%d %d %d)\n", i, r1, r2, r3)
+					cores_utilizada = append(cores_utilizada, cores_padrao[mCor-1])
 					fmt.Printf("\nMuitas trocas de cor :%d    =   %d", mCor, len(cores_utilizada))
-					cores_utilizada = append(cores_utilizada, cores_padrao[mCor])
 				}
-				fmt.Printf("\nTroca de cor :%d    =   %d", mCor, len(cores_utilizada))
+				fmt.Printf("\nTroca de cor :%d    =   %d\n", mCor, len(cores_utilizada))
 			}
 			salto = false
 			if (r3 & 128) == 128 {
@@ -565,12 +566,16 @@ func (c *BordadoController) LerDst() {
 			}
 
 			if !salto {
-				bresenham.DrawLine(img, XX0, YY0, XX, YY, cores_utilizada[mCor].CorRGB)
+				bresenham.DrawLine(img, XX0, YY0, XX, YY, cores_utilizada[mCor-1].CorRGB)
 			}
 			X0 = X
 			Y0 = Y
 		}
 
+		for _, linha := range cores_utilizada {
+			fmt.Printf("\n%s",linha.Codigo," ",linha.Nome)
+
+		}
 		//Ajusta as linhas
 /* 		linhas := make([]*models.LinhaBordadoRel, 0)
 		for i := len(m.LinhaBordadoRel); i < int(Cores); i++ {

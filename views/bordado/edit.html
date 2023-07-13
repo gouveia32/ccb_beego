@@ -131,8 +131,8 @@
                                     {{$item.Seq}}
                                 </div>
                                 <div style="text-align: center;" class="col-md-3">
-                                    <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}">
-                                    <input type="Text" onchange="LerDst(this.value,{{$item.Seq}})" style="width: 45px; height: 19px;" name="LinhaCods{{$item.Seq}}" value="{{$item.Linha.Codigo}}">
+                                    <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}" id="LinhaIds{{$item.Seq}}">
+                                    <input type="Text" onchange="LerDst(this.value,{{$item.Seq}})" style="width: 45px; height: 19px;" name="LinhaCods" id="LinhaCods{{$item.Seq}}" value="{{$item.Linha.Codigo}}">
                                 </div>
                                 <div class="col-md-5" nowrap>
                                     {{$item.Linha.Nome}}
@@ -150,7 +150,7 @@
             </td>
             <td width="40%">
                 <div id="div_img" class="image col-md-10" style="background-color: rgb(243, 206, 206);">
-                    <img id="img" name="img" src="data:image/png;base64,{{.m.Imagem}}" alt="Imagem" />
+                    <img id="img" name="img" ondblclick="LerDst(this.value,'0')" src="data:image/png;base64,{{.m.Imagem}}" alt="Imagem" />
                     <input type="hidden" name="Imagem" id="imagem" value="{{.m.Imagem}}">
                 </div>
                 <!-- <canvas id="myCanvas" width="300" height="300"></canvas> -->
@@ -268,7 +268,7 @@ var $,form;
                 //alert('alterado')
 
                 $("form[name=thisForm]").find("input[name=Imagem]").val(data.img);
-                //$("form[name=thisForm]").find("span[name=span_cor_" + seq + "]").css('background-color', '#' + data.CorHex);
+                $("form[name=thisForm]").find("span[name=span_cor_" + seq + "]").css('background-color', '#' + data.CorHex);
 
                 $("form[name=thisForm]").find("input[name=Largura]").val(data.largura);
                 $("form[name=thisForm]").find("input[name=Altura]").val(data.altura);
@@ -277,7 +277,8 @@ var $,form;
                 //console.log('cor:',data.CorHex);
                 console.log('linhas:',data.linhas);
                 for (let i = 0; i < data.linhas.length; i++) {
-                    $("form[name=thisForm]").find("input[name=LinhaCods" + i + "]").val(data.linhas[i].Codigo);
+                    $("form[name=thisForm]").find("input[id=LinhaIds" + i + "]").val(data.linhas[i+1].Codigo);
+                    //$("form[name=thisForm]").find("input[id=LinhaCods" + i + "]").val(data.linhas[i+1].Codigo);
                 }
                 return true;
             }
