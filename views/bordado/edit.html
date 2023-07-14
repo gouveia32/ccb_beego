@@ -122,7 +122,7 @@
                         <table id="linhas"  width="70%">
                             <th class="label-micro col-md-2" style="text-align: center;">SEQ</th>
                             <th class="label-micro col-md-3" style="text-align: center;">CÓDIGO</th>
-                            <th class="label-micro col-md-5">NOME</th>
+                            <th style="width:60%">NOME</th>
                             <th class="label-micro col-md-1" style="text-align: center;">COR</th>
                             {{range $key,$item := .linhas}}
                                 <tr>
@@ -142,29 +142,7 @@
 
                                 </tr>
                             {{end}}
-<!--                         <div name="Linhas" class="row">
-                            <div class="label-micro col-md-2" style="text-align: center;">SEQ</div>
-                            <div class="label-micro col-md-3" style="text-align: center;">CÓDIGO</div>
-                            <div class="label-micro col-md-5">NOME</div>
-                            <div class="label-micro col-md-1" style="text-align: center;">COR</div>
-                        </div> 
-                        <div name="Linhas" class="row">
-                            {{range $key,$item := .linhas}}
-                                <div style="text-align: center;" class="col-md-2">
-                                    {{$item.Seq}}
-                                </div>
-                                <div style="text-align: center;" class="col-md-3">
-                                    <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}" id="LinhaIds{{$item.Seq}}">
-                                    <input type="Text" onchange="LerDst(this.value,{{$item.Seq}})" style="width: 45px; height: 19px;" name="LinhaCods" id="LinhaCods{{$item.Seq}}" value="{{$item.Linha.Codigo}}">
-                                </div>
-                                <div class="col-md-5" nowrap>
-                                    {{$item.Linha.Nome}}
-                                </div>
-                                <div class="col-md-2">
-                                    <span name="span_cor_{{$item.Seq}}" style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>    
-                                </div>
-                            {{end}}
-                        </div> -->
+
                         </table>
                     </div>
                     <div id="Notas" class="tabcontent image col-md-12" style="background-color: rgb(230, 227, 227);">
@@ -303,17 +281,16 @@ var $,form;
                 var table = document.getElementById("linhas");
                 
                 //apaga inicialmente as linhas
-                for (let i = 0; i <= data.linhas.length; i++) {
-                    document.getElementById("linhas").deleteRow(0);
-                }
+                document.getElementById("linhas").innerHTML="";
 
                 //gera a tabela de linhas denovo
-                 for (let i = 0; i < data.linhas.length; i++) {
+                for (let i = 0; i < data.linhas.length & i < data.cores; i++) {
                     var row = table.insertRow(i);
                     row.insertCell(0).innerHTML = i+1;
                     row.insertCell(1).innerHTML = '<input type="hidden" style="width: 45px;" name="LinhaIds" value="' + data.linhas[i].Codigo + '" id="LinhaIds'+String(i+1)+'">';
                     row.insertCell(1).innerHTML = '<input type="Text" onchange="LerDst(this.value,'+String(i+1)+')" style="width: 45px; height: 19px;" name="LinhaCods" id="LinhaCods" value="' + data.linhas[i].Codigo + '">';
                     row.insertCell(2).innerHTML = data.linhas[i].Nome;
+                    row.insertCell(3).innerHTML = '<span name="span_cor_'+String(i+1)+'" style="border: 1px solid rgb(0, 0, 0); background-color: #'+data.linhas[i].CorHex+'">__</span>';
                 }
                 return true;
             }

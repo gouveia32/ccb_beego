@@ -342,7 +342,7 @@ func Hex2RGB(cHex string) color.Color {
 // *
 // ***************** Corres **************************
 func CarregaCores(id int, nc int) []*models.Linha {
-	cores_padrao := []string{"5075", "5208", "5151", "5115", "5310", "5311", "5158", "5058", "5027", "5198"}
+	cores_padrao := []string{"5208", "5311", "5151", "5075", "5310", "5158", "5045", "5058", "5208", "5311", "5151", "5075", "5310", "5158", "5045", "5058", "5208", "5311", "5151", "5075", "5310", "5158", "5045", "5058", "5208", "5311", "5151", "5075", "5310", "5158", "5045", "5058"}
 	data := []*models.Linha{}
 
 	linhas := models.LinhaBordadoPageList(id)
@@ -367,7 +367,6 @@ func CarregaCores(id int, nc int) []*models.Linha {
 			}
 		}
 	}
-
 	return data
 
 }
@@ -381,7 +380,7 @@ func (c *BordadoController) LerDst() {
 	seq, _ := c.GetInt("seq", 0)
 	arq := c.GetString("file")
 
-	fmt.Printf("\n\nPARAMS: cor:%s id:%d seq:%d arq:%s\n", cod_linha, id, seq, arq)
+	//fmt.Printf("\n\nPARAMS: cor:%s id:%d seq:%d arq:%s\n", cod_linha, id, seq, arq)
 
 	mCor := 1
 	var corHex = ""
@@ -399,18 +398,7 @@ func (c *BordadoController) LerDst() {
 		}
 	}
 
-	fmt.Printf("\n\ncorHex:%s\n", corHex)
-
-	/* 	if arq == "" {
-
-	   		if nSeq, err := strconv.Atoi(seq); err == nil {
-	   			cores_utilizada[nSeq],_ = models.ParseHexColor(corHex)
-	   			fmt.Printf("\n\nCOR: seq=%d %s", nSeq, cores_utilizada[nSeq])
-	   		}
-	   		//ajustar cor da seq
-
-	   	}
-	*/
+	//fmt.Printf("\n\ncorHex:%s\n", corHex)
 
 	data, err := ioutil.ReadFile(arq)
 	if err != nil {
@@ -487,11 +475,11 @@ func (c *BordadoController) LerDst() {
 			if (r3 & 64) == 64 { //troca de cor
 				mCor += 1
 				if mCor > len(cores_utilizada) {
-					fmt.Printf("\nbyte :%d  (%d %d %d)\n", i, r1, r2, r3)
+					//fmt.Printf("\nbyte :%d  (%d %d %d)\n", i, r1, r2, r3)
 					cores_utilizada = append(cores_utilizada, cores_padrao[mCor-1])
-					fmt.Printf("\nMuitas trocas de cor :%d    =   %d", mCor, len(cores_utilizada))
+					//fmt.Printf("\nMuitas trocas de cor :%d    =   %d", mCor, len(cores_utilizada))
 				}
-				fmt.Printf("\nTroca de cor :%d    =   %d\n", mCor, len(cores_utilizada))
+				//fmt.Printf("\nTroca de cor :%d    =   %d\n", mCor, len(cores_utilizada))
 			}
 			salto = false
 			if (r3 & 128) == 128 {
@@ -575,24 +563,12 @@ func (c *BordadoController) LerDst() {
 			X0 = X
 			Y0 = Y
 		}
-		/*
-			for _, linha := range cores_utilizada {
-				fmt.Printf("\n%s  %s", linha.Codigo, linha.Nome)
+	
+		for _, linha := range cores_utilizada {
+			fmt.Printf("\n%s  %s", linha.Codigo, linha.Nome)
+		}
 
-			} */
-		//Ajusta as linhas
-		/* 		linhas := make([]*models.LinhaBordadoRel, 0)
-		   		for i := len(m.LinhaBordadoRel); i < int(Cores); i++ {
-		   			linha, err := models.LinhaOne(lps[i])
-		   			if err != nil {
-		   				linha, _ = models.LinhaOne("5311")
-		   			}
-		   			fmt.Println("linha:", linha.Codigo, " ", linha.Nome)
-
-		   			item := models.LinhaBordadoRel{Bordado: m, Linha: linha, Seq: i + 1}
-		   			linhas = append(linhas, &item)
-		   		}
-		*/ // Codifica a imagem em base64
+		// Codifica a imagem em base64
 		var buf bytes.Buffer
 		png.Encode(&buf, img)
 		b64 := base64.StdEncoding.EncodeToString(buf.Bytes())
