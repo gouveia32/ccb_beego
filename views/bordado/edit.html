@@ -34,7 +34,7 @@
                   console.log("Nome do arquivo: ", event);
                   $("form[name=thisForm]").find("input[name=Arquivo]").val(filename);
                   $("form[name=thisForm]").find("input[name=Caminho]").val(directory);
-                  LerDst(directory,'0')
+                  LerDst(directory,0)
                 }
                 
                 </script>
@@ -108,7 +108,7 @@
     </table>
 
     <!-- Tab links -->
-    <table id="info" width="70%">
+    <table id="info"  width="70%">
         <tr>
             <td width="50%" style="vertical-align: top;">
                 <div class="col-md-12">
@@ -119,12 +119,35 @@
                 
                     <!-- Tab content -->
                     <div id="Linhas" class="tabcontent">
-                        <div name="Linhas" class="row">
+                        <table id="linhas"  width="70%">
+                            <th class="label-micro col-md-2" style="text-align: center;">SEQ</th>
+                            <th class="label-micro col-md-3" style="text-align: center;">CÓDIGO</th>
+                            <th class="label-micro col-md-5">NOME</th>
+                            <th class="label-micro col-md-1" style="text-align: center;">COR</th>
+                            {{range $key,$item := .linhas}}
+                                <tr>
+                                    <td style="text-align: center;">
+                                        {{$item.Seq}} 
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}" id="LinhaIds{{$item.Seq}}">
+                                        <input type="Text" onchange="LerDst(this.value,{{$item.Seq}})" style="width: 45px; height: 19px;" name="LinhaCods" id="LinhaCods{{$item.Seq}}" value="{{$item.Linha.Codigo}}">                                        
+                                    </td>
+                                    <td>
+                                        {{$item.Linha.Nome}}
+                                    </td>
+                                    <td>
+                                        <span name="span_cor_{{$item.Seq}}" style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>      
+                                    </td>
+
+                                </tr>
+                            {{end}}
+<!--                         <div name="Linhas" class="row">
                             <div class="label-micro col-md-2" style="text-align: center;">SEQ</div>
                             <div class="label-micro col-md-3" style="text-align: center;">CÓDIGO</div>
                             <div class="label-micro col-md-5">NOME</div>
                             <div class="label-micro col-md-1" style="text-align: center;">COR</div>
-                        </div>
+                        </div> 
                         <div name="Linhas" class="row">
                             {{range $key,$item := .linhas}}
                                 <div style="text-align: center;" class="col-md-2">
@@ -141,7 +164,8 @@
                                     <span name="span_cor_{{$item.Seq}}" style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>    
                                 </div>
                             {{end}}
-                        </div>
+                        </div> -->
+                        </table>
                     </div>
                     <div id="Notas" class="tabcontent image col-md-12" style="background-color: rgb(230, 227, 227);">
                         <!-- <img src="data:image/png;base64, {{.imagem}}" alt="Imagem" /> -->
@@ -150,7 +174,7 @@
             </td>
             <td width="40%">
                 <div id="div_img" class="image col-md-10" style="background-color: rgb(243, 206, 206);">
-                    <img id="img" name="img" ondblclick="LerDst(this.value,'0')" src="data:image/png;base64,{{.m.Imagem}}" alt="Imagem" />
+                    <img id="img" name="img" ondblclick="LerDst(this.value,0)" src="data:image/png;base64,{{.m.Imagem}}" alt="Imagem" />
                     <input type="hidden" name="Imagem" id="imagem" value="{{.m.Imagem}}">
                 </div>
                 <!-- <canvas id="myCanvas" width="300" height="300"></canvas> -->
@@ -276,9 +300,20 @@ var $,form;
                 $("form[name=thisForm]").find("input[name=Pontos]").val(data.pontos);
                 //console.log('cor:',data.CorHex);
                 console.log('linhas:',data.linhas);
-                for (let i = 0; i < data.linhas.length; i++) {
-                    $("form[name=thisForm]").find("input[id=LinhaIds" + i + "]").val(data.linhas[i+1].Codigo);
-                    //$("form[name=thisForm]").find("input[id=LinhaCods" + i + "]").val(data.linhas[i+1].Codigo);
+                var table = document.getElementById("linhas");
+                
+                //apaga inicialmente as linhas
+                for (let i = 0; i <= data.linhas.length; i++) {
+                    document.getElementById("linhas").deleteRow(0);
+                }
+
+                //gera a tabela de linhas denovo
+                 for (let i = 0; i < data.linhas.length; i++) {
+                    var row = table.insertRow(i);
+                    row.insertCell(0).innerHTML = i+1;
+                    row.insertCell(1).innerHTML = '<input type="hidden" style="width: 45px;" name="LinhaIds" value="' + data.linhas[i].Codigo + '" id="LinhaIds'+String(i+1)+'">';
+                    row.insertCell(1).innerHTML = '<input type="Text" onchange="LerDst(this.value,'+String(i+1)+')" style="width: 45px; height: 19px;" name="LinhaCods" id="LinhaCods" value="' + data.linhas[i].Codigo + '">';
+                    row.insertCell(2).innerHTML = data.linhas[i].Nome;
                 }
                 return true;
             }
