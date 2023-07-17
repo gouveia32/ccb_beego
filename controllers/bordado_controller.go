@@ -37,6 +37,9 @@ func (c *BordadoController) Prepare() {
 	c.checkAuthor("DataGrid", "DataList", "SelectPicker")
 }
 
+// *
+// *
+// ***************** Index **************************
 func (c *BordadoController) Index() {
 	c.Data["pageTitle"] = "Bordado"
 	c.Data["showMoreQuery"] = true
@@ -52,6 +55,9 @@ func (c *BordadoController) Index() {
 	c.Data["canDelete"] = c.checkActionAuthor("BordadoController", "Delete")
 }
 
+// *
+// *
+// ***************** DataGrid **************************
 func (c *BordadoController) DataGrid() {
 	var params models.BordadoQueryParam
 
@@ -76,6 +82,9 @@ func (c *BordadoController) SelectPicker() {
 	c.jsonResult(enums.JRCodeSucc, "", data)
 }
 
+// *
+// *
+// ***************** DataList **************************
 func (c *BordadoController) DataList() {
 	var params = models.BordadoQueryParam{}
 	fmt.Println("Params:", params)
@@ -116,9 +125,6 @@ func (c *BordadoController) Edit() {
 	}
 
 	c.Data["imagem"] = m.Imagem
-	//c.Data["img"] = CarregaDst(color.White)
-
-	//c.Data["img"] = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 
 	ufs := models.GetUFs()
 	c.Data["ufs"] = ufs
@@ -179,6 +185,9 @@ func (c *BordadoController) Edit() {
 	c.LayoutSections["footerjs"] = "bordado/edit_footerjs.html"
 }
 
+// *
+// *
+// ***************** Save **************************
 // add | update
 func (c *BordadoController) Save() {
 	var err error
@@ -306,6 +315,9 @@ func (c *BordadoController) Save() {
 	}
 }
 
+// *
+// *
+// ***************** Delete **************************
 func (c *BordadoController) Delete() {
 	strs := c.GetString("ids")
 	ids := make([]int, 0, len(strs))
@@ -341,34 +353,28 @@ func Hex2RGB(cHex string) color.Color {
 // *
 // *
 // ***************** Corres **************************
-func CarregaCores(id int, nc int) []*models.Linha {
+func CarregaCores(CoresInicial []string, nc int) []*models.Linha {
 	cores_padrao := []string{"5208", "5311", "5151", "5075", "5310", "5158", "5045", "5058", "5208", "5311", "5151", "5075", "5310", "5158", "5045", "5058", "5208", "5311", "5151", "5075", "5310", "5158", "5045", "5058", "5208", "5311", "5151", "5075", "5310", "5158", "5045", "5058"}
 	data := []*models.Linha{}
 
-	linhas := models.LinhaBordadoPageList(id)
-	if len(linhas) > 0 {
-		for _, linha := range linhas {
-			l, err := models.LinhaOne(linha.Linha.Codigo)
-			if err != nil {
-				log.Fatal(err)
+	if CoresInicial != nil {
+		for i, cor := range CoresInicial {
+			l, err := models.LinhaOne(cor)
+			if i < nc && err == nil {
+				l.CorRGB = Hex2RGB(l.CorHex)
+				data = append(data, l)
 			}
-
-			l.CorRGB = Hex2RGB(l.CorHex)
-			data = append(data, l)
 		}
-
 	} else {
 		for i, cor := range cores_padrao {
 			l, err := models.LinhaOne(cor)
 			if i < nc && err == nil {
-
 				l.CorRGB = Hex2RGB(l.CorHex)
 				data = append(data, l)
 			}
 		}
 	}
 	return data
-
 }
 
 // *
@@ -379,8 +385,10 @@ func (c *BordadoController) LerDst() {
 	id, _ := c.GetInt("id", 0) //id do bordado
 	seq, _ := c.GetInt("seq", 0)
 	arq := c.GetString("file")
+	sLinhas := c.GetString("linhas")
+	aLinhas := strings.Split(sLinhas, ",")
 
-	//fmt.Printf("\n\nPARAMS: cor:%s id:%d seq:%d arq:%s\n", cod_linha, id, seq, arq)
+	fmt.Printf("\n\nPARAMS: cor:%s id:%d seq:%d arq:%s \nLinhas:%s\n", cod_linha, id, seq, arq, aLinhas)
 
 	mCor := 1
 	var corHex = ""
@@ -432,25 +440,17 @@ func (c *BordadoController) LerDst() {
 		Cores, _ := strconv.Atoi(strings.TrimSpace(string(data[34:37])))
 		Cores++
 
-		cores_padrao := CarregaCores(0, Cores+1)
-		cores_utilizada := CarregaCores(id, Cores+1)
+		cores_padrao := CarregaCores(nil, Cores+1)
+		cores_utilizada := CarregaCores(aLinhas, Cores+1)
 		if len(cores_utilizada) < 1 {
 			cores_utilizada = cores_padrao
 		}
 
-		if seq > 0 && cod_linha != "0" {
-			linha, err := models.LinhaOne(cod_linha)
-			if err == nil {
-				cores_utilizada[seq-1] = linha
-				linha.CorRGB = Hex2RGB(linha.CorHex)
-				fmt.Printf("\nlinha trocada:%s", linha.Codigo)
-			}
-		}
-		/* 		for _, linha := range cores_utilizada {
-		   			fmt.Printf("\n%s  %s ", linha.Codigo, linha.Nome)
+		for _, linha := range cores_utilizada {
+			fmt.Printf("\nAntes:%s  %s ", linha.Codigo, linha.Nome)
 
-		   		}
-		*/
+		}
+
 		X0 := Xmenos
 		Y0 := Ymenos + 20
 
@@ -563,7 +563,7 @@ func (c *BordadoController) LerDst() {
 			X0 = X
 			Y0 = Y
 		}
-	
+
 		for _, linha := range cores_utilizada {
 			fmt.Printf("\n%s  %s", linha.Codigo, linha.Nome)
 		}

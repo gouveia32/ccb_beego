@@ -119,10 +119,10 @@
                 
                     <!-- Tab content -->
                     <div id="Linhas" class="tabcontent">
-                        <table id="linhas"  width="70%">
+                        <table id="tab_linhas"  width="70%">
                             <th class="label-micro col-md-2" style="text-align: center;">SEQ</th>
-                            <th class="label-micro col-md-3" style="text-align: center;">CÓDIGO</th>
-                            <th style="width:60%">NOME</th>
+                            <th class="label-micro col-md-3" style="text-align: center;">CODIGO</th>
+                            <th class="label-micro col-md-12" nowrap>NOME</th>
                             <th class="label-micro col-md-1" style="text-align: center;">COR</th>
                             {{range $key,$item := .linhas}}
                                 <tr>
@@ -133,10 +133,10 @@
                                         <input type="hidden" style="width: 45px;" name="LinhaIds" value="{{$item.Linha.Codigo}}" id="LinhaIds{{$item.Seq}}">
                                         <input type="Text" onchange="LerDst(this.value,{{$item.Seq}})" style="width: 45px; height: 19px;" name="LinhaCods" id="LinhaCods{{$item.Seq}}" value="{{$item.Linha.Codigo}}">                                        
                                     </td>
-                                    <td>
+                                    <td nowrap>
                                         {{$item.Linha.Nome}}
                                     </td>
-                                    <td>
+                                    <td style="text-align: center;">
                                         <span name="span_cor_{{$item.Seq}}" style="border: 1px solid rgb(0, 0, 0); background-color: #{{$item.Linha.CorHex}}">__</span>      
                                     </td>
 
@@ -245,57 +245,95 @@ var $,form;
           
         });
 
-    function LerDst(cor,seq){
-    //alert('AQUI ' + cor)
+        //
+        ////////////////DesenhaGridLinhas
+        function DesenhaGridLinhas(data){
+            //console.log('linhas:',data.linhas);
+            var tabela = document.getElementById("tab_linhas");
 
-    // alert(urlfor);
+            //apaga inicialmente as linhas
+            tabela.innerHTML="";
 
-    var id = $("#Id").val();
-    var file = document.getElementById('caminho').value;
-    
-    $.ajax({
-        type: "POST",
-        url: "/bordado/lerdst",
-        data: {
-            id:     id,
-            cor:    cor,
-            seq:    seq,
-            file:   file
-        },
-        dataType: 'json',
-        success: function(data) {
-            //console.log("data",data)
-            if(data != ''){
-                document.getElementById('img').src = "data:image/png;base64," + data.img;
-                //alert('alterado')
+            //Criar Haeder th
+            var header = tabela.insertRow(0);
+            header.insertCell(0).innerHTML = '<th class="label-micro col-md-2" style="text-align: center;">SEQ</th>';
+            header.insertCell(1).innerHTML = '<th class="label-micro col-md-3" style="text-align: center;">CODIGO</th>';
+            header.insertCell(2).innerHTML = '<th class="label-micro col-md-12" nowrap>NOME</th>';
+            header.insertCell(3).innerHTML = '<th class="label-micro col-md-1" style="text-align: center;">COR</th>';
 
-                $("form[name=thisForm]").find("input[name=Imagem]").val(data.img);
-                $("form[name=thisForm]").find("span[name=span_cor_" + seq + "]").css('background-color', '#' + data.CorHex);
-
-                $("form[name=thisForm]").find("input[name=Largura]").val(data.largura);
-                $("form[name=thisForm]").find("input[name=Altura]").val(data.altura);
-                $("form[name=thisForm]").find("input[name=Cores]").val(data.cores);
-                $("form[name=thisForm]").find("input[name=Pontos]").val(data.pontos);
-                //console.log('cor:',data.CorHex);
-                console.log('linhas:',data.linhas);
-                var table = document.getElementById("linhas");
-                
-                //apaga inicialmente as linhas
-                document.getElementById("linhas").innerHTML="";
-
-                //gera a tabela de linhas denovo
-                for (let i = 0; i < data.linhas.length & i < data.cores; i++) {
-                    var row = table.insertRow(i);
-                    row.insertCell(0).innerHTML = i+1;
-                    row.insertCell(1).innerHTML = '<input type="hidden" style="width: 45px;" name="LinhaIds" value="' + data.linhas[i].Codigo + '" id="LinhaIds'+String(i+1)+'">';
-                    row.insertCell(1).innerHTML = '<input type="Text" onchange="LerDst(this.value,'+String(i+1)+')" style="width: 45px; height: 19px;" name="LinhaCods" id="LinhaCods" value="' + data.linhas[i].Codigo + '">';
-                    row.insertCell(2).innerHTML = data.linhas[i].Nome;
-                    row.insertCell(3).innerHTML = '<span name="span_cor_'+String(i+1)+'" style="border: 1px solid rgb(0, 0, 0); background-color: #'+data.linhas[i].CorHex+'">__</span>';
-                }
-                return true;
+            //gera a tabela de linhas denovo
+            for (let i = 0; i < data.linhas.length & i < data.cores; i++) {
+                var row = tabela.insertRow(i+1);
+                row.insertCell(0).innerHTML = i+1;
+                row.insertCell(1).innerHTML = '<input type="hidden" style="width: 45px;" name="LinhaIds" value="' + data.linhas[i].Codigo + '" id="LinhaIds'+String(i+1)+'">' +
+                                              '<input type="Text" onchange="LerDst(this.value,'+String(i+1)+')" style="width: 45px; height: 19px;" name="LinhaCods" id="LinhaCods" value="' + data.linhas[i].Codigo + '">';
+                row.insertCell(2).innerHTML = data.linhas[i].Nome;
+                row.insertCell(3).innerHTML = '<span name="span_cor_'+String(i+1)+'" style="border: 1px solid rgb(0, 0, 0); background-color: #'+data.linhas[i].CorHex+'">__</span>';
             }
+            console.log("Atualizado.");
         }
-    }); 
+        
+        //
+        ///////////////////// LerDst
+        function LerDst(cor,seq) {
+
+        var id = $("#Id").val();
+        var file = document.getElementById('caminho').value;
+        var sLinhas = "";
+
+        let tabela = document.getElementById("tab_linhas");
+        let linhas = tabela.getElementsByTagName("tr");
+
+        //console.log('linhas:', linhas.length);
+
+         for(var i = 1; i < linhas.length; i++){
+            let linha = linhas[i];
+            let colunas = linha.getElementsByTagName("td");
+            //console.log('linha:', linha);
+   
+            let coluna = colunas[1].children[1].value; //coluna Codigo
+            //console.log('   Colunas:', coluna);
+            //aLinhas.push(coluna);
+            if (sLinhas == "") {
+                sLinhas = sLinhas + coluna
+            } else {
+                sLinhas = sLinhas + "," + coluna
+            }
+         } 
+
+
+        console.log('Linhas Antes:', sLinhas);
+        $.ajax({
+            type: "POST",
+            url: "/bordado/lerdst",
+            data: {
+                id:     id,
+                cor:    cor,
+                seq:    seq,
+                file:   file,
+                linhas:  sLinhas
+            },
+            dataType: 'json',
+            success: function(data) {
+                //console.log("data",data)
+                if(data != ''){
+                    document.getElementById('img').src = "data:image/png;base64," + data.img;
+                    //alert('alterado')
+
+                    $("form[name=thisForm]").find("input[name=Imagem]").val(data.img);
+                    //$("form[name=thisForm]").find("span[name=span_cor_" + seq + "]").css('background-color', '#' + data.CorHex);
+
+                    $("form[name=thisForm]").find("input[name=Largura]").val(data.largura);
+                    $("form[name=thisForm]").find("input[name=Altura]").val(data.altura);
+                    $("form[name=thisForm]").find("input[name=Cores]").val(data.cores);
+                    $("form[name=thisForm]").find("input[name=Pontos]").val(data.pontos); 
+                    //console.log('cor:',data.CorHex);
+                    
+                    DesenhaGridLinhas(data)
+                    return true;
+                }
+            }
+        }); 
 }
 
 </script>
