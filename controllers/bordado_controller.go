@@ -24,7 +24,6 @@ import (
 	"time"
 
 	"github.com/StephaneBunel/bresenham"
-
 	"github.com/beego/beego/v2/client/orm"
 )
 
@@ -594,3 +593,133 @@ func normalize(colorStr string) (string, error) {
 	// left as an exercise for the reader
 	return colorStr, nil
 }
+
+/* func DrawLine(g *image.RGBA, x1, y1, x2, y2, scaleXY int, currentColor color.Color, flags int){
+
+
+	const fNORMAL = 0
+	const fJUMP = 1
+	const fTRIM1 = 2
+	const fTRIM = 2
+	const fSTOP = 4
+	const fEND = 8
+	const colorchnge = 16
+	const colordst = 5
+	const SEQUIN_MODE = 6
+	const SEQUIN_MODE = 6
+	const SEQUIN_EJECT = 7
+	const SEQUIN_MODE = 6
+	const SLOW = &HB
+	const NEEDLE_SET = 9
+	const FAST = &HC
+
+	r1 := 0
+	g1 := 0
+	b1 := 0
+	//  Color color = Color.FromArgb(255, 0, 0);
+	//  int dark = adjust(Convert.ToInt32(color), -60);
+	somecolor := currentColor
+	amt := Math.Round(2.55 * 2)
+	str := somecolor.R.ToString() & "," & somecolor.G.ToString() & "," & somecolor.B.ToString()
+	r1 = Convert.ToInt16(somecolor.R.ToString())
+	g1 = Convert.ToInt16(somecolor.G.ToString())
+	b1 = Convert.ToInt16(somecolor.B.ToString())
+	r1 = r1 + CInt(amt)
+	g1 = g1 + CInt(amt)
+	b1 = b1 + CInt(amt)
+	if r1 > 250 {
+		r1 = 248
+	}
+	if g1 > 250 {
+		g1 = 248
+	}
+	if b1 > 250 {
+		b1 = 250
+	}
+	if r1 == 5 && g1 == 5 && b1 == 5 {
+		r1 = 5
+		g1 = 30
+		b1 = 10
+	}
+
+	currentColor1 := color.RGBA{r1, g1, b1, 255}
+
+	x1Scaled := int(x1 / scaleXY)
+	y1Scaled := int(y1 / scaleXY)
+	x2Scaled := int(x2 / scaleXY)
+	y2Scaled := int(y2 / scaleXY)
+	if x1Scaled == x2Scaled && y1Scaled == y2Scaled {
+		Return
+	}
+	corR := 0
+	corg := 0
+	corb := 0
+	if somecolor.R == 0 && somecolor.G == 0 && somecolor.B == 0 {
+		corR = adjust(35, 0)
+		corg = adjust(35, 0)
+		corb = adjust(35, 0)
+	} else {
+		corR = adjust(somecolor.R, -60)
+		corg = adjust(somecolor.G, -60)
+		corb = adjust(somecolor.B, -60)
+	}
+
+	coresmodificadas := Color.FromArgb(corR, corg, corb, 255)
+
+	Dim ppp As LinearGradientBrush = New LinearGradientBrush(New PointF(x2Scaled, y2Scaled), New PointF(x1Scaled, y1Scaled), coresmodificadas, currentColor)
+	g.SmoothingMode = SmoothingMode.AntiAlias
+	Dim myColors As Color() = {currentColor, coresmodificadas, currentColor, coresmodificadas, currentColor}
+	Dim posArray As Single() = New Single() {0, 0.05F, 0.5F, 0.9F, 1.0F}
+	Dim myBlend As ColorBlend = New ColorBlend()
+	myBlend.Colors = myColors
+	myBlend.Positions = posArray
+	ppp.InterpolationColors = myBlend
+	Dim pt As Pen = New Pen(ppp, 3.2F)
+	pt.DashCap = DashCap.Round
+	If flags = CShort(StitchType.SEQUIN_MODE) Then
+		sequin_mode = True
+	End If
+	If flags = CShort(StitchType.fJUMP) Then
+		pt = New Pen(Color.Transparent, 1.0F)
+		g.DrawLine(pt, x2Scaled, y2Scaled, x1Scaled, y1Scaled)
+		sequin_mode = False
+	End If
+	If sequin_mode = True Then
+		If flags = CShort(StitchType.SEQUIN_EJECT) Then
+			g.FillEllipse(Brushes.Red, Convert.ToInt32(x2Scaled) - 20, Convert.ToInt32(y2Scaled) - 20, 40, 40)
+			g.FillEllipse(Brushes.White, Convert.ToInt32(x2Scaled) - 6, Convert.ToInt32(y2Scaled) - 6, 12, 12)
+		End If
+	End If
+	If flags = CShort(StitchType.fTRIM) Then
+		pt = New Pen(Color.Transparent, 1.0F)
+		g.DrawLine(pt, x2Scaled, y2Scaled, x1Scaled, y1Scaled)
+	End If
+	If contar1 >= 10 Then
+		g.DrawLine(pt, x2Scaled, y2Scaled, x1Scaled, y1Scaled)
+	End If
+	contar1 += 1
+
+}
+
+func adjust(color int, amount int) (ret int) {
+	a := color >> 24 && &HFF
+	r := color >> 16 && &HFF
+	g := color >> 8 && &HFF
+	b := color && &HFF
+	r = clamp(r + amount)
+	g = clamp(g + amount)
+	b = clamp(b + amount)
+	return a << 24 || r << 16 || g << 8 || b
+}
+
+fun clamp(v int) (ret int) {
+	if v > 255 {
+		return 255
+	}
+	if v < 0 {
+		return 0
+	}
+	return v
+}
+
+*/
