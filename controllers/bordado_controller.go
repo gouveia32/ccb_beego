@@ -9,6 +9,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
+	"math"
 
 	//"github.com/go-playground/colors"
 	"fmt"
@@ -594,8 +595,7 @@ func normalize(colorStr string) (string, error) {
 	return colorStr, nil
 }
 
-/* func DrawLine(g *image.RGBA, x1, y1, x2, y2, scaleXY int, currentColor color.Color, flags int){
-
+func DrawLine(g *image.RGBA, x1, y1, x2, y2, scaleXY int, currentColor color.Color, flags int) {
 
 	const fNORMAL = 0
 	const fJUMP = 1
@@ -606,12 +606,10 @@ func normalize(colorStr string) (string, error) {
 	const colorchnge = 16
 	const colordst = 5
 	const SEQUIN_MODE = 6
-	const SEQUIN_MODE = 6
 	const SEQUIN_EJECT = 7
-	const SEQUIN_MODE = 6
-	const SLOW = &HB
+	const SLOW = 14
 	const NEEDLE_SET = 9
-	const FAST = &HC
+	const FAST = 12
 
 	r1 := 0
 	g1 := 0
@@ -619,10 +617,9 @@ func normalize(colorStr string) (string, error) {
 	//  Color color = Color.FromArgb(255, 0, 0);
 	//  int dark = adjust(Convert.ToInt32(color), -60);
 	somecolor := currentColor
-	amt := Math.Round(2.55 * 2)
-	str := somecolor.R.ToString() & "," & somecolor.G.ToString() & "," & somecolor.B.ToString()
-	r1 = Convert.ToInt16(somecolor.R.ToString())
-	g1 = Convert.ToInt16(somecolor.G.ToString())
+	amt := math.Round(2.55 * 2)
+	//str := somecolor.R.ToString() & "," & somecolor.G.ToString() & "," & somecolor.B.ToString()
+	r1 = somecolor.r
 	b1 = Convert.ToInt16(somecolor.B.ToString())
 	r1 = r1 + CInt(amt)
 	g1 = g1 + CInt(amt)
@@ -649,7 +646,7 @@ func normalize(colorStr string) (string, error) {
 	x2Scaled := int(x2 / scaleXY)
 	y2Scaled := int(y2 / scaleXY)
 	if x1Scaled == x2Scaled && y1Scaled == y2Scaled {
-		Return
+		return
 	}
 	corR := 0
 	corg := 0
@@ -666,7 +663,7 @@ func normalize(colorStr string) (string, error) {
 
 	coresmodificadas := Color.FromArgb(corR, corg, corb, 255)
 
-	Dim ppp As LinearGradientBrush = New LinearGradientBrush(New PointF(x2Scaled, y2Scaled), New PointF(x1Scaled, y1Scaled), coresmodificadas, currentColor)
+	/* Dim ppp As LinearGradientBrush = New LinearGradientBrush(New PointF(x2Scaled, y2Scaled), New PointF(x1Scaled, y1Scaled), coresmodificadas, currentColor)
 	g.SmoothingMode = SmoothingMode.AntiAlias
 	Dim myColors As Color() = {currentColor, coresmodificadas, currentColor, coresmodificadas, currentColor}
 	Dim posArray As Single() = New Single() {0, 0.05F, 0.5F, 0.9F, 1.0F}
@@ -697,22 +694,22 @@ func normalize(colorStr string) (string, error) {
 	If contar1 >= 10 Then
 		g.DrawLine(pt, x2Scaled, y2Scaled, x1Scaled, y1Scaled)
 	End If
-	contar1 += 1
+	contar1 += 1 */
 
 }
 
 func adjust(color int, amount int) (ret int) {
-	a := color >> 24 && &HFF
-	r := color >> 16 && &HFF
-	g := color >> 8 && &HFF
-	b := color && &HFF
+	a := color >> 24 & 255
+	r := color >> 16 & 255
+	g := color >> 8 & 255
+	b := color & 255
 	r = clamp(r + amount)
 	g = clamp(g + amount)
 	b = clamp(b + amount)
-	return a << 24 || r << 16 || g << 8 || b
+	return a<<24 | r<<16 | g<<8 | b
 }
 
-fun clamp(v int) (ret int) {
+func clamp(v int) (ret int) {
 	if v > 255 {
 		return 255
 	}
@@ -721,5 +718,3 @@ fun clamp(v int) (ret int) {
 	}
 	return v
 }
-
-*/
